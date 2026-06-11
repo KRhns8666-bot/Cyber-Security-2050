@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Kai Cyber — field notes on the permanent problems of security: trust, identity, human error, asymmetry, economics, and complexity.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0B0C0D">
+<title>Kai Cyber — The threats change. The problems don’t.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230B0C0D'/%3E%3Ccircle cx='8' cy='8' r='3.5' fill='%2346B5A2'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --bg:        #0B0C0D;
+    --bg-raise:  #101214;
+    --line:      #222628;
+    --ink:       #E7EAE9;
+    --ink-dim:   #8C9492;
+    --ink-faint: #565E5C;
+    --accent:    #46B5A2;
+    --accent-dim:#2C6E63;
+
+    --sans: -apple-system, "Helvetica Neue", Helvetica, "Arial Nova", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+    --col: min(1080px, 100% - 2 * clamp(20px, 5vw, 64px));
+    --section-gap: clamp(7rem, 18vh, 13rem);
+    --ease: cubic-bezier(.22, .61, .36, 1);
+  }
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  [id] { scroll-margin-top: 5rem; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: clamp(1rem, 1.05vw, 1.125rem);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  h1, h2, h3 { margin: 0; font-weight: 600; }
+  p { margin: 0; }
+  p + p { margin-top: 1.25em; }
+
+  a { color: var(--ink); text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  .wrap { width: var(--col); margin-inline: auto; }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* ---------- Skip link ---------- */
+  .skip {
+    position: absolute;
+    left: 50%;
+    top: 0.75rem;
+    transform: translate(-50%, -300%);
+    z-index: 10;
+    padding: 0.6rem 1.1rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: transform 200ms var(--ease);
+  }
+  .skip:focus { transform: translate(-50%, 0); }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.1rem;
+  }
+  .mark {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .mark b { color: var(--accent); font-weight: 700; }
+  nav ul {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  nav a {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    transition: color 200ms var(--ease);
+  }
+  nav a:hover { color: var(--ink); }
+  @media (max-width: 540px) {
+    nav li:nth-child(3) { display: none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-block: clamp(6rem, 22vh, 14rem) var(--section-gap); }
+  .hero .label { display: block; margin-bottom: clamp(1.5rem, 4vh, 2.75rem); }
+  .hero h1 {
+    font-size: clamp(2.6rem, 8vw, 6.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .lede {
+    margin-top: clamp(2rem, 5vh, 3.5rem);
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink-dim);
+    max-width: 44ch;
+    text-wrap: pretty;
+  }
+  .lede strong { color: var(--ink); font-weight: 400; }
+
+  /* ---------- Sections ---------- */
+  section { padding-bottom: var(--section-gap); }
+  .section-head { margin-bottom: clamp(3rem, 8vh, 5rem); }
+  .section-head .label { display: block; margin-bottom: 1.25rem; }
+  .section-head h2 {
+    font-size: clamp(1.8rem, 4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .section-head .intro {
+    margin-top: 1.5rem;
+    color: var(--ink-dim);
+    max-width: 58ch;
+    text-wrap: pretty;
+  }
+
+  /* ---------- Principles ledger ---------- */
+  .ledger { border-bottom: 1px solid var(--line); }
+  .principle {
+    display: grid;
+    grid-template-columns: 5rem minmax(11rem, 16rem) 1fr;
+    gap: clamp(1.25rem, 3vw, 3rem);
+    padding-block: clamp(2rem, 4.5vh, 3rem);
+    border-top: 1px solid var(--line);
+  }
+  .principle .num {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--ink-faint);
+    padding-top: 0.45em;
+  }
+  .principle h3 {
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .principle p {
+    color: var(--ink-dim);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+  .principle p strong { color: var(--ink); font-weight: 400; }
+  @media (max-width: 860px) {
+    .principle { grid-template-columns: 3.5rem 1fr; }
+    .principle h3 { grid-column: 2; margin-bottom: 0.75rem; }
+    .principle p  { grid-column: 2; }
+  }
+  @media (max-width: 480px) {
+    .principle { grid-template-columns: 1fr; }
+    .principle .num { padding-top: 0; }
+    .principle h3, .principle p { grid-column: 1; }
+  }
+
+  /* ---------- Visualization ---------- */
+  .viz-outer { width: min(1280px, 100% - 2 * clamp(12px, 3vw, 40px)); margin-inline: auto; }
+  figure.viz { margin: 0; }
+  .stage {
+    position: relative;
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+  }
+  .stage canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1280 / 560;
+  }
+  @media (max-width: 640px) {
+    .stage canvas { aspect-ratio: 4 / 5; }
+  }
+  .console {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    padding-block: 1.25rem;
+  }
+  .run {
+    appearance: none;
+    min-width: 14rem;
+    text-align: center;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.6rem;
+    cursor: pointer;
+    transition: background 200ms var(--ease), color 200ms var(--ease);
+  }
+  .run:hover { background: var(--accent); color: var(--bg); }
+  .run[aria-disabled="true"] { border-color: var(--line); color: var(--ink-faint); cursor: default; }
+  .run[aria-disabled="true"]:hover { background: transparent; }
+  .counter {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+  .counter .hot { color: var(--accent); }
+  figcaption.feed {
+    min-height: 3.2em;
+    padding-top: 1.1rem;
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    color: var(--ink-dim);
+    max-width: 58ch;
+  }
+  figcaption.feed strong { color: var(--ink); font-weight: 400; }
+
+  /* ---------- Closing ---------- */
+  .closing p { color: var(--ink-dim); max-width: 58ch; text-wrap: pretty; }
+  .closing p strong { color: var(--ink); font-weight: 400; }
+  .closing .kicker {
+    margin-top: clamp(2.5rem, 6vh, 4rem);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    max-width: 28ch;
+    text-wrap: balance;
+  }
+  .closing .kicker em { font-style: normal; color: var(--accent); }
+
+  /* ---------- Footer ---------- */
+  footer { border-top: 1px solid var(--line); }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2.5rem;
+    justify-content: space-between;
+    padding-block: 2.25rem clamp(2.25rem, 6vh, 4rem);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .foot .credit { color: var(--ink-dim); }
+  .foot .credit b { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Reveal ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-reveal] {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+    }
+    .js [data-reveal].is-in { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Print ---------- */
+  @media print {
+    :root { --bg: #fff; --bg-raise: #fff; --ink: #111; --ink-dim: #333; --ink-faint: #666; --line: #bbb; }
+    body { background: #fff; color: #111; }
+    header { position: static; }
+    .stage, .run { display: none; }
+    .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="wrap bar">
+    <a class="mark" href="#top" aria-label="Kai Cyber — home">KAI<b>·</b>CYBER</a>
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#problems">Problems</a></li>
+        <li><a href="#breach">The Breach</a></li>
+        <li><a href="#position">Position</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <div class="wrap">
+      <span class="label" data-reveal>Field notes on the permanent</span>
+      <h1 id="hero-h" data-reveal>The threats change. The problems <em>don’t.</em></h1>
+      <p class="lede" data-reveal>Every breach you will read about in the next
+      decade is already explained by six old problems.
+      <strong>Tools expire. These stay.</strong></p>
+    </div>
+  </section>
+
+  <!-- ============ PRINCIPLES ============ -->
+  <section id="problems" aria-labelledby="problems-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">The six problems</span>
+        <h2 id="problems-h">Everything else is implementation detail.</h2>
+      </div>
+
+      <div class="ledger">
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">01</span>
+          <h3>Trust</h3>
+          <p>Every system is a chain of decisions to believe someone. The
+          processor believes the firmware. The login believes the password.
+          You believe the screen. Verification has to stop somewhere —
+          <strong>and wherever it stops is where the attack begins.</strong></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">02</span>
+          <h3>Identity</h3>
+          <p>A network has never met you. It has met your credentials, and
+          whoever presents them is — as far as any machine can tell — you.
+          <strong>Most intrusions are not break-ins. They are logins.</strong></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">03</span>
+          <h3>Human error</h3>
+          <p>People are called the weakest link by systems that were designed
+          without them. A person who clicks the wrong thing at the wrong hour
+          is not failing the system. <strong>The system planned for a user who
+          doesn’t exist.</strong></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">04</span>
+          <h3>Asymmetry</h3>
+          <p>The defender must be right everywhere, forever. The attacker must
+          be right once, anywhere, eventually. <strong>This is not pessimism.
+          It is arithmetic</strong> — and it does not improve with budget.</p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">05</span>
+          <h3>Economics</h3>
+          <p>Security fails on purpose more often than by accident. Wherever
+          breaking a system costs less than what it protects, someone will pay
+          that cost — attackers run on margins, like every business.
+          <strong>Raise their price or lower your value. Nothing else moves
+          the line.</strong></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">06</span>
+          <h3>Complexity</h3>
+          <p>Every feature is surface. Every connection is a path. Every
+          convenience is a promise someone must keep forever. <strong>The most
+          secure component is the one you removed</strong> — and it is the
+          only one that stays secure.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VISUALIZATION ============ -->
+  <section id="breach" aria-labelledby="breach-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Demonstration</span>
+        <h2 id="breach-h">One credential.</h2>
+        <p class="intro">Twenty-four systems, each trusting the next. One
+        administrator reused a password. Watch what that costs.</p>
+      </div>
+    </div>
+
+    <div class="viz-outer" data-reveal>
+      <figure class="viz">
+        <div class="console">
+          <button class="run" id="run" type="button">Run the breach</button>
+          <span class="counter" id="counter" aria-hidden="true">00 / 24 systems</span>
+        </div>
+        <div class="stage">
+          <canvas id="net" role="img"
+            aria-label="Animated diagram. A network of twenty-four connected
+            systems. An attacker signs in to one minor system with a reused
+            password, then moves from system to system along existing trust
+            relationships until all twenty-four are compromised. No
+            vulnerability is exploited at any point — every step is a valid
+            login."></canvas>
+          <noscript>
+            <p style="padding:2rem; color:#8C9492; max-width:58ch;">This
+            demonstration animates one reused password spreading through a
+            network of twenty-four trusting systems until all are compromised
+            — without a single exploit. Enable JavaScript to run it; the six
+            problems above tell the same story.</p>
+          </noscript>
+        </div>
+        <figcaption class="feed" id="feed" aria-live="polite">
+          One of these systems holds a password its administrator also used
+          somewhere less careful.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ CLOSING ============ -->
+  <section id="position" class="closing" aria-labelledby="position-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Position</span>
+        <h2 id="position-h">Security is not a product. It is a posture.</h2>
+      </div>
+      <div data-reveal>
+        <p>You cannot buy your way out of the six problems. You can only
+        decide how you stand in relation to them. Assume the credential leaks.
+        Assume the person is tired. Assume the attacker has read your
+        documentation — <strong>they have.</strong></p>
+        <p>What survives contact is not the tool but the discipline: trust
+        deliberately, verify cheaply, and keep the system small enough that
+        one person can hold it in their head. <strong>Complexity you do not
+        understand is someone else’s asset.</strong></p>
+        <p class="kicker">The threats of the next decade have not been
+        invented yet. <em>The problems they will use have been here all
+        along.</em></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="credit"><b>KAI CYBER</b> — written, designed, and built by Kai Cyber.</span>
+    <span>One file. No dependencies. Nothing to expire.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ================= Reveal on scroll ================= */
+  const reveals = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window && !reduced.matches) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+      }
+    }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add('is-in'));
+  }
+
+  /* ================= The breach ================= */
+  const canvas  = document.getElementById('net');
+  const ctx     = canvas.getContext('2d');
+  const runBtn  = document.getElementById('run');
+  const feed    = document.getElementById('feed');
+  const counter = document.getElementById('counter');
+
+  const N = 24;
+  const COLOR = {
+    bg: '#101214',
+    edge: 'rgba(140, 148, 146, 0.13)',
+    edgeHot: 'rgba(44, 110, 99, 0.85)',
+    nodeFill: '#16191B',
+    nodeStroke: '#3A4042',
+    hot: '#46B5A2',
+    label: '#8C9492'
+  };
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ----- Graph: deterministic layout in unit space ----- */
+  function buildGraph() {
+    const rnd = mulberry32(2050);
+    const pts = [];
+    const M = 0.075;
+    let minD = 0.16, tries = 0;
+    while (pts.length < N) {
+      const x = M + rnd() * (1 - 2 * M);
+      const y = M + rnd() * (1 - 2 * M);
+      let ok = true;
+      for (const p of pts) {
+        const dx = p.x - x, dy = p.y - y;
+        if (dx * dx + dy * dy < minD * minD) { ok = false; break; }
+      }
+      if (ok) pts.push({ x, y });
+      if (++tries > 1200) { minD *= 0.92; tries = 0; }
+    }
+
+    // Edges: each node to its two nearest neighbours, deduplicated.
+    const key = (a, b) => (a < b ? a * N + b : b * N + a);
+    const edgeSet = new Map();
+    const dist2 = (a, b) => {
+      const dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
+      return dx * dx + dy * dy;
+    };
+    for (let i = 0; i < N; i++) {
+      const order = [];
+      for (let j = 0; j < N; j++) if (j !== i) order.push(j);
+      order.sort((a, b) => dist2(i, a) - dist2(i, b));
+      for (let k = 0; k < 2; k++) {
+        const j = order[k];
+        edgeSet.set(key(i, j), [Math.min(i, j), Math.max(i, j)]);
+      }
+    }
+
+    // Guarantee a single connected component.
+    const parent = Array.from({ length: N }, (_, i) => i);
+    const find = (i) => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+    const union = (a, b) => { parent[find(a)] = find(b); };
+    for (const [, [a, b]] of edgeSet) union(a, b);
+    for (;;) {
+      const roots = new Set();
+      for (let i = 0; i < N; i++) roots.add(find(i));
+      if (roots.size === 1) break;
+      let best = null;
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          if (find(i) !== find(j)) {
+            const d = dist2(i, j);
+            if (!best || d < best.d) best = { i, j, d };
+          }
+        }
+      }
+      edgeSet.set(key(best.i, best.j), [best.i, best.j]);
+      union(best.i, best.j);
+    }
+
+    const edges = [...edgeSet.values()];
+    const adj = Array.from({ length: N }, () => []);
+    for (const [a, b] of edges) { adj[a].push(b); adj[b].push(a); }
+
+    // Patient zero: the leftmost system.
+    let root = 0;
+    for (let i = 1; i < N; i++) if (pts[i].x < pts[root].x) root = i;
+
+    return { pts, edges, adj, root };
+  }
+
+  /* ----- Timeline: breadth-first compromise with jitter ----- */
+  function buildTimeline(g) {
+    const rnd = mulberry32(99);
+    const popAt = new Array(N).fill(Infinity);
+    const via = new Array(N).fill(-1);
+    const depth = new Array(N).fill(0);
+
+    popAt[g.root] = 1.6;
+    const queue = [g.root];
+    const seen = new Set([g.root]);
+    while (queue.length) {
+      const cur = queue.shift();
+      for (const nb of g.adj[cur]) {
+        if (seen.has(nb)) continue;
+        seen.add(nb);
+        depth[nb] = depth[cur] + 1;
+        const base = Math.max(0.32, 1.7 * Math.pow(0.8, depth[nb] - 1));
+        popAt[nb] = popAt[cur] + base * (0.75 + rnd() * 0.6);
+        via[nb] = cur;
+        queue.push(nb);
+      }
+    }
+
+    const traces = [];
+    for (let i = 0; i < N; i++) {
+      if (via[i] !== -1) {
+        traces.push({ from: via[i], to: i, start: popAt[via[i]] + 0.06, end: popAt[i] });
+      }
+    }
+
+    const popsSorted = popAt.slice().sort((a, b) => a - b);
+    const last = popsSorted[N - 1];
+    const captions = [
+      { t: 0, html: 'One password, reused on an unimportant system.' },
+      { t: popAt[g.root], html: '<strong>Not an exploit. A login.</strong> The network has met the credential, not the person.' },
+      { t: popsSorted[7], html: 'Each system trusts the last. <strong>Trust is transitive — so is compromise.</strong>' },
+      { t: last + 0.7, html: '<strong>Total compromise in one sitting.</strong> Vulnerabilities exploited: zero.' }
+    ];
+
+    return { popAt, traces, captions, end: last + 1.2 };
+  }
+
+  const graph = buildGraph();
+  const tl = buildTimeline(graph);
+
+  /* ----- Sizing ----- */
+  let W = 0, H = 0, R = 6, px = [], py = [];
+  function resize() {
+    const cssW = canvas.clientWidth;
+    const cssH = canvas.clientHeight;
+    if (!cssW || !cssH) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = cssW; H = cssH;
+    R = Math.max(5, Math.min(8, W / 120));
+    const padX = R + 22, padTop = R + 22, padBot = R + 40;
+    px = graph.pts.map((p) => padX + p.x * (W - 2 * padX));
+    py = graph.pts.map((p) => padTop + p.y * (H - padTop - padBot));
+    draw(state.elapsed);
+  }
+
+  /* ----- State ----- */
+  const state = {
+    running: false,
+    finished: false,
+    started: false,   // has ever run
+    elapsed: 0,
+    t0: 0,
+    raf: 0,
+    captionIdx: -1,
+    count: 0,
+    visible: false
+  };
+
+  /* ----- Drawing ----- */
+  function draw(t) {
+    if (!W || !H) return;
+    ctx.clearRect(0, 0, W, H);
+    const noMotion = reduced.matches;
+
+    // Edges at rest
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = COLOR.edge;
+    ctx.beginPath();
+    for (const [a, b] of graph.edges) {
+      ctx.moveTo(px[a], py[a]);
+      ctx.lineTo(px[b], py[b]);
+    }
+    ctx.stroke();
+
+    // Traversed edges
+    ctx.strokeStyle = COLOR.edgeHot;
+    ctx.lineWidth = 1.5;
+    for (const tr of tl.traces) {
+      if (t < tr.start) continue;
+      const p = noMotion
+        ? (t >= tr.end ? 1 : 0)
+        : Math.min(1, (t - tr.start) / (tr.end - tr.start));
+      if (p <= 0) continue;
+      const x1 = px[tr.from], y1 = py[tr.from];
+      const x2 = x1 + (px[tr.to] - x1) * p;
+      const y2 = y1 + (py[tr.to] - y1) * p;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      if (p < 1) {
+        ctx.fillStyle = COLOR.hot;
+        ctx.beginPath();
+        ctx.arc(x2, y2, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Nodes
+    for (let i = 0; i < N; i++) {
+      const isRoot = i === graph.root;
+      const r = isRoot ? R + 1.5 : R;
+      const popped = state.started && t >= tl.popAt[i];
+
+      if (popped && !noMotion) {
+        const age = t - tl.popAt[i];
+        if (age < 0.9) {
+          const k = age / 0.9;
+          ctx.strokeStyle = 'rgba(70, 181, 162, ' + (0.45 * (1 - k)).toFixed(3) + ')';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(px[i], py[i], r + 2 + k * 22, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      ctx.beginPath();
+      ctx.arc(px[i], py[i], r, 0, Math.PI * 2);
+      if (popped) {
+        ctx.fillStyle = COLOR.hot;
+        ctx.fill();
+      } else {
+        ctx.fillStyle = COLOR.nodeFill;
+        ctx.fill();
+        ctx.strokeStyle = COLOR.nodeStroke;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    // Patient-zero marker
+    const rx = px[graph.root], ry = py[graph.root];
+    ctx.strokeStyle = COLOR.hot;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    ctx.arc(rx, ry, R + 7.5, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = COLOR.label;
+    ctx.font = '11px ' + 'ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+    ctx.textAlign = rx < 90 ? 'left' : 'center';
+    ctx.fillText('the reused password', rx < 90 ? Math.max(4, rx - R) : rx, ry + R + 26);
+  }
+
+  /* ----- DOM sync ----- */
+  function syncDom(t) {
+    let idx = state.captionIdx;
+    for (let i = tl.captions.length - 1; i >= 0; i--) {
+      if (t >= tl.captions[i].t) { idx = i; break; }
+    }
+    if (idx !== state.captionIdx) {
+      state.captionIdx = idx;
+      feed.innerHTML = tl.captions[idx].html;
+    }
+    let c = 0;
+    for (let i = 0; i < N; i++) if (t >= tl.popAt[i]) c++;
+    if (c !== state.count) {
+      state.count = c;
+      const s = String(c).padStart(2, '0');
+      counter.innerHTML = (c > 0 ? '<span class="hot">' + s + '</span>' : s) +
+        ' / 24 systems';
+    }
+  }
+
+  /* ----- Run loop ----- */
+  function frame(now) {
+    state.elapsed = (now - state.t0) / 1000;
+    if (state.elapsed >= tl.end) {
+      state.elapsed = tl.end;
+      draw(state.elapsed);
+      syncDom(state.elapsed);
+      finish();
+      return;
+    }
+    draw(state.elapsed);
+    syncDom(state.elapsed);
+    state.raf = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    cancelAnimationFrame(state.raf);
+    state.running = true;
+    state.finished = false;
+    state.started = true;
+    state.elapsed = 0;
+    state.captionIdx = -1;
+    state.count = -1;
+    runBtn.textContent = 'Breach in progress';
+    runBtn.setAttribute('aria-disabled', 'true');
+    state.t0 = performance.now();
+    state.raf = requestAnimationFrame(frame);
+  }
+
+  function finish() {
+    state.running = false;
+    state.finished = true;
+    runBtn.textContent = 'Run it again';
+    runBtn.removeAttribute('aria-disabled');
+  }
+
+  function pause() {
+    if (!state.running) return;
+    cancelAnimationFrame(state.raf);
+    state.raf = 0;
+  }
+
+  function resume() {
+    if (!state.running || state.raf) return;
+    state.t0 = performance.now() - state.elapsed * 1000;
+    state.raf = requestAnimationFrame(frame);
+  }
+
+  runBtn.addEventListener('click', () => {
+    if (state.running) return;
+    start();
+  });
+
+  /* ----- Visibility: never burn frames off-screen ----- */
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        state.visible = e.isIntersecting;
+        if (e.isIntersecting) {
+          resume();
+          // Auto-play once, when the stage first comes into view.
+          if (!state.started && !reduced.matches && e.intersectionRatio >= 0.45) {
+            start();
+          }
+        } else {
+          pause();
+        }
+      }
+    }, { threshold: [0, 0.45] });
+    io.observe(canvas);
+  } else {
+    state.visible = true;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) pause();
+    else if (state.visible) resume();
+  });
+
+  /* ----- Wire up ----- */
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(resize).observe(canvas);
+  } else {
+    window.addEventListener('resize', resize);
+  }
+  resize();
+})();
+</script>
+</body>
+</html>
