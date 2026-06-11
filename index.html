@@ -132,8 +132,21 @@
     transition: color 200ms var(--ease);
   }
   nav a:hover { color: var(--ink); }
+  @media (max-width: 720px) {
+    nav li:nth-child(4) { display: none; }
+  }
   @media (max-width: 540px) {
     nav li:nth-child(3) { display: none; }
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 
   /* ---------- Hero ---------- */
@@ -214,6 +227,137 @@
     .principle { grid-template-columns: 1fr; }
     .principle .num { padding-top: 0; }
     .principle h3, .principle p { grid-column: 1; }
+  }
+
+  /* ---------- Case files ---------- */
+  .case {
+    display: grid;
+    grid-template-columns: minmax(9rem, 13rem) minmax(11rem, 16rem) 1fr;
+    gap: clamp(1.25rem, 3vw, 3rem);
+    padding-block: clamp(2rem, 4.5vh, 3rem);
+    border-top: 1px solid var(--line);
+  }
+  .case .stat {
+    font-family: var(--mono);
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .case .stat small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 0.7rem;
+    line-height: 1.5;
+    max-width: 12rem;
+  }
+  .case .tag {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.7rem;
+  }
+  .case h3 {
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .case .when {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 0.55rem;
+  }
+  .case p {
+    color: var(--ink-dim);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+  .case p strong { color: var(--ink); font-weight: 400; }
+  @media (max-width: 860px) {
+    .case { grid-template-columns: minmax(7.5rem, 10rem) 1fr; }
+    .case .case-id { grid-column: 2; }
+    .case p { grid-column: 2; margin-top: 0.9rem; }
+  }
+  @media (max-width: 480px) {
+    .case { grid-template-columns: 1fr; }
+    .case .case-id, .case p { grid-column: 1; }
+    .case p { margin-top: 0.75rem; }
+  }
+
+  /* ---------- Live wire ---------- */
+  .wire {
+    margin-top: clamp(3.5rem, 8vh, 5.5rem);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .wire-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1rem;
+    overflow: hidden;
+  }
+  .wire-label {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .wire-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .wire.is-live .dot { animation: dot-pulse 2.4s var(--ease) infinite; }
+    @keyframes dot-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(0.55); opacity: 0.45; }
+    }
+  }
+  .track {
+    display: flex;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .track .item { padding-right: 3.5rem; }
+  .track .item b { color: var(--ink-dim); font-weight: 500; }
+  .track .item .n { color: var(--accent); }
+  @media (prefers-reduced-motion: no-preference) {
+    .wire.is-live .track {
+      animation: wire-scroll 70s linear infinite;
+      will-change: transform;
+    }
+    @keyframes wire-scroll { to { transform: translateX(-50%); } }
+    .wire.is-live:hover .track,
+    .wire.is-live:focus-within .track { animation-play-state: paused; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wire-inner { overflow: hidden; }
+    .track { flex-wrap: nowrap; }
   }
 
   /* ---------- Visualization ---------- */
@@ -310,10 +454,16 @@
   @media (prefers-reduced-motion: no-preference) {
     .js [data-reveal] {
       opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+      transform: translateY(16px);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
     }
     .js [data-reveal].is-in { opacity: 1; transform: none; }
+    /* Stagger rows that enter together */
+    .js .ledger [data-reveal]:nth-child(2) { transition-delay: 70ms; }
+    .js .ledger [data-reveal]:nth-child(3) { transition-delay: 140ms; }
+    .js .ledger [data-reveal]:nth-child(4) { transition-delay: 210ms; }
+    .js .ledger [data-reveal]:nth-child(5) { transition-delay: 280ms; }
+    .js .ledger [data-reveal]:nth-child(6) { transition-delay: 350ms; }
   }
 
   /* ---------- Print ---------- */
@@ -321,7 +471,7 @@
     :root { --bg: #fff; --bg-raise: #fff; --ink: #111; --ink-dim: #333; --ink-faint: #666; --line: #bbb; }
     body { background: #fff; color: #111; }
     header { position: static; }
-    .stage, .run { display: none; }
+    .stage, .run, .wire { display: none; }
     .js [data-reveal] { opacity: 1 !important; transform: none !important; }
   }
 </style>
@@ -337,6 +487,7 @@
       <ul>
         <li><a href="#problems">Problems</a></li>
         <li><a href="#breach">The Breach</a></li>
+        <li><a href="#cases">Case Files</a></li>
         <li><a href="#position">Position</a></li>
       </ul>
     </nav>
@@ -459,6 +610,133 @@
           somewhere less careful.
         </figcaption>
       </figure>
+    </div>
+  </section>
+
+  <!-- ============ CASE FILES ============ -->
+  <section id="cases" aria-labelledby="cases-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Case files</span>
+        <h2 id="cases-h">The record.</h2>
+        <p class="intro">None of this is theoretical. One exhibit per problem —
+        each breach famous, each avoidable, each caused by a problem older
+        than the company it ruined.</p>
+      </div>
+
+      <div class="ledger">
+        <article class="case" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="18000" aria-hidden="true">0</span>
+            <span class="sr-only">18,000</span>
+            <small>organizations installed it</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">01 · Trust</span>
+            <h3>The signed update</h3>
+            <span class="when">A software vendor, 2020</span>
+          </div>
+          <p>A build server signed the attacker’s code, and the signature did
+          what signatures do — it ended the questioning. <strong>Eighteen
+          thousand organizations installed the backdoor themselves,</strong>
+          on schedule, as routine maintenance.</p>
+        </article>
+
+        <article class="case" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="1" aria-hidden="true">0</span>
+            <span class="sr-only">1</span>
+            <small>password, never retired</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">02 · Identity</span>
+            <h3>The forgotten credential</h3>
+            <span class="when">A fuel pipeline, 2021</span>
+          </div>
+          <p>One remote-access password, leaked and never revoked, shut down
+          the largest fuel pipeline in the country. <strong>To the network,
+          the attacker was an employee having a normal morning.</strong> The
+          lines at the gas stations came later.</p>
+        </article>
+
+        <article class="case" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="130" aria-hidden="true">0</span>
+            <span class="sr-only">130</span>
+            <small>accounts, one phone call</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">03 · Human error</span>
+            <h3>The phone call</h3>
+            <span class="when">A social network, 2020</span>
+          </div>
+          <p>A teenager phoned the help desk and asked, politely, for access.
+          The internal tools trusted the staff; the staff trusted the caller.
+          <strong>Within hours, the most famous accounts in the world were
+          asking strangers for money.</strong></p>
+        </article>
+
+        <article class="case" data-reveal>
+          <span class="stat">
+            <span class="num" data-prefix="$" data-count="10" data-suffix="B" aria-hidden="true">$0B</span>
+            <span class="sr-only">10 billion dollars</span>
+            <small>in collateral damage</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">04 · Asymmetry</span>
+            <h3>The stray weapon</h3>
+            <span class="when">A tax-software update, 2017</span>
+          </div>
+          <p>A weapon aimed at one country’s accounting software crossed the
+          world in hours, stopping ports, factories, and hospitals that were
+          never targets. <strong>Built once. Felt everywhere.</strong> Paid
+          for, almost entirely, by bystanders.</p>
+        </article>
+
+        <article class="case" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="147" data-suffix="M" aria-hidden="true">0</span>
+            <span class="sr-only">147 million</span>
+            <small>identities, one missed patch</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">05 · Economics</span>
+            <h3>The unapplied fix</h3>
+            <span class="when">A credit bureau, 2017</span>
+          </div>
+          <p>The fix had existed for two months. Applying it was one team’s
+          cost; not applying it became 147 million people’s problem.
+          <strong>They were not the customers. They were the
+          inventory.</strong></p>
+        </article>
+
+        <article class="case" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="10" data-suffix="&nbsp;GB" aria-hidden="true">0&nbsp;GB</span>
+            <span class="sr-only">10 gigabytes</span>
+            <small>out through a thermometer</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">06 · Complexity</span>
+            <h3>The fish tank</h3>
+            <span class="when">A casino, 2017</span>
+          </div>
+          <p>The high-roller database left the building through the
+          internet-connected thermometer in the lobby aquarium. <strong>No
+          one had decided the fish tank was part of the security
+          perimeter.</strong> No one had decided anything about it at all.</p>
+        </article>
+      </div>
+
+      <div class="wire" id="wire" data-reveal>
+        <div class="wire-inner">
+          <span class="wire-label"><span class="dot" aria-hidden="true"></span>Live</span>
+          <p class="sr-only" id="wire-sr">Recent publicly disclosed breaches.</p>
+          <div class="track" id="wire-track" aria-hidden="true">
+            <span class="item">Querying the public record&hellip;</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -684,8 +962,47 @@
     visible: false
   };
 
+  /* ----- Idle noise: faint probes wandering the graph ----- */
+  const probes = [];
+  let noiseRaf = 0;
+  let nextProbe = 0;
+
+  function noiseTick(now) {
+    noiseRaf = 0;
+    if (state.running || !state.visible || reduced.matches || document.hidden) return;
+    const t = now / 1000;
+    if (t >= nextProbe && probes.length < 3) {
+      const e = graph.edges[(Math.random() * graph.edges.length) | 0];
+      const flip = Math.random() < 0.5;
+      probes.push({
+        a: flip ? e[1] : e[0],
+        b: flip ? e[0] : e[1],
+        t0: t,
+        dur: 1.4 + Math.random() * 1.3
+      });
+      nextProbe = t + 0.6 + Math.random() * 1.5;
+    }
+    for (let i = probes.length - 1; i >= 0; i--) {
+      if (t - probes[i].t0 > probes[i].dur) probes.splice(i, 1);
+    }
+    draw(state.elapsed, t);
+    noiseRaf = requestAnimationFrame(noiseTick);
+  }
+
+  function startNoise() {
+    if (noiseRaf || state.running || reduced.matches || !state.visible) return;
+    nextProbe = performance.now() / 1000 + 0.4;
+    noiseRaf = requestAnimationFrame(noiseTick);
+  }
+
+  function stopNoise() {
+    cancelAnimationFrame(noiseRaf);
+    noiseRaf = 0;
+    probes.length = 0;
+  }
+
   /* ----- Drawing ----- */
-  function draw(t) {
+  function draw(t, noiseT) {
     if (!W || !H) return;
     ctx.clearRect(0, 0, W, H);
     const noMotion = reduced.matches;
@@ -756,6 +1073,21 @@
       }
     }
 
+    // Idle probes: the scanning never stops
+    if (noiseT !== undefined) {
+      for (const pr of probes) {
+        const k = (noiseT - pr.t0) / pr.dur;
+        if (k <= 0 || k >= 1) continue;
+        const x = px[pr.a] + (px[pr.b] - px[pr.a]) * k;
+        const y = py[pr.a] + (py[pr.b] - py[pr.a]) * k;
+        const a = Math.sin(k * Math.PI) * 0.35;
+        ctx.fillStyle = 'rgba(70, 181, 162, ' + a.toFixed(3) + ')';
+        ctx.beginPath();
+        ctx.arc(x, y, 1.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
     // Patient-zero marker
     const rx = px[graph.root], ry = py[graph.root];
     ctx.strokeStyle = COLOR.hot;
@@ -807,6 +1139,7 @@
   }
 
   function start() {
+    stopNoise();
     cancelAnimationFrame(state.raf);
     state.running = true;
     state.finished = false;
@@ -825,6 +1158,7 @@
     state.finished = true;
     runBtn.textContent = 'Run it again';
     runBtn.removeAttribute('aria-disabled');
+    startNoise();
   }
 
   function pause() {
@@ -854,9 +1188,12 @@
           // Auto-play once, when the stage first comes into view.
           if (!state.started && !reduced.matches && e.intersectionRatio >= 0.45) {
             start();
+          } else if (!state.running) {
+            startNoise();
           }
         } else {
           pause();
+          stopNoise();
         }
       }
     }, { threshold: [0, 0.45] });
@@ -866,8 +1203,8 @@
   }
 
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) pause();
-    else if (state.visible) resume();
+    if (document.hidden) { pause(); stopNoise(); }
+    else if (state.visible) { resume(); if (!state.running) startNoise(); }
   });
 
   /* ----- Wire up ----- */
@@ -877,6 +1214,99 @@
     window.addEventListener('resize', resize);
   }
   resize();
+
+  /* ================= Case-file counters ================= */
+  const fmt = (el, v) =>
+    (el.dataset.prefix || '') +
+    Math.round(v).toLocaleString('en-US') +
+    (el.dataset.suffix || '');
+
+  const nums = document.querySelectorAll('.case .num');
+  function runCounter(el) {
+    const target = parseInt(el.dataset.count, 10);
+    const dur = 1100;
+    const t0 = performance.now();
+    const tick = (now) => {
+      const k = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(el, target * eased);
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+  if ('IntersectionObserver' in window && !reduced.matches) {
+    const cio = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { runCounter(e.target); cio.unobserve(e.target); }
+      }
+    }, { threshold: 0.6 });
+    nums.forEach((el) => cio.observe(el));
+  } else {
+    nums.forEach((el) => { el.textContent = fmt(el, parseInt(el.dataset.count, 10)); });
+  }
+
+  /* ================= Live wire =================
+     Best-effort garnish, never load-bearing: a keyless public feed of
+     disclosed breaches, fetched after load with a hard timeout. If it
+     fails — offline, blocked, retired — the page is already whole. */
+  const wire = document.getElementById('wire');
+  const track = document.getElementById('wire-track');
+  const wireSr = document.getElementById('wire-sr');
+
+  function wireFallback() {
+    track.textContent = '';
+    const item = document.createElement('span');
+    item.className = 'item';
+    item.textContent = 'Feed unreachable. The breaches continue regardless.';
+    track.appendChild(item);
+  }
+
+  function wireRender(list) {
+    const recent = list
+      .filter((b) => b && b.Title && b.AddedDate)
+      .sort((a, b) => new Date(b.AddedDate) - new Date(a.AddedDate))
+      .slice(0, 10);
+    if (!recent.length) { wireFallback(); return; }
+
+    const compact = new Intl.NumberFormat('en-US', { notation: 'compact' });
+    track.textContent = '';
+    // Two copies of the set make the scroll loop seamless.
+    for (let copy = 0; copy < 2; copy++) {
+      for (const b of recent) {
+        const item = document.createElement('span');
+        item.className = 'item';
+        const name = document.createElement('b');
+        name.textContent = b.Title;             // textContent only: feed data is untrusted
+        item.appendChild(name);
+        const n = document.createElement('span');
+        n.className = 'n';
+        n.textContent = Number.isFinite(b.PwnCount) && b.PwnCount > 0
+          ? ' ' + compact.format(b.PwnCount) + ' accounts'
+          : '';
+        item.appendChild(n);
+        item.appendChild(document.createTextNode(
+          b.BreachDate ? ' · ' + String(b.BreachDate).slice(0, 4) : ''
+        ));
+        track.appendChild(item);
+      }
+    }
+    wire.classList.add('is-live');
+    wireSr.textContent = 'Recently disclosed breaches: ' +
+      recent.slice(0, 5).map((b) => b.Title).join(', ') + '.';
+  }
+
+  if (wire && 'fetch' in window) {
+    const ctrl = 'AbortController' in window ? new AbortController() : null;
+    const tmo = ctrl ? setTimeout(() => ctrl.abort(), 6000) : 0;
+    fetch('https://haveibeenpwned.com/api/v3/breaches', {
+      signal: ctrl ? ctrl.signal : undefined
+    })
+      .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then((list) => { clearTimeout(tmo); wireRender(list); })
+      .catch(() => { clearTimeout(tmo); wireFallback(); });
+  } else if (wire) {
+    wireFallback();
+  }
 })();
 </script>
 </body>

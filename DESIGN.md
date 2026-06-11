@@ -83,9 +83,14 @@ Rules:
 - Reveal-on-scroll: 12px rise + fade, 600ms, `cubic-bezier(.22,.61,.36,1)`,
   triggered once via `IntersectionObserver`. Subtle enough to miss.
 - The visualization renders only while on screen and only while running.
+- Ledger rows entering together stagger by 70ms; the rise is 16px over 700ms.
+- While the visualization is idle, faint probe dots wander the graph — the
+  scanning never stops. Max three concurrent, ~35% peak alpha, killed the
+  moment the canvas leaves the viewport.
+- Case-file numerals count up once on entry (1.1s, cubic ease-out, rAF).
 - `prefers-reduced-motion`: reveals disabled; the cascade plays as discrete
-  state changes — no easing, no pulses, no continuous motion. Same lesson,
-  no movement.
+  state changes — no easing, no pulses, no idle noise, no ticker scroll, no
+  counter animation. Same lesson, no movement.
 
 ## 6. The Centerpiece — “One Credential”
 
@@ -105,10 +110,27 @@ vulnerabilities exploited.
 - Fully operable by keyboard: one real `<button>`, captions mirrored to an
   `aria-live` region, canvas carries a complete text alternative.
 
-## 7. Craftsmanship Standards
+## 7. Case Files & the Live Wire
 
-- Single `index.html`. Zero external requests. Loads and renders in well under
-  one second on any connection, because there is nothing to wait for.
+The record keeps the page from being abstract. Six exhibits, one per problem,
+each a famous breach told in two sentences with a single mono numeral as its
+headline stat. Vendors are never named — exhibits are identified by what they
+were (“a credit bureau, 2017”), because the lesson outlives the brand.
+
+The live wire is a single horizontal ticker of recently disclosed breaches,
+fed by one keyless public endpoint, fetched after load with a hard 6-second
+timeout. **Live data is garnish, never load-bearing**: it renders nothing the
+page depends on, it sanitizes everything it shows (text nodes only, never
+markup), and when the feed is unreachable or dead it degrades to one line —
+“Feed unreachable. The breaches continue regardless.” The page must be whole
+with the network cable cut.
+
+## 8. Craftsmanship Standards
+
+- Single `index.html`. Zero external requests on the critical path — the page
+  is complete before the optional live wire is even attempted. Loads and
+  renders in well under one second on any connection, because there is
+  nothing to wait for.
 - Semantic structure: one `h1`, ordered heading levels, `header/main/section/
   footer`, skip link, visible focus rings (2px accent outline, 3px offset).
 - Keyboard: every interactive element reachable and operable; no traps.
