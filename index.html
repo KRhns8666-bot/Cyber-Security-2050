@@ -173,6 +173,8 @@
     text-wrap: pretty;
   }
   .lede strong { color: var(--ink); font-weight: 400; }
+  .cta { margin-top: clamp(2.5rem, 6vh, 4rem); }
+  a.run { display: inline-block; text-decoration: none; }
 
   /* ---------- Sections ---------- */
   section { padding-bottom: var(--section-gap); }
@@ -297,6 +299,152 @@
     .case p { margin-top: 0.75rem; }
   }
 
+  /* ---------- Dossiers ---------- */
+  .case-toggle {
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    transition: color 200ms var(--ease);
+  }
+  .case-toggle:hover { color: var(--accent); }
+  .case-toggle .x {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.85em;
+    color: var(--accent);
+    display: inline-block;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .case-toggle .x { transition: transform 300ms var(--ease); }
+  }
+  .case.is-open .case-toggle .x { transform: rotate(45deg); }
+
+  .case .dossier {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-rows: 0fr;
+  }
+  @media (max-width: 860px) { .case .dossier { grid-column: 2; } }
+  @media (max-width: 480px) { .case .dossier { grid-column: 1; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .case .dossier { transition: grid-template-rows 450ms var(--ease); }
+  }
+  .case.is-open .dossier { grid-template-rows: 1fr; }
+  .dossier .inner {
+    min-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+  .case.is-open .dossier .inner { visibility: visible; }
+  @media (prefers-reduced-motion: no-preference) {
+    .dossier .inner { transition: visibility 0s 450ms; }
+    .case.is-open .dossier .inner { transition: visibility 0s 0s; }
+  }
+  .dossier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    padding-top: 2.25rem;
+  }
+  @media (max-width: 1020px) { .dossier-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .dossier-grid { grid-template-columns: 1fr; gap: 1.75rem; } }
+  .dossier .label { display: block; margin-bottom: 0.4rem; }
+  .dossier ol, .dossier ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .anatomy ol { counter-reset: step; }
+  .anatomy li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    gap: 0.6rem;
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim);
+  }
+  .anatomy li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    padding-top: 0.25em;
+  }
+  .bill li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim);
+  }
+  .bill b {
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .threats li { border-top: 1px solid var(--line); }
+  .threats a {
+    display: block;
+    padding-block: 0.55rem;
+    color: var(--ink-dim);
+    transition: color 200ms var(--ease);
+  }
+  .threats a:hover { color: var(--ink); }
+  .threats b {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: var(--ink);
+    margin-right: 0.5rem;
+  }
+  .threats .sev {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .threats .sev.hot { color: var(--accent); }
+  .threats .pending {
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+  .lesson {
+    margin-top: 2.25rem;
+    padding-block: 1.25rem 0.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    max-width: 62ch;
+  }
+  .xref {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+    transition: color 200ms var(--ease);
+  }
+  .xref:hover { color: var(--ink); }
+
   /* ---------- Live wire ---------- */
   .wire {
     margin-top: clamp(3.5rem, 8vh, 5.5rem);
@@ -400,8 +548,10 @@
     transition: background 200ms var(--ease), color 200ms var(--ease);
   }
   .run:hover { background: var(--accent); color: var(--bg); }
+  .run.alt { border-color: var(--line); color: var(--ink-dim); }
+  .run.alt:hover { background: transparent; border-color: var(--accent); color: var(--accent); }
   .run[aria-disabled="true"] { border-color: var(--line); color: var(--ink-faint); cursor: default; }
-  .run[aria-disabled="true"]:hover { background: transparent; }
+  .run[aria-disabled="true"]:hover { background: transparent; border-color: var(--line); }
   .counter {
     font-family: var(--mono);
     font-size: 0.85rem;
@@ -504,6 +654,9 @@
       <p class="lede" data-reveal>Every breach you will read about in the next
       decade is already explained by six old problems.
       <strong>Tools expire. These stay.</strong></p>
+      <div class="cta" data-reveal>
+        <a class="run" href="#breach">Watch it happen</a>
+      </div>
     </div>
   </section>
 
@@ -522,7 +675,8 @@
           <p>Every system is a chain of decisions to believe someone. The
           processor believes the firmware. The login believes the password.
           You believe the screen. Verification has to stop somewhere —
-          <strong>and wherever it stops is where the attack begins.</strong></p>
+          <strong>and wherever it stops is where the attack begins.</strong>
+          <a class="xref" href="#case-01">Case file 01 →</a></p>
         </article>
 
         <article class="principle" data-reveal>
@@ -530,7 +684,8 @@
           <h3>Identity</h3>
           <p>A network has never met you. It has met your credentials, and
           whoever presents them is — as far as any machine can tell — you.
-          <strong>Most intrusions are not break-ins. They are logins.</strong></p>
+          <strong>Most intrusions are not break-ins. They are logins.</strong>
+          <a class="xref" href="#case-02">Case file 02 →</a></p>
         </article>
 
         <article class="principle" data-reveal>
@@ -539,7 +694,8 @@
           <p>People are called the weakest link by systems that were designed
           without them. A person who clicks the wrong thing at the wrong hour
           is not failing the system. <strong>The system planned for a user who
-          doesn’t exist.</strong></p>
+          doesn’t exist.</strong>
+          <a class="xref" href="#case-03">Case file 03 →</a></p>
         </article>
 
         <article class="principle" data-reveal>
@@ -547,7 +703,8 @@
           <h3>Asymmetry</h3>
           <p>The defender must be right everywhere, forever. The attacker must
           be right once, anywhere, eventually. <strong>This is not pessimism.
-          It is arithmetic</strong> — and it does not improve with budget.</p>
+          It is arithmetic</strong> — and it does not improve with budget.
+          <a class="xref" href="#case-04">Case file 04 →</a></p>
         </article>
 
         <article class="principle" data-reveal>
@@ -557,7 +714,8 @@
           breaking a system costs less than what it protects, someone will pay
           that cost — attackers run on margins, like every business.
           <strong>Raise their price or lower your value. Nothing else moves
-          the line.</strong></p>
+          the line.</strong>
+          <a class="xref" href="#case-05">Case file 05 →</a></p>
         </article>
 
         <article class="principle" data-reveal>
@@ -566,7 +724,8 @@
           <p>Every feature is surface. Every connection is a path. Every
           convenience is a promise someone must keep forever. <strong>The most
           secure component is the one you removed</strong> — and it is the
-          only one that stays secure.</p>
+          only one that stays secure.
+          <a class="xref" href="#case-06">Case file 06 →</a></p>
         </article>
       </div>
     </div>
@@ -579,7 +738,8 @@
         <span class="label">Demonstration</span>
         <h2 id="breach-h">One credential.</h2>
         <p class="intro">Twenty-four systems, each trusting the next. One
-        administrator reused a password. Watch what that costs.</p>
+        administrator reused a password. Watch what that costs — then run
+        the same attack against a network that was built expecting it.</p>
       </div>
     </div>
 
@@ -587,6 +747,7 @@
       <figure class="viz">
         <div class="console">
           <button class="run" id="run" type="button">Run the breach</button>
+          <button class="run alt" id="run-seg" type="button">Run it segmented</button>
           <span class="counter" id="counter" aria-hidden="true">00 / 24 systems</span>
         </div>
         <div class="stage">
@@ -596,7 +757,10 @@
             password, then moves from system to system along existing trust
             relationships until all twenty-four are compromised. No
             vulnerability is exploited at any point — every step is a valid
-            login."></canvas>
+            login. A second button replays the identical attack against the
+            same network divided into three isolated zones: the breach takes
+            the first zone and stops at its boundary, contained at eight
+            systems of twenty-four."></canvas>
           <noscript>
             <p style="padding:2rem; color:#8C9492; max-width:58ch;">This
             demonstration animates one reused password spreading through a
@@ -625,7 +789,7 @@
       </div>
 
       <div class="ledger">
-        <article class="case" data-reveal>
+        <article class="case" id="case-01" data-reveal>
           <span class="stat">
             <span class="num" data-count="18000" aria-hidden="true">0</span>
             <span class="sr-only">18,000</span>
@@ -633,16 +797,49 @@
           </span>
           <div class="case-id">
             <span class="tag">01 · Trust</span>
-            <h3>The signed update</h3>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-01">The signed update <span class="x"
+              aria-hidden="true">+</span></button></h3>
             <span class="when">A software vendor, 2020</span>
           </div>
           <p>A build server signed the attacker’s code, and the signature did
           what signatures do — it ended the questioning. <strong>Eighteen
           thousand organizations installed the backdoor themselves,</strong>
           on schedule, as routine maintenance.</p>
+          <div class="dossier" id="d-01">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>Attackers live, unnoticed, inside the vendor’s build system.</li>
+                    <li>The implant is compiled in, then signed like everything else.</li>
+                    <li>Customers install the update on schedule. It sleeps for two weeks.</li>
+                    <li>A handful of high-value networks get the second stage. Months pass quietly.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Time undetected <b>9+ months</b></li>
+                    <li>Networks backdoored <b>18,000</b></li>
+                    <li>Hand-picked targets <b>~100</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="supply,package,dependency,signature,certificate,update,plugin">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">You did not install software. You extended
+              trust to everyone who built it.
+              <a class="xref" href="#problems">Problem 01 ↑</a></p>
+            </div>
+          </div>
         </article>
 
-        <article class="case" data-reveal>
+        <article class="case" id="case-02" data-reveal>
           <span class="stat">
             <span class="num" data-count="1" aria-hidden="true">0</span>
             <span class="sr-only">1</span>
@@ -650,16 +847,49 @@
           </span>
           <div class="case-id">
             <span class="tag">02 · Identity</span>
-            <h3>The forgotten credential</h3>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-02">The forgotten credential <span class="x"
+              aria-hidden="true">+</span></button></h3>
             <span class="when">A fuel pipeline, 2021</span>
           </div>
           <p>One remote-access password, leaked and never revoked, shut down
           the largest fuel pipeline in the country. <strong>To the network,
           the attacker was an employee having a normal morning.</strong> The
           lines at the gas stations came later.</p>
+          <div class="dossier" id="d-02">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A reused remote-access password surfaces in an old credential dump.</li>
+                    <li>The account is still active. There is no second factor.</li>
+                    <li>Ransomware lands; the company halts the pipeline itself, just in case.</li>
+                    <li>Six days of dry pumps, panic buying, and one wire transfer.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Passwords required <b>1</b></li>
+                    <li>Pipeline offline <b>6 days</b></li>
+                    <li>Ransom paid <b>$4.4M</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="auth,credential,password,token,session,privilege,bypass">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">A credential is not a person. Treat every
+              login as a claim, not a fact.
+              <a class="xref" href="#problems">Problem 02 ↑</a></p>
+            </div>
+          </div>
         </article>
 
-        <article class="case" data-reveal>
+        <article class="case" id="case-03" data-reveal>
           <span class="stat">
             <span class="num" data-count="130" aria-hidden="true">0</span>
             <span class="sr-only">130</span>
@@ -667,16 +897,49 @@
           </span>
           <div class="case-id">
             <span class="tag">03 · Human error</span>
-            <h3>The phone call</h3>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-03">The phone call <span class="x"
+              aria-hidden="true">+</span></button></h3>
             <span class="when">A social network, 2020</span>
           </div>
           <p>A teenager phoned the help desk and asked, politely, for access.
           The internal tools trusted the staff; the staff trusted the caller.
           <strong>Within hours, the most famous accounts in the world were
           asking strangers for money.</strong></p>
+          <div class="dossier" id="d-03">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A caller claims to be IT and asks staff to log in — on his page.</li>
+                    <li>The harvested session opens the internal admin console.</li>
+                    <li>130 famous accounts change hands in one afternoon.</li>
+                    <li>The scam earns pocket change. The lesson costs far more.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Exploits used <b>0</b></li>
+                    <li>Accounts hijacked <b>130</b></li>
+                    <li>Attacker’s age <b>17</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="spoof,phish,csrf,impersonat,social,redirect">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">The help desk was working as designed. That
+              is the problem with the design.
+              <a class="xref" href="#problems">Problem 03 ↑</a></p>
+            </div>
+          </div>
         </article>
 
-        <article class="case" data-reveal>
+        <article class="case" id="case-04" data-reveal>
           <span class="stat">
             <span class="num" data-prefix="$" data-count="10" data-suffix="B" aria-hidden="true">$0B</span>
             <span class="sr-only">10 billion dollars</span>
@@ -684,16 +947,49 @@
           </span>
           <div class="case-id">
             <span class="tag">04 · Asymmetry</span>
-            <h3>The stray weapon</h3>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-04">The stray weapon <span class="x"
+              aria-hidden="true">+</span></button></h3>
             <span class="when">A tax-software update, 2017</span>
           </div>
           <p>A weapon aimed at one country’s accounting software crossed the
           world in hours, stopping ports, factories, and hospitals that were
           never targets. <strong>Built once. Felt everywhere.</strong> Paid
           for, almost entirely, by bystanders.</p>
+          <div class="dossier" id="d-04">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A nation’s tax software pushes an update that is not an update.</li>
+                    <li>Inside each network it spreads with stolen credentials and one old exploit.</li>
+                    <li>By nightfall it is in ports, factories, and hospitals on five continents.</li>
+                    <li>It was never after money. The ransom note was a costume.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Intended targets <b>1 country</b></li>
+                    <li>Total damage <b>$10B+</b></li>
+                    <li>One firm’s rebuild <b>45,000 PCs</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="remote,unauthenticated,execution,rce,wormable,arbitrary">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">You don’t have to be the target to be the
+              casualty. Distance is not a control.
+              <a class="xref" href="#problems">Problem 04 ↑</a></p>
+            </div>
+          </div>
         </article>
 
-        <article class="case" data-reveal>
+        <article class="case" id="case-05" data-reveal>
           <span class="stat">
             <span class="num" data-count="147" data-suffix="M" aria-hidden="true">0</span>
             <span class="sr-only">147 million</span>
@@ -701,16 +997,49 @@
           </span>
           <div class="case-id">
             <span class="tag">05 · Economics</span>
-            <h3>The unapplied fix</h3>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-05">The unapplied fix <span class="x"
+              aria-hidden="true">+</span></button></h3>
             <span class="when">A credit bureau, 2017</span>
           </div>
           <p>The fix had existed for two months. Applying it was one team’s
           cost; not applying it became 147 million people’s problem.
           <strong>They were not the customers. They were the
           inventory.</strong></p>
+          <div class="dossier" id="d-05">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A critical patch ships in March. One internet-facing server is missed.</li>
+                    <li>Attackers arrive in May. They stay 76 days.</li>
+                    <li>The monitor that would have seen the traffic sat behind a certificate that had expired 19 months earlier.</li>
+                    <li>147 million people learn their data was never really theirs.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Patch available for <b>2 months</b></li>
+                    <li>Attackers inside <b>76 days</b></li>
+                    <li>Identities taken <b>147.9M</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="exposure,disclosure,leak,plaintext,unpatched,default">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">The fix was free. Skipping it cost three
+              executives their jobs and 147 million people their privacy.
+              <a class="xref" href="#problems">Problem 05 ↑</a></p>
+            </div>
+          </div>
         </article>
 
-        <article class="case" data-reveal>
+        <article class="case" id="case-06" data-reveal>
           <span class="stat">
             <span class="num" data-count="10" data-suffix="&nbsp;GB" aria-hidden="true">0&nbsp;GB</span>
             <span class="sr-only">10 gigabytes</span>
@@ -718,13 +1047,46 @@
           </span>
           <div class="case-id">
             <span class="tag">06 · Complexity</span>
-            <h3>The fish tank</h3>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-06">The fish tank <span class="x"
+              aria-hidden="true">+</span></button></h3>
             <span class="when">A casino, 2017</span>
           </div>
           <p>The high-roller database left the building through the
           internet-connected thermometer in the lobby aquarium. <strong>No
           one had decided the fish tank was part of the security
           perimeter.</strong> No one had decided anything about it at all.</p>
+          <div class="dossier" id="d-06">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A smart thermometer joins the casino’s network. Nobody writes it down.</li>
+                    <li>From the internet, it is the softest door in the building.</li>
+                    <li>Attackers pivot from the tank to the high-roller database.</li>
+                    <li>Ten gigabytes swim out the same way the temperature readings come in.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Entry point <b>1 thermometer</b></li>
+                    <li>Exfiltrated <b>10 GB</b></li>
+                    <li>Perimeter <b>undefined</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="overflow,memory,parser,deserial,buffer,corruption,injection">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">Your network is everything that can reach
+              it — including the aquarium.
+              <a class="xref" href="#problems">Problem 06 ↑</a></p>
+            </div>
+          </div>
         </article>
       </div>
 
@@ -795,6 +1157,7 @@
   const canvas  = document.getElementById('net');
   const ctx     = canvas.getContext('2d');
   const runBtn  = document.getElementById('run');
+  const segBtn  = document.getElementById('run-seg');
   const feed    = document.getElementById('feed');
   const counter = document.getElementById('counter');
 
@@ -887,7 +1250,7 @@
   }
 
   /* ----- Timeline: breadth-first compromise with jitter ----- */
-  function buildTimeline(g) {
+  function buildTimeline(g, adj, mode) {
     const rnd = mulberry32(99);
     const popAt = new Array(N).fill(Infinity);
     const via = new Array(N).fill(-1);
@@ -898,7 +1261,7 @@
     const seen = new Set([g.root]);
     while (queue.length) {
       const cur = queue.shift();
-      for (const nb of g.adj[cur]) {
+      for (const nb of adj[cur]) {
         if (seen.has(nb)) continue;
         seen.add(nb);
         depth[nb] = depth[cur] + 1;
@@ -916,23 +1279,49 @@
       }
     }
 
-    const popsSorted = popAt.slice().sort((a, b) => a - b);
-    const last = popsSorted[N - 1];
-    const captions = [
-      { t: 0, html: 'One password, reused on an unimportant system.' },
-      { t: popAt[g.root], html: '<strong>Not an exploit. A login.</strong> The network has met the credential, not the person.' },
-      { t: popsSorted[7], html: 'Each system trusts the last. <strong>Trust is transitive — so is compromise.</strong>' },
-      { t: last + 0.7, html: '<strong>Total compromise in one sitting.</strong> Vulnerabilities exploited: zero.' }
-    ];
+    const pops = popAt.filter(Number.isFinite).sort((a, b) => a - b);
+    const last = pops[pops.length - 1];
+    const reach = pops.length;
+    const captions = mode === 'seg'
+      ? [
+          { t: 0, html: 'Same attacker. Same password. One architectural decision, made years earlier.' },
+          { t: popAt[g.root], html: 'The login still works. <strong>The first zone still falls.</strong>' },
+          { t: pops[Math.floor(reach * 0.6)], html: 'At the boundary, the stolen credential meets systems that were <strong>never told to trust it.</strong>' },
+          { t: last + 0.7, html: '<strong>Contained: ' + reach + ' of ' + N + '.</strong> The breach ends where the trust ends.' }
+        ]
+      : [
+          { t: 0, html: 'One password, reused on an unimportant system.' },
+          { t: popAt[g.root], html: '<strong>Not an exploit. A login.</strong> The network has met the credential, not the person.' },
+          { t: pops[7], html: 'Each system trusts the last. <strong>Trust is transitive — so is compromise.</strong>' },
+          { t: last + 0.7, html: '<strong>Total compromise in one sitting.</strong> Vulnerabilities exploited: zero.' }
+        ];
 
     return { popAt, traces, captions, end: last + 1.2 };
   }
 
   const graph = buildGraph();
-  const tl = buildTimeline(graph);
+
+  /* Segmentation: the same network, partitioned into three zones.
+     Edges that cross a boundary carry no trust. */
+  const ZONES = [0.34, 0.66];
+  const zoneOf = (i) => (graph.pts[i].x < ZONES[0] ? 0 : graph.pts[i].x < ZONES[1] ? 1 : 2);
+  const segAdj = Array.from({ length: N }, () => []);
+  const crossEdge = new Set();
+  graph.edges.forEach(([a, b], idx) => {
+    if (zoneOf(a) === zoneOf(b)) {
+      segAdj[a].push(b);
+      segAdj[b].push(a);
+    } else {
+      crossEdge.add(idx);
+    }
+  });
+
+  const tlOpen = buildTimeline(graph, graph.adj, 'open');
+  const tlSeg = buildTimeline(graph, segAdj, 'seg');
+  let tl = tlOpen;
 
   /* ----- Sizing ----- */
-  let W = 0, H = 0, R = 6, px = [], py = [];
+  let W = 0, H = 0, R = 6, px = [], py = [], PADX = 0, PADY = 0;
   function resize() {
     const cssW = canvas.clientWidth;
     const cssH = canvas.clientHeight;
@@ -944,6 +1333,7 @@
     W = cssW; H = cssH;
     R = Math.max(5, Math.min(8, W / 120));
     const padX = R + 22, padTop = R + 22, padBot = R + 40;
+    PADX = padX; PADY = padTop;
     px = graph.pts.map((p) => padX + p.x * (W - 2 * padX));
     py = graph.pts.map((p) => padTop + p.y * (H - padTop - padBot));
     draw(state.elapsed);
@@ -954,6 +1344,7 @@
     running: false,
     finished: false,
     started: false,   // has ever run
+    mode: 'open',     // 'open' | 'seg'
     elapsed: 0,
     t0: 0,
     raf: 0,
@@ -1007,15 +1398,45 @@
     ctx.clearRect(0, 0, W, H);
     const noMotion = reduced.matches;
 
-    // Edges at rest
+    const seg = state.mode === 'seg';
+
+    // Zone boundaries: the walls the credential cannot talk through
+    if (seg) {
+      ctx.strokeStyle = 'rgba(70, 181, 162, 0.28)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 6]);
+      for (const z of ZONES) {
+        const x = PADX + z * (W - 2 * PADX);
+        ctx.beginPath();
+        ctx.moveTo(x, PADY - 8);
+        ctx.lineTo(x, H - 20);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+
+    // Edges at rest (in segmented mode, severed edges barely register)
     ctx.lineWidth = 1;
-    ctx.strokeStyle = COLOR.edge;
     ctx.beginPath();
-    for (const [a, b] of graph.edges) {
+    graph.edges.forEach(([a, b], idx) => {
+      if (seg && crossEdge.has(idx)) return;
       ctx.moveTo(px[a], py[a]);
       ctx.lineTo(px[b], py[b]);
-    }
+    });
+    ctx.strokeStyle = COLOR.edge;
     ctx.stroke();
+    if (seg) {
+      ctx.beginPath();
+      graph.edges.forEach(([a, b], idx) => {
+        if (!crossEdge.has(idx)) return;
+        ctx.moveTo(px[a], py[a]);
+        ctx.lineTo(px[b], py[b]);
+      });
+      ctx.strokeStyle = 'rgba(140, 148, 146, 0.05)';
+      ctx.setLineDash([3, 7]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
 
     // Traversed edges
     ctx.strokeStyle = COLOR.edgeHot;
@@ -1138,17 +1559,21 @@
     state.raf = requestAnimationFrame(frame);
   }
 
-  function start() {
+  function start(mode) {
     stopNoise();
     cancelAnimationFrame(state.raf);
+    state.mode = mode;
+    tl = mode === 'seg' ? tlSeg : tlOpen;
     state.running = true;
     state.finished = false;
     state.started = true;
     state.elapsed = 0;
     state.captionIdx = -1;
     state.count = -1;
-    runBtn.textContent = 'Breach in progress';
+    runBtn.textContent = mode === 'open' ? 'Breach in progress' : 'Run the breach';
+    segBtn.textContent = mode === 'seg' ? 'Containment in progress' : 'Run it segmented';
     runBtn.setAttribute('aria-disabled', 'true');
+    segBtn.setAttribute('aria-disabled', 'true');
     state.t0 = performance.now();
     state.raf = requestAnimationFrame(frame);
   }
@@ -1156,8 +1581,10 @@
   function finish() {
     state.running = false;
     state.finished = true;
-    runBtn.textContent = 'Run it again';
+    runBtn.textContent = state.mode === 'open' ? 'Run it again' : 'Run the breach';
+    segBtn.textContent = state.mode === 'seg' ? 'Segment it again' : 'Run it segmented';
     runBtn.removeAttribute('aria-disabled');
+    segBtn.removeAttribute('aria-disabled');
     startNoise();
   }
 
@@ -1175,7 +1602,11 @@
 
   runBtn.addEventListener('click', () => {
     if (state.running) return;
-    start();
+    start('open');
+  });
+  segBtn.addEventListener('click', () => {
+    if (state.running) return;
+    start('seg');
   });
 
   /* ----- Visibility: never burn frames off-screen ----- */
@@ -1187,7 +1618,7 @@
           resume();
           // Auto-play once, when the stage first comes into view.
           if (!state.started && !reduced.matches && e.intersectionRatio >= 0.45) {
-            start();
+            start('open');
           } else if (!state.running) {
             startNoise();
           }
@@ -1243,6 +1674,96 @@
     nums.forEach((el) => cio.observe(el));
   } else {
     nums.forEach((el) => { el.textContent = fmt(el, parseInt(el.dataset.count, 10)); });
+  }
+
+  /* ================= Dossiers ================= */
+  const setCase = (c, open) => {
+    c.classList.toggle('is-open', open);
+    const t = c.querySelector('.case-toggle');
+    if (t) t.setAttribute('aria-expanded', String(open));
+  };
+  document.querySelectorAll('.case-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const c = btn.closest('.case');
+      setCase(c, !c.classList.contains('is-open'));
+    });
+  });
+  // Cross-references from the six problems open their case file on arrival.
+  document.querySelectorAll('a.xref[href^="#case-"]').forEach((a) => {
+    a.addEventListener('click', () => {
+      const c = document.querySelector(a.getAttribute('href'));
+      if (c) setCase(c, true);
+    });
+  });
+
+  /* ================= Live threats in dossiers =================
+     Same policy as the wire: a keyless public feed (GitHub Security
+     Advisories), fetched once, matched to each problem by keyword,
+     sanitized to text nodes, and free to fail. */
+  const slots = document.querySelectorAll('.live-threats');
+
+  function threatsFallback() {
+    slots.forEach((s) => {
+      const ul = s.querySelector('.threats');
+      ul.textContent = '';
+      const li = document.createElement('li');
+      li.className = 'pending';
+      li.textContent = 'Feed unreachable. Yesterday’s lessons remain current.';
+      ul.appendChild(li);
+    });
+  }
+
+  function renderThreats(advisories) {
+    const clean = advisories.filter((a) => a && a.summary && (a.cve_id || a.ghsa_id));
+    if (!clean.length) { threatsFallback(); return; }
+    slots.forEach((s) => {
+      const keys = (s.dataset.keys || '').split(',').filter(Boolean);
+      const matched = clean.filter((a) => {
+        const hay = (a.summary + ' ' +
+          (a.cwes || []).map((c) => (c && c.name) || '').join(' ')).toLowerCase();
+        return keys.some((k) => hay.includes(k));
+      });
+      const picks = (matched.length ? matched : clean).slice(0, 3);
+      const ul = s.querySelector('.threats');
+      ul.textContent = '';
+      for (const a of picks) {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = a.html_url || 'https://github.com/advisories/' + a.ghsa_id;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        const id = document.createElement('b');
+        id.textContent = a.cve_id || a.ghsa_id;
+        link.appendChild(id);
+        const sev = document.createElement('span');
+        sev.className = 'sev' +
+          (a.severity === 'critical' || a.severity === 'high' ? ' hot' : '');
+        sev.textContent = a.severity || '';
+        link.appendChild(sev);
+        const sum = document.createElement('span');
+        const txt = a.summary.length > 92
+          ? a.summary.slice(0, 90).trimEnd() + '…'
+          : a.summary;
+        sum.textContent = ' — ' + txt;
+        link.appendChild(sum);
+        li.appendChild(link);
+        ul.appendChild(li);
+      }
+    });
+  }
+
+  if (slots.length && 'fetch' in window) {
+    const tc = 'AbortController' in window ? new AbortController() : null;
+    const tt = tc ? setTimeout(() => tc.abort(), 8000) : 0;
+    fetch('https://api.github.com/advisories?per_page=60&sort=published', {
+      headers: { Accept: 'application/vnd.github+json' },
+      signal: tc ? tc.signal : undefined
+    })
+      .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then((list) => { clearTimeout(tt); renderThreats(Array.isArray(list) ? list : []); })
+      .catch(() => { clearTimeout(tt); threatsFallback(); });
+  } else if (slots.length) {
+    threatsFallback();
   }
 
   /* ================= Live wire =================

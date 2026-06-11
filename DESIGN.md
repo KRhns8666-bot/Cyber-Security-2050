@@ -101,6 +101,12 @@ seconds. Captions (four, one sentence each) narrate the phases; a mono counter
 tracks systems compromised. The closing line is the thesis: zero
 vulnerabilities exploited.
 
+A second button, **Run it segmented**, replays the identical attack against
+the same network partitioned into three zones (dashed boundary walls; severed
+cross-zone edges fade to near-nothing). The cascade takes the first zone and
+dies at the wall — contained at 8 of 24. Demonstration and counter-
+demonstration: the attack is a property of the architecture, not the attacker.
+
 - Safe node: dark fill, `--line` stroke. Compromised: `--accent` fill, single
   expanding pulse ring (canvas, not CSS).
 - Edges at rest: barely visible. Traversed: `--accent-dim`, drawn as a moving
@@ -116,6 +122,15 @@ The record keeps the page from being abstract. Six exhibits, one per problem,
 each a famous breach told in two sentences with a single mono numeral as its
 headline stat. Vendors are never named — exhibits are identified by what they
 were (“a credit bureau, 2017”), because the lesson outlives the brand.
+
+Each exhibit opens. The title is a real `<button>` (aria-expanded, animated
+“+” that rotates to “×”); the dossier expands beneath in the ledger’s own
+geometry with three columns — **Anatomy** (the kill chain in four numbered
+steps), **The bill** (three label/figure lines), and **This problem, today**
+(up to three current vulnerability disclosures from a keyless public advisory
+feed, keyword-matched to the problem, linking out to the full record). A
+closing **lesson** line ties the exhibit back to its problem, and each of the
+six problems cross-links to its case file, which opens on arrival.
 
 The live wire is a single horizontal ticker of recently disclosed breaches,
 fed by one keyless public endpoint, fetched after load with a hard 6-second
