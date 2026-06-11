@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Kai Cyber — field notes on the permanent problems of security: trust, identity, human error, asymmetry, economics, and complexity.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0B0C0D">
+<title>Kai Cyber — The threats change. The problems don’t.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230B0C0D'/%3E%3Ccircle cx='8' cy='8' r='3.5' fill='%2346B5A2'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --bg:        #0B0C0D;
+    --bg-raise:  #101214;
+    --line:      #222628;
+    --ink:       #E7EAE9;
+    --ink-dim:   #8C9492;
+    --ink-faint: #565E5C;
+    --accent:    #46B5A2;
+    --accent-dim:#2C6E63;
+
+    --sans: -apple-system, "Helvetica Neue", Helvetica, "Arial Nova", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+    --col: min(1080px, 100% - 2 * clamp(20px, 5vw, 64px));
+    --section-gap: clamp(7rem, 18vh, 13rem);
+    --ease: cubic-bezier(.22, .61, .36, 1);
+  }
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  [id] { scroll-margin-top: 5rem; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: clamp(1rem, 1.05vw, 1.125rem);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  h1, h2, h3 { margin: 0; font-weight: 600; }
+  p { margin: 0; }
+  p + p { margin-top: 1.25em; }
+
+  a { color: var(--ink); text-decoration: none; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  .wrap { width: var(--col); margin-inline: auto; }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* ---------- Skip link ---------- */
+  .skip {
+    position: absolute;
+    left: 50%;
+    top: 0.75rem;
+    transform: translate(-50%, -300%);
+    z-index: 10;
+    padding: 0.6rem 1.1rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: transform 200ms var(--ease);
+  }
+  .skip:focus { transform: translate(-50%, 0); }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.1rem;
+  }
+  .mark {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .mark b { color: var(--accent); font-weight: 700; }
+  nav ul {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  nav a {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    transition: color 200ms var(--ease);
+  }
+  nav a:hover { color: var(--ink); }
+  @media (max-width: 720px) {
+    nav li:nth-child(4) { display: none; }
+  }
+  @media (max-width: 540px) {
+    nav li:nth-child(3) { display: none; }
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-block: clamp(6rem, 22vh, 14rem) var(--section-gap); }
+  .hero .label { display: block; margin-bottom: clamp(1.5rem, 4vh, 2.75rem); }
+  .hero h1 {
+    font-size: clamp(2.6rem, 8vw, 6.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .lede {
+    margin-top: clamp(2rem, 5vh, 3.5rem);
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--ink-dim);
+    max-width: 44ch;
+    text-wrap: pretty;
+  }
+  .lede strong { color: var(--ink); font-weight: 400; }
+  .cta { margin-top: clamp(2.5rem, 6vh, 4rem); }
+  a.run { display: inline-block; text-decoration: none; }
+
+  /* ---------- Sections ---------- */
+  section { padding-bottom: var(--section-gap); }
+  .section-head { margin-bottom: clamp(3rem, 8vh, 5rem); }
+  .section-head .label { display: block; margin-bottom: 1.25rem; }
+  .section-head h2 {
+    font-size: clamp(1.8rem, 4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .section-head .intro {
+    margin-top: 1.5rem;
+    color: var(--ink-dim);
+    max-width: 58ch;
+    text-wrap: pretty;
+  }
+
+  /* ---------- Principles ledger ---------- */
+  .ledger { border-bottom: 1px solid var(--line); }
+  .principle {
+    display: grid;
+    grid-template-columns: 5rem minmax(11rem, 16rem) 1fr;
+    gap: clamp(1.25rem, 3vw, 3rem);
+    padding-block: clamp(2rem, 4.5vh, 3rem);
+    border-top: 1px solid var(--line);
+  }
+  .principle .num {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--ink-faint);
+    padding-top: 0.45em;
+  }
+  .principle h3 {
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .principle p {
+    color: var(--ink-dim);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+  .principle p strong { color: var(--ink); font-weight: 400; }
+  @media (max-width: 860px) {
+    .principle { grid-template-columns: 3.5rem 1fr; }
+    .principle h3 { grid-column: 2; margin-bottom: 0.75rem; }
+    .principle p  { grid-column: 2; }
+  }
+  @media (max-width: 480px) {
+    .principle { grid-template-columns: 1fr; }
+    .principle .num { padding-top: 0; }
+    .principle h3, .principle p { grid-column: 1; }
+  }
+
+  /* ---------- Case files ---------- */
+  .case {
+    display: grid;
+    grid-template-columns: minmax(9rem, 13rem) minmax(11rem, 16rem) 1fr;
+    gap: clamp(1.25rem, 3vw, 3rem);
+    padding-block: clamp(2rem, 4.5vh, 3rem);
+    border-top: 1px solid var(--line);
+  }
+  .case .stat {
+    font-family: var(--mono);
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .case .stat small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 0.7rem;
+    line-height: 1.5;
+    max-width: 12rem;
+  }
+  .case .tag {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.7rem;
+  }
+  .case h3 {
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .case .when {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 0.55rem;
+  }
+  .case p {
+    color: var(--ink-dim);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+  .case p strong { color: var(--ink); font-weight: 400; }
+  @media (max-width: 860px) {
+    .case { grid-template-columns: minmax(7.5rem, 10rem) 1fr; }
+    .case .case-id { grid-column: 2; }
+    .case p { grid-column: 2; margin-top: 0.9rem; }
+  }
+  @media (max-width: 480px) {
+    .case { grid-template-columns: 1fr; }
+    .case .case-id, .case p { grid-column: 1; }
+    .case p { margin-top: 0.75rem; }
+  }
+
+  /* ---------- Dossiers ---------- */
+  .case-toggle {
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    transition: color 200ms var(--ease);
+  }
+  .case-toggle:hover { color: var(--accent); }
+  .case-toggle .x {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.85em;
+    color: var(--accent);
+    display: inline-block;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .case-toggle .x { transition: transform 300ms var(--ease); }
+  }
+  .case.is-open .case-toggle .x { transform: rotate(45deg); }
+
+  .case .dossier {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-rows: 0fr;
+  }
+  @media (max-width: 860px) { .case .dossier { grid-column: 2; } }
+  @media (max-width: 480px) { .case .dossier { grid-column: 1; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .case .dossier { transition: grid-template-rows 450ms var(--ease); }
+  }
+  .case.is-open .dossier { grid-template-rows: 1fr; }
+  .dossier .inner {
+    min-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+  .case.is-open .dossier .inner { visibility: visible; }
+  @media (prefers-reduced-motion: no-preference) {
+    .dossier .inner { transition: visibility 0s 450ms; }
+    .case.is-open .dossier .inner { transition: visibility 0s 0s; }
+  }
+  .dossier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    padding-top: 2.25rem;
+  }
+  @media (max-width: 1020px) { .dossier-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .dossier-grid { grid-template-columns: 1fr; gap: 1.75rem; } }
+  .dossier .label { display: block; margin-bottom: 0.4rem; }
+  .dossier ol, .dossier ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .anatomy ol { counter-reset: step; }
+  .anatomy li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    gap: 0.6rem;
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim);
+  }
+  .anatomy li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    padding-top: 0.25em;
+  }
+  .bill li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim);
+  }
+  .bill b {
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .threats li { border-top: 1px solid var(--line); }
+  .threats a {
+    display: block;
+    padding-block: 0.55rem;
+    color: var(--ink-dim);
+    transition: color 200ms var(--ease);
+  }
+  .threats a:hover { color: var(--ink); }
+  .threats b {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: var(--ink);
+    margin-right: 0.5rem;
+  }
+  .threats .sev {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .threats .sev.hot { color: var(--accent); }
+  .threats .pending {
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+  .lesson {
+    margin-top: 2.25rem;
+    padding-block: 1.25rem 0.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    max-width: 62ch;
+  }
+  .xref {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+    transition: color 200ms var(--ease);
+  }
+  .xref:hover { color: var(--ink); }
+
+  /* ---------- Live wire ---------- */
+  .wire {
+    margin-top: clamp(3.5rem, 8vh, 5.5rem);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .wire-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1rem;
+    overflow: hidden;
+  }
+  .wire-label {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .wire-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .wire.is-live .dot { animation: dot-pulse 2.4s var(--ease) infinite; }
+    @keyframes dot-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(0.55); opacity: 0.45; }
+    }
+  }
+  .track {
+    display: flex;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .track .item { padding-right: 3.5rem; }
+  .track .item b { color: var(--ink-dim); font-weight: 500; }
+  .track .item .n { color: var(--accent); }
+  @media (prefers-reduced-motion: no-preference) {
+    .wire.is-live .track {
+      animation: wire-scroll 70s linear infinite;
+      will-change: transform;
+    }
+    @keyframes wire-scroll { to { transform: translateX(-50%); } }
+    .wire.is-live:hover .track,
+    .wire.is-live:focus-within .track { animation-play-state: paused; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wire-inner { overflow: hidden; }
+    .track { flex-wrap: nowrap; }
+  }
+
+  /* ---------- Visualization ---------- */
+  .viz-outer { width: min(1280px, 100% - 2 * clamp(12px, 3vw, 40px)); margin-inline: auto; }
+  figure.viz { margin: 0; }
+  .stage {
+    position: relative;
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+  }
+  .stage canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1280 / 560;
+  }
+  @media (max-width: 640px) {
+    .stage canvas { aspect-ratio: 4 / 5; }
+  }
+  .console {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    padding-block: 1.25rem;
+  }
+  .run {
+    appearance: none;
+    min-width: 14rem;
+    text-align: center;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.6rem;
+    cursor: pointer;
+    transition: background 200ms var(--ease), color 200ms var(--ease);
+  }
+  .run:hover { background: var(--accent); color: var(--bg); }
+  .run.alt { border-color: var(--line); color: var(--ink-dim); }
+  .run.alt:hover { background: transparent; border-color: var(--accent); color: var(--accent); }
+  .run[aria-disabled="true"] { border-color: var(--line); color: var(--ink-faint); cursor: default; }
+  .run[aria-disabled="true"]:hover { background: transparent; border-color: var(--line); }
+  .counter {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+  .counter .hot { color: var(--accent); }
+  figcaption.feed {
+    min-height: 3.2em;
+    padding-top: 1.1rem;
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    color: var(--ink-dim);
+    max-width: 58ch;
+  }
+  figcaption.feed strong { color: var(--ink); font-weight: 400; }
+
+  /* ---------- Closing ---------- */
+  .closing p { color: var(--ink-dim); max-width: 58ch; text-wrap: pretty; }
+  .closing p strong { color: var(--ink); font-weight: 400; }
+  .closing .kicker {
+    margin-top: clamp(2.5rem, 6vh, 4rem);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    max-width: 28ch;
+    text-wrap: balance;
+  }
+  .closing .kicker em { font-style: normal; color: var(--accent); }
+
+  /* ---------- Footer ---------- */
+  footer { border-top: 1px solid var(--line); }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2.5rem;
+    justify-content: space-between;
+    padding-block: 2.25rem clamp(2.25rem, 6vh, 4rem);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .foot .credit { color: var(--ink-dim); }
+  .foot .credit b { color: var(--ink); font-weight: 500; }
+
+  /* ---------- Reveal ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-reveal] {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+    }
+    .js [data-reveal].is-in { opacity: 1; transform: none; }
+    /* Stagger rows that enter together */
+    .js .ledger [data-reveal]:nth-child(2) { transition-delay: 70ms; }
+    .js .ledger [data-reveal]:nth-child(3) { transition-delay: 140ms; }
+    .js .ledger [data-reveal]:nth-child(4) { transition-delay: 210ms; }
+    .js .ledger [data-reveal]:nth-child(5) { transition-delay: 280ms; }
+    .js .ledger [data-reveal]:nth-child(6) { transition-delay: 350ms; }
+  }
+
+  /* ---------- Print ---------- */
+  @media print {
+    :root { --bg: #fff; --bg-raise: #fff; --ink: #111; --ink-dim: #333; --ink-faint: #666; --line: #bbb; }
+    body { background: #fff; color: #111; }
+    header { position: static; }
+    .stage, .run, .wire { display: none; }
+    .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="wrap bar">
+    <a class="mark" href="#top" aria-label="Kai Cyber — home">KAI<b>·</b>CYBER</a>
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#problems">Problems</a></li>
+        <li><a href="#breach">The Breach</a></li>
+        <li><a href="#cases">Case Files</a></li>
+        <li><a href="#position">Position</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <div class="wrap">
+      <span class="label" data-reveal>Field notes on the permanent</span>
+      <h1 id="hero-h" data-reveal>The threats change. The problems <em>don’t.</em></h1>
+      <p class="lede" data-reveal>Every breach you will read about in the next
+      decade is already explained by six old problems.
+      <strong>Tools expire. These stay.</strong></p>
+      <div class="cta" data-reveal>
+        <a class="run" href="#breach">Watch it happen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRINCIPLES ============ -->
+  <section id="problems" aria-labelledby="problems-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">The six problems</span>
+        <h2 id="problems-h">Everything else is implementation detail.</h2>
+      </div>
+
+      <div class="ledger">
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">01</span>
+          <h3>Trust</h3>
+          <p>Every system is a chain of decisions to believe someone. The
+          processor believes the firmware. The login believes the password.
+          You believe the screen. Verification has to stop somewhere —
+          <strong>and wherever it stops is where the attack begins.</strong>
+          <a class="xref" href="#case-01">Case file 01 →</a></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">02</span>
+          <h3>Identity</h3>
+          <p>A network has never met you. It has met your credentials, and
+          whoever presents them is — as far as any machine can tell — you.
+          <strong>Most intrusions are not break-ins. They are logins.</strong>
+          <a class="xref" href="#case-02">Case file 02 →</a></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">03</span>
+          <h3>Human error</h3>
+          <p>People are called the weakest link by systems that were designed
+          without them. A person who clicks the wrong thing at the wrong hour
+          is not failing the system. <strong>The system planned for a user who
+          doesn’t exist.</strong>
+          <a class="xref" href="#case-03">Case file 03 →</a></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">04</span>
+          <h3>Asymmetry</h3>
+          <p>The defender must be right everywhere, forever. The attacker must
+          be right once, anywhere, eventually. <strong>This is not pessimism.
+          It is arithmetic</strong> — and it does not improve with budget.
+          <a class="xref" href="#case-04">Case file 04 →</a></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">05</span>
+          <h3>Economics</h3>
+          <p>Security fails on purpose more often than by accident. Wherever
+          breaking a system costs less than what it protects, someone will pay
+          that cost — attackers run on margins, like every business.
+          <strong>Raise their price or lower your value. Nothing else moves
+          the line.</strong>
+          <a class="xref" href="#case-05">Case file 05 →</a></p>
+        </article>
+
+        <article class="principle" data-reveal>
+          <span class="num" aria-hidden="true">06</span>
+          <h3>Complexity</h3>
+          <p>Every feature is surface. Every connection is a path. Every
+          convenience is a promise someone must keep forever. <strong>The most
+          secure component is the one you removed</strong> — and it is the
+          only one that stays secure.
+          <a class="xref" href="#case-06">Case file 06 →</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VISUALIZATION ============ -->
+  <section id="breach" aria-labelledby="breach-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Demonstration</span>
+        <h2 id="breach-h">One credential.</h2>
+        <p class="intro">Twenty-four systems, each trusting the next. One
+        administrator reused a password. Watch what that costs — then run
+        the same attack against a network that was built expecting it.</p>
+      </div>
+    </div>
+
+    <div class="viz-outer" data-reveal>
+      <figure class="viz">
+        <div class="console">
+          <button class="run" id="run" type="button">Run the breach</button>
+          <button class="run alt" id="run-seg" type="button">Run it segmented</button>
+          <span class="counter" id="counter" aria-hidden="true">00 / 24 systems</span>
+        </div>
+        <div class="stage">
+          <canvas id="net" role="img"
+            aria-label="Animated diagram. A network of twenty-four connected
+            systems. An attacker signs in to one minor system with a reused
+            password, then moves from system to system along existing trust
+            relationships until all twenty-four are compromised. No
+            vulnerability is exploited at any point — every step is a valid
+            login. A second button replays the identical attack against the
+            same network divided into three isolated zones: the breach takes
+            the first zone and stops at its boundary, contained at eight
+            systems of twenty-four."></canvas>
+          <noscript>
+            <p style="padding:2rem; color:#8C9492; max-width:58ch;">This
+            demonstration animates one reused password spreading through a
+            network of twenty-four trusting systems until all are compromised
+            — without a single exploit. Enable JavaScript to run it; the six
+            problems above tell the same story.</p>
+          </noscript>
+        </div>
+        <figcaption class="feed" id="feed" aria-live="polite">
+          One of these systems holds a password its administrator also used
+          somewhere less careful.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ CASE FILES ============ -->
+  <section id="cases" aria-labelledby="cases-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Case files</span>
+        <h2 id="cases-h">The record.</h2>
+        <p class="intro">None of this is theoretical. One exhibit per problem —
+        each breach famous, each avoidable, each caused by a problem older
+        than the company it ruined.</p>
+      </div>
+
+      <div class="ledger">
+        <article class="case" id="case-01" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="18000" aria-hidden="true">0</span>
+            <span class="sr-only">18,000</span>
+            <small>organizations installed it</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">01 · Trust</span>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-01">The signed update <span class="x"
+              aria-hidden="true">+</span></button></h3>
+            <span class="when">A software vendor, 2020</span>
+          </div>
+          <p>A build server signed the attacker’s code, and the signature did
+          what signatures do — it ended the questioning. <strong>Eighteen
+          thousand organizations installed the backdoor themselves,</strong>
+          on schedule, as routine maintenance.</p>
+          <div class="dossier" id="d-01">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>Attackers live, unnoticed, inside the vendor’s build system.</li>
+                    <li>The implant is compiled in, then signed like everything else.</li>
+                    <li>Customers install the update on schedule. It sleeps for two weeks.</li>
+                    <li>A handful of high-value networks get the second stage. Months pass quietly.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Time undetected <b>9+ months</b></li>
+                    <li>Networks backdoored <b>18,000</b></li>
+                    <li>Hand-picked targets <b>~100</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="supply,package,dependency,signature,certificate,update,plugin">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">You did not install software. You extended
+              trust to everyone who built it.
+              <a class="xref" href="#problems">Problem 01 ↑</a></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="case" id="case-02" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="1" aria-hidden="true">0</span>
+            <span class="sr-only">1</span>
+            <small>password, never retired</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">02 · Identity</span>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-02">The forgotten credential <span class="x"
+              aria-hidden="true">+</span></button></h3>
+            <span class="when">A fuel pipeline, 2021</span>
+          </div>
+          <p>One remote-access password, leaked and never revoked, shut down
+          the largest fuel pipeline in the country. <strong>To the network,
+          the attacker was an employee having a normal morning.</strong> The
+          lines at the gas stations came later.</p>
+          <div class="dossier" id="d-02">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A reused remote-access password surfaces in an old credential dump.</li>
+                    <li>The account is still active. There is no second factor.</li>
+                    <li>Ransomware lands; the company halts the pipeline itself, just in case.</li>
+                    <li>Six days of dry pumps, panic buying, and one wire transfer.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Passwords required <b>1</b></li>
+                    <li>Pipeline offline <b>6 days</b></li>
+                    <li>Ransom paid <b>$4.4M</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="auth,credential,password,token,session,privilege,bypass">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">A credential is not a person. Treat every
+              login as a claim, not a fact.
+              <a class="xref" href="#problems">Problem 02 ↑</a></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="case" id="case-03" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="130" aria-hidden="true">0</span>
+            <span class="sr-only">130</span>
+            <small>accounts, one phone call</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">03 · Human error</span>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-03">The phone call <span class="x"
+              aria-hidden="true">+</span></button></h3>
+            <span class="when">A social network, 2020</span>
+          </div>
+          <p>A teenager phoned the help desk and asked, politely, for access.
+          The internal tools trusted the staff; the staff trusted the caller.
+          <strong>Within hours, the most famous accounts in the world were
+          asking strangers for money.</strong></p>
+          <div class="dossier" id="d-03">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A caller claims to be IT and asks staff to log in — on his page.</li>
+                    <li>The harvested session opens the internal admin console.</li>
+                    <li>130 famous accounts change hands in one afternoon.</li>
+                    <li>The scam earns pocket change. The lesson costs far more.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Exploits used <b>0</b></li>
+                    <li>Accounts hijacked <b>130</b></li>
+                    <li>Attacker’s age <b>17</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="spoof,phish,csrf,impersonat,social,redirect">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">The help desk was working as designed. That
+              is the problem with the design.
+              <a class="xref" href="#problems">Problem 03 ↑</a></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="case" id="case-04" data-reveal>
+          <span class="stat">
+            <span class="num" data-prefix="$" data-count="10" data-suffix="B" aria-hidden="true">$0B</span>
+            <span class="sr-only">10 billion dollars</span>
+            <small>in collateral damage</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">04 · Asymmetry</span>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-04">The stray weapon <span class="x"
+              aria-hidden="true">+</span></button></h3>
+            <span class="when">A tax-software update, 2017</span>
+          </div>
+          <p>A weapon aimed at one country’s accounting software crossed the
+          world in hours, stopping ports, factories, and hospitals that were
+          never targets. <strong>Built once. Felt everywhere.</strong> Paid
+          for, almost entirely, by bystanders.</p>
+          <div class="dossier" id="d-04">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A nation’s tax software pushes an update that is not an update.</li>
+                    <li>Inside each network it spreads with stolen credentials and one old exploit.</li>
+                    <li>By nightfall it is in ports, factories, and hospitals on five continents.</li>
+                    <li>It was never after money. The ransom note was a costume.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Intended targets <b>1 country</b></li>
+                    <li>Total damage <b>$10B+</b></li>
+                    <li>One firm’s rebuild <b>45,000 PCs</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="remote,unauthenticated,execution,rce,wormable,arbitrary">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">You don’t have to be the target to be the
+              casualty. Distance is not a control.
+              <a class="xref" href="#problems">Problem 04 ↑</a></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="case" id="case-05" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="147" data-suffix="M" aria-hidden="true">0</span>
+            <span class="sr-only">147 million</span>
+            <small>identities, one missed patch</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">05 · Economics</span>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-05">The unapplied fix <span class="x"
+              aria-hidden="true">+</span></button></h3>
+            <span class="when">A credit bureau, 2017</span>
+          </div>
+          <p>The fix had existed for two months. Applying it was one team’s
+          cost; not applying it became 147 million people’s problem.
+          <strong>They were not the customers. They were the
+          inventory.</strong></p>
+          <div class="dossier" id="d-05">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A critical patch ships in March. One internet-facing server is missed.</li>
+                    <li>Attackers arrive in May. They stay 76 days.</li>
+                    <li>The monitor that would have seen the traffic sat behind a certificate that had expired 19 months earlier.</li>
+                    <li>147 million people learn their data was never really theirs.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Patch available for <b>2 months</b></li>
+                    <li>Attackers inside <b>76 days</b></li>
+                    <li>Identities taken <b>147.9M</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="exposure,disclosure,leak,plaintext,unpatched,default">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">The fix was free. Skipping it cost three
+              executives their jobs and 147 million people their privacy.
+              <a class="xref" href="#problems">Problem 05 ↑</a></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="case" id="case-06" data-reveal>
+          <span class="stat">
+            <span class="num" data-count="10" data-suffix="&nbsp;GB" aria-hidden="true">0&nbsp;GB</span>
+            <span class="sr-only">10 gigabytes</span>
+            <small>out through a thermometer</small>
+          </span>
+          <div class="case-id">
+            <span class="tag">06 · Complexity</span>
+            <h3><button class="case-toggle" type="button" aria-expanded="false"
+              aria-controls="d-06">The fish tank <span class="x"
+              aria-hidden="true">+</span></button></h3>
+            <span class="when">A casino, 2017</span>
+          </div>
+          <p>The high-roller database left the building through the
+          internet-connected thermometer in the lobby aquarium. <strong>No
+          one had decided the fish tank was part of the security
+          perimeter.</strong> No one had decided anything about it at all.</p>
+          <div class="dossier" id="d-06">
+            <div class="inner">
+              <div class="dossier-grid">
+                <div class="anatomy">
+                  <span class="label">Anatomy</span>
+                  <ol>
+                    <li>A smart thermometer joins the casino’s network. Nobody writes it down.</li>
+                    <li>From the internet, it is the softest door in the building.</li>
+                    <li>Attackers pivot from the tank to the high-roller database.</li>
+                    <li>Ten gigabytes swim out the same way the temperature readings come in.</li>
+                  </ol>
+                </div>
+                <div class="bill">
+                  <span class="label">The bill</span>
+                  <ul>
+                    <li>Entry point <b>1 thermometer</b></li>
+                    <li>Exfiltrated <b>10 GB</b></li>
+                    <li>Perimeter <b>undefined</b></li>
+                  </ul>
+                </div>
+                <div class="live-threats"
+                  data-keys="overflow,memory,parser,deserial,buffer,corruption,injection">
+                  <span class="label">This problem, today</span>
+                  <ul class="threats"><li class="pending">Querying the public record…</li></ul>
+                </div>
+              </div>
+              <p class="lesson">Your network is everything that can reach
+              it — including the aquarium.
+              <a class="xref" href="#problems">Problem 06 ↑</a></p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="wire" id="wire" data-reveal>
+        <div class="wire-inner">
+          <span class="wire-label"><span class="dot" aria-hidden="true"></span>Live</span>
+          <p class="sr-only" id="wire-sr">Recent publicly disclosed breaches.</p>
+          <div class="track" id="wire-track" aria-hidden="true">
+            <span class="item">Querying the public record&hellip;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLOSING ============ -->
+  <section id="position" class="closing" aria-labelledby="position-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Position</span>
+        <h2 id="position-h">Security is not a product. It is a posture.</h2>
+      </div>
+      <div data-reveal>
+        <p>You cannot buy your way out of the six problems. You can only
+        decide how you stand in relation to them. Assume the credential leaks.
+        Assume the person is tired. Assume the attacker has read your
+        documentation — <strong>they have.</strong></p>
+        <p>What survives contact is not the tool but the discipline: trust
+        deliberately, verify cheaply, and keep the system small enough that
+        one person can hold it in their head. <strong>Complexity you do not
+        understand is someone else’s asset.</strong></p>
+        <p class="kicker">The threats of the next decade have not been
+        invented yet. <em>The problems they will use have been here all
+        along.</em></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="credit"><b>KAI CYBER</b> — written, designed, and built by Kai Cyber.</span>
+    <span>One file. No dependencies. Nothing to expire.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ================= Reveal on scroll ================= */
+  const reveals = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window && !reduced.matches) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+      }
+    }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add('is-in'));
+  }
+
+  /* ================= The breach ================= */
+  const canvas  = document.getElementById('net');
+  const ctx     = canvas.getContext('2d');
+  const runBtn  = document.getElementById('run');
+  const segBtn  = document.getElementById('run-seg');
+  const feed    = document.getElementById('feed');
+  const counter = document.getElementById('counter');
+
+  const N = 24;
+  const COLOR = {
+    bg: '#101214',
+    edge: 'rgba(140, 148, 146, 0.13)',
+    edgeHot: 'rgba(44, 110, 99, 0.85)',
+    nodeFill: '#16191B',
+    nodeStroke: '#3A4042',
+    hot: '#46B5A2',
+    label: '#8C9492'
+  };
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ----- Graph: deterministic layout in unit space ----- */
+  function buildGraph() {
+    const rnd = mulberry32(2050);
+    const pts = [];
+    const M = 0.075;
+    let minD = 0.16, tries = 0;
+    while (pts.length < N) {
+      const x = M + rnd() * (1 - 2 * M);
+      const y = M + rnd() * (1 - 2 * M);
+      let ok = true;
+      for (const p of pts) {
+        const dx = p.x - x, dy = p.y - y;
+        if (dx * dx + dy * dy < minD * minD) { ok = false; break; }
+      }
+      if (ok) pts.push({ x, y });
+      if (++tries > 1200) { minD *= 0.92; tries = 0; }
+    }
+
+    // Edges: each node to its two nearest neighbours, deduplicated.
+    const key = (a, b) => (a < b ? a * N + b : b * N + a);
+    const edgeSet = new Map();
+    const dist2 = (a, b) => {
+      const dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
+      return dx * dx + dy * dy;
+    };
+    for (let i = 0; i < N; i++) {
+      const order = [];
+      for (let j = 0; j < N; j++) if (j !== i) order.push(j);
+      order.sort((a, b) => dist2(i, a) - dist2(i, b));
+      for (let k = 0; k < 2; k++) {
+        const j = order[k];
+        edgeSet.set(key(i, j), [Math.min(i, j), Math.max(i, j)]);
+      }
+    }
+
+    // Guarantee a single connected component.
+    const parent = Array.from({ length: N }, (_, i) => i);
+    const find = (i) => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+    const union = (a, b) => { parent[find(a)] = find(b); };
+    for (const [, [a, b]] of edgeSet) union(a, b);
+    for (;;) {
+      const roots = new Set();
+      for (let i = 0; i < N; i++) roots.add(find(i));
+      if (roots.size === 1) break;
+      let best = null;
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          if (find(i) !== find(j)) {
+            const d = dist2(i, j);
+            if (!best || d < best.d) best = { i, j, d };
+          }
+        }
+      }
+      edgeSet.set(key(best.i, best.j), [best.i, best.j]);
+      union(best.i, best.j);
+    }
+
+    const edges = [...edgeSet.values()];
+    const adj = Array.from({ length: N }, () => []);
+    for (const [a, b] of edges) { adj[a].push(b); adj[b].push(a); }
+
+    // Patient zero: the leftmost system.
+    let root = 0;
+    for (let i = 1; i < N; i++) if (pts[i].x < pts[root].x) root = i;
+
+    return { pts, edges, adj, root };
+  }
+
+  /* ----- Timeline: breadth-first compromise with jitter ----- */
+  function buildTimeline(g, adj, mode) {
+    const rnd = mulberry32(99);
+    const popAt = new Array(N).fill(Infinity);
+    const via = new Array(N).fill(-1);
+    const depth = new Array(N).fill(0);
+
+    popAt[g.root] = 1.6;
+    const queue = [g.root];
+    const seen = new Set([g.root]);
+    while (queue.length) {
+      const cur = queue.shift();
+      for (const nb of adj[cur]) {
+        if (seen.has(nb)) continue;
+        seen.add(nb);
+        depth[nb] = depth[cur] + 1;
+        const base = Math.max(0.32, 1.7 * Math.pow(0.8, depth[nb] - 1));
+        popAt[nb] = popAt[cur] + base * (0.75 + rnd() * 0.6);
+        via[nb] = cur;
+        queue.push(nb);
+      }
+    }
+
+    const traces = [];
+    for (let i = 0; i < N; i++) {
+      if (via[i] !== -1) {
+        traces.push({ from: via[i], to: i, start: popAt[via[i]] + 0.06, end: popAt[i] });
+      }
+    }
+
+    const pops = popAt.filter(Number.isFinite).sort((a, b) => a - b);
+    const last = pops[pops.length - 1];
+    const reach = pops.length;
+    const captions = mode === 'seg'
+      ? [
+          { t: 0, html: 'Same attacker. Same password. One architectural decision, made years earlier.' },
+          { t: popAt[g.root], html: 'The login still works. <strong>The first zone still falls.</strong>' },
+          { t: pops[Math.floor(reach * 0.6)], html: 'At the boundary, the stolen credential meets systems that were <strong>never told to trust it.</strong>' },
+          { t: last + 0.7, html: '<strong>Contained: ' + reach + ' of ' + N + '.</strong> The breach ends where the trust ends.' }
+        ]
+      : [
+          { t: 0, html: 'One password, reused on an unimportant system.' },
+          { t: popAt[g.root], html: '<strong>Not an exploit. A login.</strong> The network has met the credential, not the person.' },
+          { t: pops[7], html: 'Each system trusts the last. <strong>Trust is transitive — so is compromise.</strong>' },
+          { t: last + 0.7, html: '<strong>Total compromise in one sitting.</strong> Vulnerabilities exploited: zero.' }
+        ];
+
+    return { popAt, traces, captions, end: last + 1.2 };
+  }
+
+  const graph = buildGraph();
+
+  /* Segmentation: the same network, partitioned into three zones.
+     Edges that cross a boundary carry no trust. */
+  const ZONES = [0.34, 0.66];
+  const zoneOf = (i) => (graph.pts[i].x < ZONES[0] ? 0 : graph.pts[i].x < ZONES[1] ? 1 : 2);
+  const segAdj = Array.from({ length: N }, () => []);
+  const crossEdge = new Set();
+  graph.edges.forEach(([a, b], idx) => {
+    if (zoneOf(a) === zoneOf(b)) {
+      segAdj[a].push(b);
+      segAdj[b].push(a);
+    } else {
+      crossEdge.add(idx);
+    }
+  });
+
+  const tlOpen = buildTimeline(graph, graph.adj, 'open');
+  const tlSeg = buildTimeline(graph, segAdj, 'seg');
+  let tl = tlOpen;
+
+  /* ----- Sizing ----- */
+  let W = 0, H = 0, R = 6, px = [], py = [], PADX = 0, PADY = 0;
+  function resize() {
+    const cssW = canvas.clientWidth;
+    const cssH = canvas.clientHeight;
+    if (!cssW || !cssH) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = cssW; H = cssH;
+    R = Math.max(5, Math.min(8, W / 120));
+    const padX = R + 22, padTop = R + 22, padBot = R + 40;
+    PADX = padX; PADY = padTop;
+    px = graph.pts.map((p) => padX + p.x * (W - 2 * padX));
+    py = graph.pts.map((p) => padTop + p.y * (H - padTop - padBot));
+    draw(state.elapsed);
+  }
+
+  /* ----- State ----- */
+  const state = {
+    running: false,
+    finished: false,
+    started: false,   // has ever run
+    mode: 'open',     // 'open' | 'seg'
+    elapsed: 0,
+    t0: 0,
+    raf: 0,
+    captionIdx: -1,
+    count: 0,
+    visible: false
+  };
+
+  /* ----- Idle noise: faint probes wandering the graph ----- */
+  const probes = [];
+  let noiseRaf = 0;
+  let nextProbe = 0;
+
+  function noiseTick(now) {
+    noiseRaf = 0;
+    if (state.running || !state.visible || reduced.matches || document.hidden) return;
+    const t = now / 1000;
+    if (t >= nextProbe && probes.length < 3) {
+      const e = graph.edges[(Math.random() * graph.edges.length) | 0];
+      const flip = Math.random() < 0.5;
+      probes.push({
+        a: flip ? e[1] : e[0],
+        b: flip ? e[0] : e[1],
+        t0: t,
+        dur: 1.4 + Math.random() * 1.3
+      });
+      nextProbe = t + 0.6 + Math.random() * 1.5;
+    }
+    for (let i = probes.length - 1; i >= 0; i--) {
+      if (t - probes[i].t0 > probes[i].dur) probes.splice(i, 1);
+    }
+    draw(state.elapsed, t);
+    noiseRaf = requestAnimationFrame(noiseTick);
+  }
+
+  function startNoise() {
+    if (noiseRaf || state.running || reduced.matches || !state.visible) return;
+    nextProbe = performance.now() / 1000 + 0.4;
+    noiseRaf = requestAnimationFrame(noiseTick);
+  }
+
+  function stopNoise() {
+    cancelAnimationFrame(noiseRaf);
+    noiseRaf = 0;
+    probes.length = 0;
+  }
+
+  /* ----- Drawing ----- */
+  function draw(t, noiseT) {
+    if (!W || !H) return;
+    ctx.clearRect(0, 0, W, H);
+    const noMotion = reduced.matches;
+
+    const seg = state.mode === 'seg';
+
+    // Zone boundaries: the walls the credential cannot talk through
+    if (seg) {
+      ctx.strokeStyle = 'rgba(70, 181, 162, 0.28)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 6]);
+      for (const z of ZONES) {
+        const x = PADX + z * (W - 2 * PADX);
+        ctx.beginPath();
+        ctx.moveTo(x, PADY - 8);
+        ctx.lineTo(x, H - 20);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+
+    // Edges at rest (in segmented mode, severed edges barely register)
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    graph.edges.forEach(([a, b], idx) => {
+      if (seg && crossEdge.has(idx)) return;
+      ctx.moveTo(px[a], py[a]);
+      ctx.lineTo(px[b], py[b]);
+    });
+    ctx.strokeStyle = COLOR.edge;
+    ctx.stroke();
+    if (seg) {
+      ctx.beginPath();
+      graph.edges.forEach(([a, b], idx) => {
+        if (!crossEdge.has(idx)) return;
+        ctx.moveTo(px[a], py[a]);
+        ctx.lineTo(px[b], py[b]);
+      });
+      ctx.strokeStyle = 'rgba(140, 148, 146, 0.05)';
+      ctx.setLineDash([3, 7]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Traversed edges
+    ctx.strokeStyle = COLOR.edgeHot;
+    ctx.lineWidth = 1.5;
+    for (const tr of tl.traces) {
+      if (t < tr.start) continue;
+      const p = noMotion
+        ? (t >= tr.end ? 1 : 0)
+        : Math.min(1, (t - tr.start) / (tr.end - tr.start));
+      if (p <= 0) continue;
+      const x1 = px[tr.from], y1 = py[tr.from];
+      const x2 = x1 + (px[tr.to] - x1) * p;
+      const y2 = y1 + (py[tr.to] - y1) * p;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      if (p < 1) {
+        ctx.fillStyle = COLOR.hot;
+        ctx.beginPath();
+        ctx.arc(x2, y2, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Nodes
+    for (let i = 0; i < N; i++) {
+      const isRoot = i === graph.root;
+      const r = isRoot ? R + 1.5 : R;
+      const popped = state.started && t >= tl.popAt[i];
+
+      if (popped && !noMotion) {
+        const age = t - tl.popAt[i];
+        if (age < 0.9) {
+          const k = age / 0.9;
+          ctx.strokeStyle = 'rgba(70, 181, 162, ' + (0.45 * (1 - k)).toFixed(3) + ')';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(px[i], py[i], r + 2 + k * 22, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      ctx.beginPath();
+      ctx.arc(px[i], py[i], r, 0, Math.PI * 2);
+      if (popped) {
+        ctx.fillStyle = COLOR.hot;
+        ctx.fill();
+      } else {
+        ctx.fillStyle = COLOR.nodeFill;
+        ctx.fill();
+        ctx.strokeStyle = COLOR.nodeStroke;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    // Idle probes: the scanning never stops
+    if (noiseT !== undefined) {
+      for (const pr of probes) {
+        const k = (noiseT - pr.t0) / pr.dur;
+        if (k <= 0 || k >= 1) continue;
+        const x = px[pr.a] + (px[pr.b] - px[pr.a]) * k;
+        const y = py[pr.a] + (py[pr.b] - py[pr.a]) * k;
+        const a = Math.sin(k * Math.PI) * 0.35;
+        ctx.fillStyle = 'rgba(70, 181, 162, ' + a.toFixed(3) + ')';
+        ctx.beginPath();
+        ctx.arc(x, y, 1.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Patient-zero marker
+    const rx = px[graph.root], ry = py[graph.root];
+    ctx.strokeStyle = COLOR.hot;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    ctx.arc(rx, ry, R + 7.5, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = COLOR.label;
+    ctx.font = '11px ' + 'ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+    ctx.textAlign = rx < 90 ? 'left' : 'center';
+    ctx.fillText('the reused password', rx < 90 ? Math.max(4, rx - R) : rx, ry + R + 26);
+  }
+
+  /* ----- DOM sync ----- */
+  function syncDom(t) {
+    let idx = state.captionIdx;
+    for (let i = tl.captions.length - 1; i >= 0; i--) {
+      if (t >= tl.captions[i].t) { idx = i; break; }
+    }
+    if (idx !== state.captionIdx) {
+      state.captionIdx = idx;
+      feed.innerHTML = tl.captions[idx].html;
+    }
+    let c = 0;
+    for (let i = 0; i < N; i++) if (t >= tl.popAt[i]) c++;
+    if (c !== state.count) {
+      state.count = c;
+      const s = String(c).padStart(2, '0');
+      counter.innerHTML = (c > 0 ? '<span class="hot">' + s + '</span>' : s) +
+        ' / 24 systems';
+    }
+  }
+
+  /* ----- Run loop ----- */
+  function frame(now) {
+    state.elapsed = (now - state.t0) / 1000;
+    if (state.elapsed >= tl.end) {
+      state.elapsed = tl.end;
+      draw(state.elapsed);
+      syncDom(state.elapsed);
+      finish();
+      return;
+    }
+    draw(state.elapsed);
+    syncDom(state.elapsed);
+    state.raf = requestAnimationFrame(frame);
+  }
+
+  function start(mode) {
+    stopNoise();
+    cancelAnimationFrame(state.raf);
+    state.mode = mode;
+    tl = mode === 'seg' ? tlSeg : tlOpen;
+    state.running = true;
+    state.finished = false;
+    state.started = true;
+    state.elapsed = 0;
+    state.captionIdx = -1;
+    state.count = -1;
+    runBtn.textContent = mode === 'open' ? 'Breach in progress' : 'Run the breach';
+    segBtn.textContent = mode === 'seg' ? 'Containment in progress' : 'Run it segmented';
+    runBtn.setAttribute('aria-disabled', 'true');
+    segBtn.setAttribute('aria-disabled', 'true');
+    state.t0 = performance.now();
+    state.raf = requestAnimationFrame(frame);
+  }
+
+  function finish() {
+    state.running = false;
+    state.finished = true;
+    runBtn.textContent = state.mode === 'open' ? 'Run it again' : 'Run the breach';
+    segBtn.textContent = state.mode === 'seg' ? 'Segment it again' : 'Run it segmented';
+    runBtn.removeAttribute('aria-disabled');
+    segBtn.removeAttribute('aria-disabled');
+    startNoise();
+  }
+
+  function pause() {
+    if (!state.running) return;
+    cancelAnimationFrame(state.raf);
+    state.raf = 0;
+  }
+
+  function resume() {
+    if (!state.running || state.raf) return;
+    state.t0 = performance.now() - state.elapsed * 1000;
+    state.raf = requestAnimationFrame(frame);
+  }
+
+  runBtn.addEventListener('click', () => {
+    if (state.running) return;
+    start('open');
+  });
+  segBtn.addEventListener('click', () => {
+    if (state.running) return;
+    start('seg');
+  });
+
+  /* ----- Visibility: never burn frames off-screen ----- */
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        state.visible = e.isIntersecting;
+        if (e.isIntersecting) {
+          resume();
+          // Auto-play once, when the stage first comes into view.
+          if (!state.started && !reduced.matches && e.intersectionRatio >= 0.45) {
+            start('open');
+          } else if (!state.running) {
+            startNoise();
+          }
+        } else {
+          pause();
+          stopNoise();
+        }
+      }
+    }, { threshold: [0, 0.45] });
+    io.observe(canvas);
+  } else {
+    state.visible = true;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { pause(); stopNoise(); }
+    else if (state.visible) { resume(); if (!state.running) startNoise(); }
+  });
+
+  /* ----- Wire up ----- */
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(resize).observe(canvas);
+  } else {
+    window.addEventListener('resize', resize);
+  }
+  resize();
+
+  /* ================= Case-file counters ================= */
+  const fmt = (el, v) =>
+    (el.dataset.prefix || '') +
+    Math.round(v).toLocaleString('en-US') +
+    (el.dataset.suffix || '');
+
+  const nums = document.querySelectorAll('.case .num');
+  function runCounter(el) {
+    const target = parseInt(el.dataset.count, 10);
+    const dur = 1100;
+    const t0 = performance.now();
+    const tick = (now) => {
+      const k = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(el, target * eased);
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+  if ('IntersectionObserver' in window && !reduced.matches) {
+    const cio = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { runCounter(e.target); cio.unobserve(e.target); }
+      }
+    }, { threshold: 0.6 });
+    nums.forEach((el) => cio.observe(el));
+  } else {
+    nums.forEach((el) => { el.textContent = fmt(el, parseInt(el.dataset.count, 10)); });
+  }
+
+  /* ================= Dossiers ================= */
+  const setCase = (c, open) => {
+    c.classList.toggle('is-open', open);
+    const t = c.querySelector('.case-toggle');
+    if (t) t.setAttribute('aria-expanded', String(open));
+  };
+  document.querySelectorAll('.case-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const c = btn.closest('.case');
+      setCase(c, !c.classList.contains('is-open'));
+    });
+  });
+  // Cross-references from the six problems open their case file on arrival.
+  document.querySelectorAll('a.xref[href^="#case-"]').forEach((a) => {
+    a.addEventListener('click', () => {
+      const c = document.querySelector(a.getAttribute('href'));
+      if (c) setCase(c, true);
+    });
+  });
+
+  /* ================= Live threats in dossiers =================
+     Same policy as the wire: a keyless public feed (GitHub Security
+     Advisories), fetched once, matched to each problem by keyword,
+     sanitized to text nodes, and free to fail. */
+  const slots = document.querySelectorAll('.live-threats');
+
+  function threatsFallback() {
+    slots.forEach((s) => {
+      const ul = s.querySelector('.threats');
+      ul.textContent = '';
+      const li = document.createElement('li');
+      li.className = 'pending';
+      li.textContent = 'Feed unreachable. Yesterday’s lessons remain current.';
+      ul.appendChild(li);
+    });
+  }
+
+  function renderThreats(advisories) {
+    const clean = advisories.filter((a) => a && a.summary && (a.cve_id || a.ghsa_id));
+    if (!clean.length) { threatsFallback(); return; }
+    slots.forEach((s) => {
+      const keys = (s.dataset.keys || '').split(',').filter(Boolean);
+      const matched = clean.filter((a) => {
+        const hay = (a.summary + ' ' +
+          (a.cwes || []).map((c) => (c && c.name) || '').join(' ')).toLowerCase();
+        return keys.some((k) => hay.includes(k));
+      });
+      const picks = (matched.length ? matched : clean).slice(0, 3);
+      const ul = s.querySelector('.threats');
+      ul.textContent = '';
+      for (const a of picks) {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = a.html_url || 'https://github.com/advisories/' + a.ghsa_id;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        const id = document.createElement('b');
+        id.textContent = a.cve_id || a.ghsa_id;
+        link.appendChild(id);
+        const sev = document.createElement('span');
+        sev.className = 'sev' +
+          (a.severity === 'critical' || a.severity === 'high' ? ' hot' : '');
+        sev.textContent = a.severity || '';
+        link.appendChild(sev);
+        const sum = document.createElement('span');
+        const txt = a.summary.length > 92
+          ? a.summary.slice(0, 90).trimEnd() + '…'
+          : a.summary;
+        sum.textContent = ' — ' + txt;
+        link.appendChild(sum);
+        li.appendChild(link);
+        ul.appendChild(li);
+      }
+    });
+  }
+
+  if (slots.length && 'fetch' in window) {
+    const tc = 'AbortController' in window ? new AbortController() : null;
+    const tt = tc ? setTimeout(() => tc.abort(), 8000) : 0;
+    fetch('https://api.github.com/advisories?per_page=60&sort=published', {
+      headers: { Accept: 'application/vnd.github+json' },
+      signal: tc ? tc.signal : undefined
+    })
+      .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then((list) => { clearTimeout(tt); renderThreats(Array.isArray(list) ? list : []); })
+      .catch(() => { clearTimeout(tt); threatsFallback(); });
+  } else if (slots.length) {
+    threatsFallback();
+  }
+
+  /* ================= Live wire =================
+     Best-effort garnish, never load-bearing: a keyless public feed of
+     disclosed breaches, fetched after load with a hard timeout. If it
+     fails — offline, blocked, retired — the page is already whole. */
+  const wire = document.getElementById('wire');
+  const track = document.getElementById('wire-track');
+  const wireSr = document.getElementById('wire-sr');
+
+  function wireFallback() {
+    track.textContent = '';
+    const item = document.createElement('span');
+    item.className = 'item';
+    item.textContent = 'Feed unreachable. The breaches continue regardless.';
+    track.appendChild(item);
+  }
+
+  function wireRender(list) {
+    const recent = list
+      .filter((b) => b && b.Title && b.AddedDate)
+      .sort((a, b) => new Date(b.AddedDate) - new Date(a.AddedDate))
+      .slice(0, 10);
+    if (!recent.length) { wireFallback(); return; }
+
+    const compact = new Intl.NumberFormat('en-US', { notation: 'compact' });
+    track.textContent = '';
+    // Two copies of the set make the scroll loop seamless.
+    for (let copy = 0; copy < 2; copy++) {
+      for (const b of recent) {
+        const item = document.createElement('span');
+        item.className = 'item';
+        const name = document.createElement('b');
+        name.textContent = b.Title;             // textContent only: feed data is untrusted
+        item.appendChild(name);
+        const n = document.createElement('span');
+        n.className = 'n';
+        n.textContent = Number.isFinite(b.PwnCount) && b.PwnCount > 0
+          ? ' ' + compact.format(b.PwnCount) + ' accounts'
+          : '';
+        item.appendChild(n);
+        item.appendChild(document.createTextNode(
+          b.BreachDate ? ' · ' + String(b.BreachDate).slice(0, 4) : ''
+        ));
+        track.appendChild(item);
+      }
+    }
+    wire.classList.add('is-live');
+    wireSr.textContent = 'Recently disclosed breaches: ' +
+      recent.slice(0, 5).map((b) => b.Title).join(', ') + '.';
+  }
+
+  if (wire && 'fetch' in window) {
+    const ctrl = 'AbortController' in window ? new AbortController() : null;
+    const tmo = ctrl ? setTimeout(() => ctrl.abort(), 6000) : 0;
+    fetch('https://haveibeenpwned.com/api/v3/breaches', {
+      signal: ctrl ? ctrl.signal : undefined
+    })
+      .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then((list) => { clearTimeout(tmo); wireRender(list); })
+      .catch(() => { clearTimeout(tmo); wireFallback(); });
+  } else if (wire) {
+    wireFallback();
+  }
+})();
+</script>
+</body>
+</html>
