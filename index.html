@@ -624,6 +624,300 @@
     .stage, .run, .wire { display: none; }
     .js [data-reveal] { opacity: 1 !important; transform: none !important; }
   }
+
+  /* ================================================================
+     § Phishing Lab
+     ================================================================ */
+  #phish-lab { border-top: 1px solid var(--line); padding-block: var(--section-gap); }
+  .phish-intro { max-width: 62ch; margin-block: 2rem 3rem; }
+
+  /* Shell */
+  .sim-shell {
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-block: 2.5rem;
+  }
+
+  /* Progress bar */
+  .sim-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .875rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .sim-prog-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .sim-prog-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 400ms var(--ease);
+    width: 0%;
+  }
+  .sim-step-label {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--ink-dim);
+    white-space: nowrap;
+    letter-spacing: .08em;
+  }
+
+  /* Stage */
+  .sim-stage { padding: 1.75rem 1.75rem 0; }
+
+  /* Email mockup */
+  .msg-email {
+    background: #0d1117;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: clamp(.9rem, 1vw, 1rem);
+  }
+  .msg-email-hdr {
+    background: var(--bg);
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .msg-fields { display: grid; grid-template-columns: 3.5rem 1fr; gap: .2rem .5rem; }
+  .msg-fl { font-family: var(--mono); font-size: .7rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .1em; padding-top: .1em; }
+  .msg-fv { color: var(--ink-dim); }
+  .msg-subj { color: var(--ink); font-weight: 600; }
+  .msg-body { padding: 1.25rem; color: var(--ink); line-height: 1.7; font-size: .975em; }
+  .msg-body p { margin: 0; }
+  .msg-body p + p { margin-top: .8em; }
+  .msg-cta {
+    display: inline-block;
+    margin: .9rem 0;
+    padding: .55em 1.3em;
+    background: var(--accent-dim);
+    color: #fff;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: .95em;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* SMS mockup */
+  .msg-sms {
+    max-width: 22rem;
+    margin: 0 auto;
+    padding: 1rem;
+    background: #0d1219;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+  }
+  .msg-sms-from {
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--ink-faint);
+    text-align: center;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: .75rem;
+  }
+  .msg-sms-bubble {
+    background: #243040;
+    color: var(--ink);
+    border-radius: 1rem 1rem .3rem 1rem;
+    padding: .8rem 1rem;
+    font-size: .95em;
+    line-height: 1.6;
+  }
+  .msg-sms-link { color: #6ab0f5; word-break: break-all; }
+
+  /* Voice mockup */
+  .msg-voice {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1.5rem;
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+  .msg-voice-icon { font-size: 2.5rem; display: block; text-align: center; margin-bottom: .5rem; }
+  .msg-voice-caller { text-align: center; font-size: 1.05em; font-weight: 700; margin-bottom: 1rem; }
+  .msg-voice-player {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+    border-radius: 2rem;
+    padding: .6rem 1rem;
+    margin-bottom: 1rem;
+  }
+  .msg-voice-wave {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(90deg, var(--accent-dim) 0, var(--accent-dim) 3px, transparent 3px, transparent 8px);
+  }
+  .msg-voice-dur { font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); }
+  .msg-voice-transcript {
+    background: var(--bg-raise);
+    border-left: 2px solid var(--ink-faint);
+    padding: .75rem 1rem;
+    color: var(--ink-dim);
+    font-style: italic;
+    margin: .75rem 0;
+    font-size: .93em;
+    line-height: 1.65;
+    border-radius: 0 3px 3px 0;
+  }
+  .msg-voice-note { font-size: .8em; color: var(--ink-faint); margin-top: .5rem; }
+
+  /* Red-flag highlights — revealed after answer */
+  .flag-hl { border-radius: 2px; transition: background 300ms, color 300ms, outline-color 300ms; outline: 1px solid transparent; }
+  .is-revealed .flag-hl.bad  { background: rgba(200,50,50,.18); color: #ff8484; outline-color: rgba(200,50,50,.4); }
+  .is-revealed .flag-hl.good { background: rgba(70,181,162,.15); color: var(--accent); outline-color: rgba(70,181,162,.35); }
+
+  /* Action buttons */
+  .sim-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    padding: 1.25rem 1.75rem 1.75rem;
+  }
+  @media (max-width: 480px) { .sim-btns { grid-template-columns: 1fr; } }
+  .sim-btn {
+    padding: .9em 1.25em;
+    border: 2px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: clamp(1rem, 1.4vw, 1.1rem);
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 140ms, border-color 140ms, color 140ms, transform 80ms;
+    line-height: 1.25;
+  }
+  .sim-btn:hover:not(:disabled) { transform: translateY(-1px); }
+  .sim-btn:active:not(:disabled) { transform: none; }
+  .sim-btn.real { border-color: var(--accent-dim); }
+  .sim-btn.real:hover:not(:disabled) { background: rgba(70,181,162,.1); border-color: var(--accent); }
+  .sim-btn.trap { border-color: #522; }
+  .sim-btn.trap:hover:not(:disabled) { background: rgba(180,50,50,.12); border-color: #c03030; color: #ff8080; }
+  .sim-btn:disabled { opacity: .35; cursor: default; transform: none !important; }
+
+  /* Feedback */
+  .sim-fb {
+    margin: 0 1.75rem 1.75rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .sim-fb[hidden] { display: none; }
+  .fb-hdr {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: 1rem 1.25rem;
+    font-size: 1.05em;
+    font-weight: 700;
+  }
+  .fb-hdr.correct { background: rgba(70,181,162,.15); color: var(--accent); }
+  .fb-hdr.wrong   { background: rgba(200,50,50,.15);  color: #ff8080; }
+  .fb-icon-big { font-size: 1.4em; }
+  .fb-body-text {
+    padding: .875rem 1.25rem;
+    color: var(--ink-dim);
+    font-size: .92em;
+    line-height: 1.65;
+    border-top: 1px solid var(--line);
+  }
+  .fb-flags { padding: .75rem 1.25rem 1rem; border-top: 1px solid var(--line); }
+  .fb-flags[hidden] { display: none; }
+  .fb-flags-title {
+    font-family: var(--mono);
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink-faint);
+    margin-bottom: .5rem;
+  }
+  .fb-flag-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .35rem; }
+  .fb-flag-item { display: flex; gap: .5rem; align-items: flex-start; font-size: .88em; color: var(--ink-dim); }
+  .fb-flag-item::before { content: '⚑'; color: #c03030; flex-shrink: 0; }
+  .fb-flag-item.good::before { content: '✓'; color: var(--accent); }
+  .sim-next {
+    display: block;
+    width: 100%;
+    padding: .85em;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: .02em;
+    transition: background 130ms;
+  }
+  .sim-next:hover { background: #5bc8b5; }
+
+  /* Results */
+  .sim-results { padding: 3rem 1.75rem; text-align: center; }
+  .sim-results[hidden] { display: none; }
+  .results-big {
+    font-family: var(--mono);
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+    margin-bottom: .4rem;
+  }
+  .results-headline { font-size: 1.2em; font-weight: 700; color: var(--ink); display: block; margin-bottom: .6rem; }
+  .results-sub { color: var(--ink-dim); font-size: .95em; max-width: 44ch; margin: 0 auto 1.75rem; }
+  .sim-restart {
+    display: inline-block;
+    padding: .7em 2em;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 130ms, color 130ms;
+  }
+  .sim-restart:hover { background: var(--accent); color: var(--bg); }
+
+  /* 2026 AI Tips */
+  .tips-2026 { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--line); }
+  .tips-2026-h { font-size: clamp(1.2rem, 2.5vw, 1.6rem); margin-bottom: .4rem; }
+  .tips-intro { color: var(--ink-dim); max-width: 58ch; margin-bottom: 2.5rem; font-size: .96em; }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+    gap: 1rem;
+  }
+  .tip-card {
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1.375rem;
+  }
+  .tip-icon { font-size: 1.6rem; display: block; margin-bottom: .6rem; line-height: 1; }
+  .tip-title { font-size: .975rem; font-weight: 700; color: var(--ink); margin-bottom: .35rem; }
+  .tip-body { font-size: .875rem; color: var(--ink-dim); line-height: 1.6; }
+  .tip-body strong { color: var(--ink); }
+  @media (max-width: 600px) {
+    .sim-btn { font-size: 1.05rem; padding: 1em; }
+    .msg-body, .msg-sms-bubble, .msg-voice-transcript { font-size: 1.05rem; }
+    .tip-body { font-size: .925rem; }
+  }
 </style>
 </head>
 <body>
@@ -1096,6 +1390,98 @@
           <p class="sr-only" id="wire-sr">Recent publicly disclosed breaches.</p>
           <div class="track" id="wire-track" aria-hidden="true">
             <span class="item">Querying the public record&hellip;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHISHING LAB ============ -->
+  <section id="phish-lab" aria-labelledby="phish-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Spot the trap</span>
+        <h2 id="phish-h">Can you tell real from fake?</h2>
+      </div>
+      <p class="lede phish-intro" data-reveal>Phishing is the number one way attackers get in — not through software flaws, but through <strong>you</strong>. In 2026, AI can clone any voice in seconds and write a convincing email in any language. Five messages below. You decide: real or trap?</p>
+
+      <!-- Simulator -->
+      <div class="sim-shell" id="phish-sim" data-reveal>
+        <div class="sim-progress">
+          <div class="sim-prog-bar"><div class="sim-prog-fill" id="phish-prog"></div></div>
+          <span class="sim-step-label" id="phish-step">Message 1 of 5</span>
+        </div>
+        <div class="sim-stage" id="phish-stage" aria-live="polite"></div>
+        <div class="sim-btns" id="phish-btns">
+          <button class="sim-btn real" id="phish-real" type="button">✓&nbsp; This looks real</button>
+          <button class="sim-btn trap" id="phish-trap" type="button">⚠&nbsp; This is a trap!</button>
+        </div>
+        <div class="sim-fb" id="phish-fb" hidden>
+          <div class="fb-hdr" id="fb-hdr">
+            <span class="fb-icon-big" id="fb-icon"></span>
+            <span id="fb-verdict"></span>
+          </div>
+          <div class="fb-body-text" id="fb-body"></div>
+          <div class="fb-flags" id="fb-flags" hidden>
+            <p class="fb-flags-title">What to look for</p>
+            <ul class="fb-flag-list" id="fb-flag-list"></ul>
+          </div>
+          <button class="sim-next" id="phish-next" type="button">Next message →</button>
+        </div>
+      </div>
+
+      <!-- Results (shown after all 5) -->
+      <div class="sim-results" id="phish-results" hidden>
+        <span class="results-big" id="results-num">5 / 5</span>
+        <span class="results-headline" id="results-headline"></span>
+        <p class="results-sub" id="results-sub"></p>
+        <button class="sim-restart" id="phish-restart" type="button">Try again</button>
+      </div>
+
+      <!-- 2026 AI Protection Tips -->
+      <div class="tips-2026" data-reveal>
+        <h3 class="tips-2026-h">How to protect yourself in 2026</h3>
+        <p class="tips-intro">AI has made attacks more convincing than ever. These rules hold regardless of how polished the attack looks.</p>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <span class="tip-icon">📞</span>
+            <p class="tip-title">AI can clone any voice</p>
+            <p class="tip-body">If someone calls claiming to be a family member in trouble, <strong>hang up and call them back on their real number.</strong> In 2026, AI clones voices from 3 seconds of audio found online. The voice proves nothing.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🎁</span>
+            <p class="tip-title">Gift cards are always a scam</p>
+            <p class="tip-body">No bank, government office, tech support line, or family member will ever ask you to <strong>pay with gift cards.</strong> Anyone who does is a scammer. Every time. No exceptions.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🔗</span>
+            <p class="tip-title">Read the full sender address</p>
+            <p class="tip-body">Scammers use "apple-support-id.com" — not "apple.com". <strong>Check the full domain after the @.</strong> The display name ("Apple Support") can say anything — the address is what counts.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">⏱</span>
+            <p class="tip-title">Urgency is a weapon</p>
+            <p class="tip-body">Countdown timers, "24-hour deadlines", "act now or lose your account" — these are pressure tactics. <strong>Real organisations give you time.</strong> If you feel rushed, that's the attack working on you. Stop and breathe.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🤫</span>
+            <p class="tip-title">"Don't tell anyone" is a red flag</p>
+            <p class="tip-body">Scammers isolate victims so no one can stop them. If anyone — by call, text, or email — tells you to <strong>keep it secret</strong>, that is a warning sign, not a reason to comply. Tell a trusted person immediately.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">🔑</span>
+            <p class="tip-title">Agree a family codeword</p>
+            <p class="tip-body">Agree on a secret word with the people you love. If someone claims to be them in an emergency, <strong>ask for the codeword.</strong> A real family member will know it. An AI voice clone won't.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">📱</span>
+            <p class="tip-title">Go direct — don't click links</p>
+            <p class="tip-body">Instead of clicking a link in a text or email, <strong>open your browser and type the address yourself</strong> — usps.com, chase.com, apple.com. If there's a real problem, you'll see it when you sign in directly.</p>
+          </div>
+          <div class="tip-card">
+            <span class="tip-icon">📸</span>
+            <p class="tip-title">Video calls can be faked too</p>
+            <p class="tip-body">In 2026, real-time deepfake video exists. If a video call seems "off" — odd lighting, no blinking, strange background — <strong>end the call and phone back on a number you know.</strong> Do not act on what you see alone.</p>
           </div>
         </div>
       </div>
@@ -1828,6 +2214,240 @@
   } else if (wire) {
     wireFallback();
   }
+})();
+
+/* ================= Phishing Lab ================= */
+(function () {
+  const stage    = document.getElementById('phish-stage');
+  const fbPanel  = document.getElementById('phish-fb');
+  const fbHdr    = document.getElementById('fb-hdr');
+  const fbIcon   = document.getElementById('fb-icon');
+  const fbVerdict= document.getElementById('fb-verdict');
+  const fbBody   = document.getElementById('fb-body');
+  const fbFlags  = document.getElementById('fb-flags');
+  const fbList   = document.getElementById('fb-flag-list');
+  const nextBtn  = document.getElementById('phish-next');
+  const realBtn  = document.getElementById('phish-real');
+  const trapBtn  = document.getElementById('phish-trap');
+  const btnsDiv  = document.getElementById('phish-btns');
+  const progFill = document.getElementById('phish-prog');
+  const stepLabel= document.getElementById('phish-step');
+  const simShell = document.getElementById('phish-sim');
+  const results  = document.getElementById('phish-results');
+  const resNum   = document.getElementById('results-num');
+  const resHead  = document.getElementById('results-headline');
+  const resSub   = document.getElementById('results-sub');
+  const restart  = document.getElementById('phish-restart');
+  if (!stage) return;
+
+  /* ---------- Scenario data ---------- */
+  const S = [
+    {
+      v: 'phish',
+      html: '<div class="msg-email">'
+        + '<div class="msg-email-hdr"><div class="msg-fields">'
+        + '<span class="msg-fl">From</span><span class="msg-fv flag-hl bad">security@apple-support-id.com</span>'
+        + '<span class="msg-fl">To</span><span class="msg-fv">you@email.com</span>'
+        + '<span class="msg-fl">Subject</span><span class="msg-fv msg-subj flag-hl bad">⚠ Your Apple ID is locked — Action required within 24 hours</span>'
+        + '</div></div>'
+        + '<div class="msg-body">'
+        + '<p><span class="flag-hl bad">Dear Customer,</span></p>'
+        + '<p>We detected unusual sign-in activity on your Apple ID. To protect your account, access has been <strong>temporarily suspended</strong>.</p>'
+        + '<p><span class="flag-hl bad">If you do not verify within 24 hours, your account will be permanently deleted.</span></p>'
+        + '<a class="msg-cta flag-hl bad" tabindex="-1" aria-hidden="true">Verify My Account →</a>'
+        + '<p style="color:var(--ink-faint);font-size:.85em">This is an automated security message. — Apple Support</p>'
+        + '</div></div>',
+      flags: [
+        { t: 'Sender is "apple-support-id.com" — NOT apple.com. Real Apple only sends from @apple.com', bad: true },
+        { t: '"Dear Customer" — Apple knows your name and always uses it', bad: true },
+        { t: '"Permanently deleted in 24 hours" is fake panic designed to stop you thinking', bad: true },
+        { t: 'Real Apple never threatens account deletion by email — check Settings on your device instead', bad: true },
+      ],
+      ok: 'Correct — this is a classic phishing email.',
+      wrong: 'This was a phishing email.',
+      explain: 'Attackers copy Apple\'s design perfectly. The only tell is the sender\'s domain. Always read the full address after the @ — the display name can say anything.',
+    },
+    {
+      v: 'real',
+      html: '<div class="msg-email">'
+        + '<div class="msg-email-hdr"><div class="msg-fields">'
+        + '<span class="msg-fl">From</span><span class="msg-fv flag-hl good">statements@chase.com</span>'
+        + '<span class="msg-fl">To</span><span class="msg-fv">alex.morgan@email.com</span>'
+        + '<span class="msg-fl">Subject</span><span class="msg-fv msg-subj">Your May 2026 statement is ready</span>'
+        + '</div></div>'
+        + '<div class="msg-body">'
+        + '<p>Hi <span class="flag-hl good">Alex</span>,</p>'
+        + '<p>Your Chase Checking account statement for <strong>May 2026</strong> is now available.</p>'
+        + '<p>Closing balance: $3,247.81</p>'
+        + '<p>To view it, sign in at <span class="flag-hl good">chase.com</span> or open the Chase app.</p>'
+        + '<p>Questions? Call us at <span class="flag-hl good">1-800-935-9935</span> — we\'re here 24/7.</p>'
+        + '<p style="color:var(--ink-faint);font-size:.85em;margin-top:1rem">Chase Bank NA · 270 Park Avenue, New York, NY 10017</p>'
+        + '</div></div>',
+      flags: [
+        { t: 'Sender is @chase.com — a real, verifiable domain', bad: false },
+        { t: 'Uses your first name (Alex) — not "Dear Customer"', bad: false },
+        { t: 'No urgency, no threats — just a routine notification', bad: false },
+        { t: 'Directs you to chase.com (type it yourself) — no suspicious link', bad: false },
+        { t: 'Includes a real phone number you can verify independently', bad: false },
+      ],
+      ok: 'Correct — this is a legitimate bank notification.',
+      wrong: 'This one was actually real.',
+      explain: 'Not everything is an attack. Real emails are calm, use your name, and send you to known websites. Learning to recognise the real ones is just as important as spotting fakes.',
+    },
+    {
+      v: 'phish',
+      html: '<div class="msg-voice">'
+        + '<span class="msg-voice-icon">📱</span>'
+        + '<p class="msg-voice-caller">Missed call from: <strong>Grandma 👵</strong></p>'
+        + '<div class="msg-voice-player"><span>▶</span><div class="msg-voice-wave"></div><span class="msg-voice-dur">0:34</span></div>'
+        + '<div class="msg-voice-transcript flag-hl bad">'
+        + '"Hello sweetheart… it\'s Grandma. I\'m stuck at the airport — they took my wallet and passport. I\'m so scared. Can you please go to a shop and get me some Google Play gift cards — about $400 worth? Send me the codes right away. <span class="flag-hl bad">And please don\'t tell your parents</span>, I don\'t want to worry them…"'
+        + '</div>'
+        + '<p class="msg-voice-note">⚠ In 2026, AI can clone any voice from 3 seconds of audio found online.</p>'
+        + '</div>',
+      flags: [
+        { t: 'Requests gift cards — the universal signal of a scam. No genuine emergency involves gift cards', bad: true },
+        { t: '"Don\'t tell anyone" — scammers isolate victims to stop a second opinion saving you', bad: true },
+        { t: 'AI clones voices from old videos, voicemails, even birthday messages. The voice proves nothing', bad: true },
+        { t: 'Airport + lost wallet is the single most common elder phone scam in 2026', bad: true },
+      ],
+      ok: 'You spotted it. This is an AI voice clone scam.',
+      wrong: 'This was an AI voice scam — one of the most dangerous in 2026.',
+      explain: 'Hang up and call Grandma back on her real number. Agree on a family codeword in advance — a real person will know it immediately. An AI clone never will.',
+    },
+    {
+      v: 'phish',
+      html: '<div class="msg-sms">'
+        + '<p class="msg-sms-from">SMS · +1 (555) 014-3827 · Unknown sender</p>'
+        + '<div class="msg-sms-bubble">'
+        + '<p><strong>USPS Alert:</strong> Your package #US9400111899 could not be delivered today.</p><br>'
+        + '<p>A <span class="flag-hl bad">$3.99 redelivery fee</span> must be paid <span class="flag-hl bad">within 24 hours</span> to avoid return to sender.</p><br>'
+        + '<p>Pay now: <span class="msg-sms-link flag-hl bad">usps-redelivery.track-pkg.com</span></p>'
+        + '</div></div>',
+      flags: [
+        { t: 'URL is "usps-redelivery.track-pkg.com" — the real USPS site is only usps.com', bad: true },
+        { t: 'USPS never charges a redelivery fee by text message', bad: true },
+        { t: 'Unknown phone number — real USPS uses official short codes or email', bad: true },
+        { t: 'Small fee ($3.99) lowers your guard — but entering your card gives them the full number', bad: true },
+      ],
+      ok: 'Right — this is SMS phishing ("smishing").',
+      wrong: 'This was a smishing attack — phishing by text message.',
+      explain: 'If you\'re expecting a package, go directly to usps.com in a new browser tab and track it there. Never click a link from an unexpected delivery text.',
+    },
+    {
+      v: 'real',
+      html: '<div class="msg-email">'
+        + '<div class="msg-email-hdr"><div class="msg-fields">'
+        + '<span class="msg-fl">From</span><span class="msg-fv flag-hl good">no-reply@accounts.google.com</span>'
+        + '<span class="msg-fl">To</span><span class="msg-fv">sam.chen@gmail.com</span>'
+        + '<span class="msg-fl">Subject</span><span class="msg-fv msg-subj">Security alert: new sign-in on Windows</span>'
+        + '</div></div>'
+        + '<div class="msg-body">'
+        + '<p>Hi <span class="flag-hl good">Sam</span>,</p>'
+        + '<p>We noticed a new sign-in to your Google Account <strong>sam.chen@gmail.com</strong>.</p>'
+        + '<p style="color:var(--ink-dim);font-size:.9em">Device: Windows PC &nbsp;·&nbsp; London, UK &nbsp;·&nbsp; 14 Jun 2026, 09:41</p>'
+        + '<p><span class="flag-hl good">If this was you, you don\'t need to do anything.</span></p>'
+        + '<p>If this wasn\'t you, visit <span class="flag-hl good">myaccount.google.com/security</span> to secure your account.</p>'
+        + '<p style="color:var(--ink-faint);font-size:.85em;margin-top:1rem">Google LLC · 1600 Amphitheatre Parkway, Mountain View, CA 94043</p>'
+        + '</div></div>',
+      flags: [
+        { t: 'Sender is @accounts.google.com — a legitimate Google domain', bad: false },
+        { t: 'Uses your first name (Sam)', bad: false },
+        { t: '"If this was you, do nothing" — no panic, no threats', bad: false },
+        { t: 'Tells you to type myaccount.google.com yourself — not click a link in the email', bad: false },
+      ],
+      ok: 'Correct — this is a genuine Google security alert.',
+      wrong: 'This one was real.',
+      explain: 'Real security alerts are informative, not threatening. They tell you what happened and what to do if it wasn\'t you — without rushing you. When in doubt, open a new browser tab and go to the site yourself.',
+    },
+  ];
+
+  let idx = 0, score = 0;
+
+  function progress() {
+    progFill.style.width = (idx / S.length * 100) + '%';
+    stepLabel.textContent = idx < S.length
+      ? 'Message ' + (idx + 1) + ' of ' + S.length
+      : 'Complete';
+  }
+
+  function render() {
+    var s = S[idx];
+    stage.innerHTML = s.html;
+    fbPanel.hidden = true;
+    btnsDiv.hidden = false;
+    realBtn.disabled = false;
+    trapBtn.disabled = false;
+    progress();
+  }
+
+  function answer(userV) {
+    var s = S[idx];
+    var correct = userV === s.v;
+    if (correct) score++;
+
+    btnsDiv.hidden = true;
+    /* Reveal highlights */
+    var wrap = stage.firstElementChild;
+    if (wrap) wrap.classList.add('is-revealed');
+
+    /* Header */
+    fbHdr.className = 'fb-hdr ' + (correct ? 'correct' : 'wrong');
+    fbIcon.textContent = correct ? '✓' : '✗';
+    fbVerdict.textContent = correct ? s.ok : s.wrong;
+    fbBody.textContent = s.explain;
+
+    /* Flags */
+    fbList.textContent = '';
+    s.flags.forEach(function (f) {
+      var li = document.createElement('li');
+      li.className = 'fb-flag-item' + (f.bad === false ? ' good' : '');
+      li.textContent = f.t;
+      fbList.appendChild(li);
+    });
+    fbFlags.hidden = false;
+
+    nextBtn.textContent = idx < S.length - 1 ? 'Next message →' : 'See my results';
+    fbPanel.hidden = false;
+    fbPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function showResults() {
+    simShell.hidden = true;
+    results.hidden = false;
+    resNum.textContent = score + ' / ' + S.length;
+    var msg, sub;
+    if (score === S.length) {
+      msg = 'Perfect — nothing got through.';
+      sub = 'You caught every one. This mindset keeps people safe. Share this with someone you care about.';
+    } else if (score >= 4) {
+      msg = 'Strong — just one slipped past.';
+      sub = 'Nearly perfect. Review the one you missed — understanding why is more useful than the score.';
+    } else if (score >= 3) {
+      msg = 'Good start — a few got through.';
+      sub = 'You\'re thinking in the right direction. Attackers rely on the ones that slip by. Review the red flags below.';
+    } else {
+      msg = 'Tough round — give it another go.';
+      sub = 'These are designed to be convincing. Each run you\'ll spot more. The goal is the habit of looking, not a perfect first score.';
+    }
+    resHead.textContent = msg;
+    resSub.textContent = sub;
+  }
+
+  realBtn.addEventListener('click', function () { if (!realBtn.disabled) answer('real'); });
+  trapBtn.addEventListener('click', function () { if (!trapBtn.disabled) answer('phish'); });
+  nextBtn.addEventListener('click', function () {
+    idx++;
+    if (idx >= S.length) { showResults(); } else { render(); }
+  });
+  restart.addEventListener('click', function () {
+    idx = 0; score = 0;
+    results.hidden = true;
+    simShell.hidden = false;
+    render();
+  });
+
+  render();
 })();
 </script>
 </body>
