@@ -1174,6 +1174,164 @@
   }
   .about-link:hover { border-color: var(--accent); color: var(--accent); }
   .about-link.primary { border-color: var(--accent-dim); color: var(--accent); }
+
+  /* ============================================================
+     ANIMATION LAYER
+     ============================================================ */
+
+  /* --- Hero canvas (particle network) --- */
+  .hero { position: relative; overflow: hidden; }
+  #hero-canvas-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  #hero-canvas { display: block; width: 100%; height: 100%; }
+  .hero .wrap { position: relative; z-index: 1; }
+
+  /* --- Scanline sweep --- */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      top: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(227,0,27,.55), transparent);
+      animation: scanline 6s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes scanline {
+      from { transform: translateY(0); }
+      to   { transform: translateY(100vh); }
+    }
+  }
+
+  /* --- Typewriter --- */
+  .hero-typewriter {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: 2rem;
+    font-family: var(--mono);
+    font-size: .82rem;
+    letter-spacing: .08em;
+    color: var(--ink-faint);
+    flex-wrap: wrap;
+  }
+  .type-word { color: var(--accent); }
+  .type-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .type-cursor { animation: blink-cur .9s step-end infinite; }
+    @keyframes blink-cur { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  }
+
+  /* --- Hero glitch on h1 --- */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero h1 { animation: glitch-shake 9s infinite; }
+    @keyframes glitch-shake {
+      0%, 87%, 100% { transform: none; filter: none; }
+      88%  { transform: skewX(-1.2deg) translateX(-3px); filter: drop-shadow(3px 0 0 rgba(227,0,27,.65)); }
+      89%  { transform: skewX(1deg) translateX(3px);    filter: drop-shadow(-3px 0 0 rgba(0,120,255,.45)); }
+      90%  { transform: none; filter: none; }
+      91%  { transform: translateX(-1px) skewX(-.4deg); filter: drop-shadow(2px 0 0 rgba(227,0,27,.4)); }
+      92%  { transform: none; filter: none; }
+    }
+  }
+
+  /* --- Hero stat strip --- */
+  .hero-stats {
+    display: flex;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    margin-top: clamp(2.5rem, 6vh, 4rem);
+    flex-wrap: wrap;
+    padding-top: clamp(1.5rem, 4vh, 2.5rem);
+    border-top: 1px solid var(--line);
+  }
+  .hero-stat { display: flex; flex-direction: column; gap: .3rem; }
+  .hero-stat-n {
+    font-family: var(--mono);
+    font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -.02em;
+  }
+  .hero-stat-l {
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* --- Staggered grid reveals --- */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .tips-grid > *,
+    .js .watch-grid > *,
+    .js .resources-grid > * {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 550ms var(--ease), transform 550ms var(--ease);
+    }
+    .js .tips-grid.is-stag > *,
+    .js .watch-grid.is-stag > *,
+    .js .resources-grid.is-stag > * {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* --- 3D tilt cards --- */
+  .tip-card, .resource-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* --- Slash section divider --- */
+  .slash-div {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, var(--accent) 70%, transparent 100%);
+    opacity: .18;
+    border: none;
+    margin: 0;
+    display: block;
+  }
+
+  /* --- Animated red glow on run buttons --- */
+  @media (prefers-reduced-motion: no-preference) {
+    .run:not(.alt) {
+      position: relative;
+      overflow: hidden;
+    }
+    .run:not(.alt)::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(227,0,27,.18), transparent);
+      transform: translateX(-100%);
+      transition: transform 400ms var(--ease);
+    }
+    .run:not(.alt):hover::after { transform: translateX(100%); }
+  }
+
+  /* --- Pulsing live dot on wire and watch badge --- */
+  @media (prefers-reduced-motion: no-preference) {
+    .wire-label .dot,
+    .watch-dot {
+      animation: dot-pulse 2.4s var(--ease) infinite !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1202,19 +1360,42 @@
 
   <!-- ============ HERO ============ -->
   <section class="hero" id="top" aria-labelledby="hero-h">
+    <div id="hero-canvas-wrap" aria-hidden="true"><canvas id="hero-canvas"></canvas></div>
     <div class="wrap">
       <span class="label" data-reveal>Field notes on the permanent</span>
       <h1 id="hero-h" data-reveal>The threats change. The problems <em>don’t.</em></h1>
       <p class="lede" data-reveal>Every breach you will read about in the next
       decade is already explained by six old problems.
       <strong>Tools expire. These stay.</strong></p>
+      <div class="hero-typewriter" data-reveal aria-live="polite">
+        <span>Now targeting:</span>
+        <span id="type-word" class="type-word">AI voice clones</span><span class="type-cursor" aria-hidden="true"></span>
+      </div>
       <div class="cta" data-reveal>
         <a class="run" href="#breach">Watch it happen</a>
         <a class="run alt" href="#phish-lab">Test yourself →</a>
       </div>
-      <p class="hero-note" data-reveal>For everyone — teens, parents, and grandparents included.</p>
+      <div class="hero-stats" data-reveal>
+        <div class="hero-stat">
+          <span class="hero-stat-n" data-hero-count="1400" data-hero-prefix="$" data-hero-suffix="M+">$0M+</span>
+          <span class="hero-stat-l">APAC scam losses Q1 2026</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-n" data-hero-count="88" data-hero-suffix="%">0%</span>
+          <span class="hero-stat-l">of breaches start with phishing</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-n">3 sec</span>
+          <span class="hero-stat-l">to clone a voice with AI</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-n">6</span>
+          <span class="hero-stat-l">permanent security problems</span>
+        </div>
+      </div>
     </div>
   </section>
+  <hr class="slash-div">
 
   <!-- ============ PRINCIPLES ============ -->
   <section id="problems" aria-labelledby="problems-h">
@@ -1658,6 +1839,7 @@
     </div>
   </section>
 
+  <hr class="slash-div">
   <!-- ============ PHISHING LAB ============ -->
   <section id="phish-lab" aria-labelledby="phish-h">
     <div class="wrap">
@@ -2971,6 +3153,201 @@
   });
 
   render();
+})();
+</script>
+
+<script>
+/* ============================================================
+   ANIMATION SCRIPTS
+   ============================================================ */
+(function () {
+  'use strict';
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Hero particle network canvas ---- */
+  (function () {
+    var wrap = document.getElementById('hero-canvas-wrap');
+    var canvas = document.getElementById('hero-canvas');
+    if (!wrap || !canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, dpr;
+    var pts = [];
+    var N = 55;
+    var RAF = 0;
+    var mouse = { x: -9999, y: -9999 };
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = wrap.offsetWidth;
+      H = wrap.offsetHeight;
+      canvas.width  = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function init() {
+      pts = [];
+      for (var i = 0; i < N; i++) {
+        pts.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - .5) * 0.22,
+          vy: (Math.random() - .5) * 0.22,
+          r: 1.5 + Math.random() * 1.8,
+        });
+      }
+    }
+
+    function tick() {
+      RAF = requestAnimationFrame(tick);
+      ctx.clearRect(0, 0, W, H);
+      var MAX_D = 145;
+      for (var i = 0; i < N; i++) {
+        var p = pts[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      }
+      for (var i = 0; i < N; i++) {
+        for (var j = i + 1; j < N; j++) {
+          var dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          var d = Math.sqrt(dx*dx + dy*dy);
+          if (d < MAX_D) {
+            var a = (1 - d / MAX_D) * 0.18;
+            ctx.strokeStyle = 'rgba(227,0,27,' + a.toFixed(3) + ')';
+            ctx.lineWidth = .8;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      for (var i = 0; i < N; i++) {
+        var p = pts[i];
+        var dx = mouse.x - p.x, dy = mouse.y - p.y;
+        var md = Math.sqrt(dx*dx + dy*dy);
+        var bright = md < 130 ? .9 : .35;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(227,0,27,' + bright + ')';
+        ctx.fill();
+      }
+    }
+
+    var hero = document.querySelector('.hero');
+    if (hero) {
+      hero.addEventListener('mousemove', function (e) {
+        var r = hero.getBoundingClientRect();
+        mouse.x = e.clientX - r.left;
+        mouse.y = e.clientY - r.top;
+      });
+      hero.addEventListener('mouseleave', function () { mouse.x = -9999; mouse.y = -9999; });
+    }
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(function () { resize(); init(); }).observe(wrap);
+    } else {
+      window.addEventListener('resize', function () { resize(); init(); });
+    }
+    resize(); init();
+    if (!RM) tick();
+  })();
+
+  /* ---- Typewriter ---- */
+  (function () {
+    var el = document.getElementById('type-word');
+    if (!el) return;
+    var words = [
+      'AI voice clones',
+      'pig-butchering scams',
+      'deepfake video fraud',
+      'CEO WhatsApp scams',
+      'OTP theft attacks',
+      'smishing campaigns',
+      'fake job offers',
+      'QR code phishing',
+    ];
+    if (RM) { el.textContent = words[0]; return; }
+    var idx = 0, pos = 0, del = false;
+    function step() {
+      var w = words[idx];
+      if (!del) {
+        el.textContent = w.slice(0, ++pos);
+        if (pos === w.length) { del = true; setTimeout(step, 2000); return; }
+        setTimeout(step, 75);
+      } else {
+        el.textContent = w.slice(0, --pos);
+        if (pos === 0) { del = false; idx = (idx + 1) % words.length; setTimeout(step, 300); return; }
+        setTimeout(step, 40);
+      }
+    }
+    setTimeout(step, 1600);
+  })();
+
+  /* ---- Hero stat counters ---- */
+  (function () {
+    if (RM) return;
+    var els = document.querySelectorAll('[data-hero-count]');
+    els.forEach(function (el) {
+      var target = parseInt(el.dataset.heroCount, 10);
+      var prefix = el.dataset.heroPrefix || '';
+      var suffix = el.dataset.heroSuffix || '';
+      var dur = 1400;
+      var observed = false;
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting && !observed) {
+          observed = true;
+          io.disconnect();
+          var t0 = performance.now();
+          (function tick(now) {
+            var k = Math.min(1, (now - t0) / dur);
+            var eased = 1 - Math.pow(1 - k, 3);
+            el.textContent = prefix + Math.round(target * eased).toLocaleString('en-US') + suffix;
+            if (k < 1) requestAnimationFrame(tick);
+          })(performance.now());
+        }
+      }, { threshold: .6 });
+      io.observe(el);
+    });
+  })();
+
+  /* ---- Staggered grid reveals ---- */
+  (function () {
+    if (RM) return;
+    document.querySelectorAll('.tips-grid, .watch-grid, .resources-grid').forEach(function (grid) {
+      var items = Array.from(grid.children);
+      items.forEach(function (item, i) {
+        item.style.transitionDelay = (i * 75) + 'ms';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          grid.classList.add('is-stag');
+          io.disconnect();
+        }
+      }, { threshold: 0.08 });
+      io.observe(grid);
+    });
+  })();
+
+  /* ---- 3D card tilt ---- */
+  (function () {
+    if (RM) return;
+    document.querySelectorAll('.tip-card, .resource-card').forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width  - .5;
+        var y = (e.clientY - r.top)  / r.height - .5;
+        card.style.transform = 'perspective(700px) rotateY(' + (x * 10) + 'deg) rotateX(' + (-y * 10) + 'deg) translateY(-4px)';
+        card.style.boxShadow = '0 14px 36px rgba(0,0,0,.55), ' + (-x * 8) + 'px ' + (-y * 8) + 'px 24px rgba(227,0,27,.1)';
+      });
+      card.addEventListener('mouseleave', function () {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+    });
+  })();
+
 })();
 </script>
 </body>
