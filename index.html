@@ -37,7 +37,7 @@
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-  [id] { scroll-margin-top: 5rem; }
+  [id] { scroll-margin-top: 7rem; } /* pill (72px) + 24px gap + buffer */
 
   body {
     margin: 0;
@@ -94,20 +94,42 @@
   }
   .skip:focus { transform: translate(-50%, 0); }
 
-  /* ---------- Header ---------- */
+  /* ---------- Header — liquid glass pill ---------- */
   header {
     position: sticky;
-    top: 0;
-    z-index: 5;
-    background: var(--bg);
-    border-bottom: 1px solid var(--line);
+    top: 24px;
+    z-index: 100;
+    /* pull header out of normal flow width so the pill can be centred */
+    width: 100%;
+    pointer-events: none; /* children re-enable below */
   }
   .bar {
+    pointer-events: auto;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    padding-block: 1.1rem;
+    max-width: 1200px;
+    height: 72px;
+    padding: 0 28px;
+    margin: 0 auto;
+    border-radius: 100px;
+    /* glass */
+    background: rgba(255,255,255,0.02);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 4px 30px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: box-shadow 250ms var(--ease), background 250ms var(--ease);
+  }
+  /* subtle lift on hover */
+  .bar:hover {
+    background: rgba(255,255,255,0.035);
+    box-shadow:
+      0 8px 40px rgba(0,0,0,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.07);
   }
   .mark {
     font-family: var(--mono);
@@ -116,29 +138,132 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--ink);
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .mark b { color: var(--accent); font-weight: 700; }
+
+  /* desktop nav */
   nav ul {
     display: flex;
-    gap: clamp(1rem, 3vw, 2.5rem);
+    gap: clamp(0.9rem, 2vw, 2rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
   nav a {
     font-family: var(--mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
     color: var(--ink-dim);
     transition: color 200ms var(--ease);
+    white-space: nowrap;
   }
-  nav a:hover { color: var(--ink); }
-  @media (max-width: 720px) {
-    nav li:nth-child(4) { display: none; }
+  nav a:hover,
+  nav a:focus-visible { color: var(--ink); outline-offset: 4px; }
+
+  /* hamburger button — hidden on desktop */
+  .nav-burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
   }
-  @media (max-width: 540px) {
-    nav li:nth-child(3) { display: none; }
+  .nav-burger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  /* three-line icon drawn with box-shadow */
+  .nav-burger-icon,
+  .nav-burger-icon::before,
+  .nav-burger-icon::after {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--ink-dim);
+    border-radius: 2px;
+    position: relative;
+    transition: transform 220ms var(--ease), opacity 150ms;
+  }
+  .nav-burger-icon { margin: auto; }
+  .nav-burger-icon::before,
+  .nav-burger-icon::after { content: ''; position: absolute; left: 0; }
+  .nav-burger-icon::before { top: -6px; }
+  .nav-burger-icon::after  { top:  6px; }
+  /* open state → X */
+  .nav-burger[aria-expanded="true"] .nav-burger-icon { background: transparent; }
+  .nav-burger[aria-expanded="true"] .nav-burger-icon::before { transform: translateY(6px) rotate(45deg);  background: var(--ink); }
+  .nav-burger[aria-expanded="true"] .nav-burger-icon::after  { transform: translateY(-6px) rotate(-45deg); background: var(--ink); }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-burger-icon,
+    .nav-burger-icon::before,
+    .nav-burger-icon::after { transition: none; }
+  }
+
+  /* mobile drawer */
+  .nav-drawer {
+    display: none; /* block only on mobile */
+    position: fixed;
+    top: 108px; /* 24px gap + 72px bar + 12px breathing room */
+    left: 24px;
+    right: 24px;
+    border-radius: 20px;
+    background: rgba(13,17,32,0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    padding: 1.25rem 1.5rem;
+    z-index: 99;
+    transform-origin: top center;
+    transform: scaleY(0.92) translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 220ms var(--ease),
+      opacity   220ms var(--ease);
+  }
+  .nav-drawer.open {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-drawer { transition: opacity 180ms linear; transform: none; }
+  }
+  .nav-drawer ul {
+    margin: 0; padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .nav-drawer li + li { border-top: 1px solid var(--line); }
+  .nav-drawer a {
+    display: block;
+    padding: .85rem .25rem;
+    font-family: var(--mono);
+    font-size: .78rem;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    transition: color 180ms;
+  }
+  .nav-drawer a:hover { color: var(--ink); }
+
+  /* breakpoint: switch to hamburger */
+  @media (max-width: 768px) {
+    nav { display: none; }
+    .nav-burger { display: flex; }
+    .nav-drawer { display: block; }
   }
 
   .sr-only {
@@ -1339,8 +1464,10 @@
 <a class="skip" href="#main">Skip to content</a>
 
 <header>
-  <div class="wrap bar">
+  <div class="bar">
     <a class="mark" href="#top" aria-label="Kai Cyber — home">KAI<b>·</b>CYBER</a>
+
+    <!-- desktop nav (hidden ≤768px via CSS) -->
     <nav aria-label="Sections">
       <ul>
         <li><a href="#problems">Problems</a></li>
@@ -1353,7 +1480,26 @@
         <li><a href="#position">Position</a></li>
       </ul>
     </nav>
+
+    <!-- hamburger (shown ≤768px via CSS) -->
+    <button class="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer" type="button">
+      <span class="nav-burger-icon" aria-hidden="true"></span>
+    </button>
   </div>
+
+  <!-- mobile drawer -->
+  <nav class="nav-drawer" id="nav-drawer" aria-label="Mobile menu">
+    <ul>
+      <li><a href="#problems">Problems</a></li>
+      <li><a href="#breach">The Breach</a></li>
+      <li><a href="#cases">Case Files</a></li>
+      <li><a href="#phish-lab" class="nav-highlight">Phish Lab</a></li>
+      <li><a href="#scam-watch">Scam Watch</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#position">Position</a></li>
+    </ul>
+  </nav>
 </header>
 
 <main id="main">
@@ -3163,6 +3309,43 @@
 (function () {
   'use strict';
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Hamburger / mobile drawer ---- */
+  (function () {
+    var burger = document.querySelector('.nav-burger');
+    var drawer = document.getElementById('nav-drawer');
+    if (!burger || !drawer) return;
+
+    function setOpen(open) {
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      drawer.classList.toggle('open', open);
+    }
+
+    burger.addEventListener('click', function () {
+      var isOpen = drawer.classList.contains('open');
+      setOpen(!isOpen);
+    });
+
+    /* close on any drawer link click */
+    drawer.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+
+    /* close on outside click */
+    document.addEventListener('click', function (e) {
+      if (!drawer.classList.contains('open')) return;
+      if (!drawer.contains(e.target) && !burger.contains(e.target)) setOpen(false);
+    });
+
+    /* close on Escape */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) {
+        setOpen(false);
+        burger.focus();
+      }
+    });
+  })();
 
   /* ---- Hero particle network canvas ---- */
   (function () {
