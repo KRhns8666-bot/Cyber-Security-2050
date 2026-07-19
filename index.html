@@ -1473,16 +1473,23 @@
   .vhero-canvas {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     z-index: 0;
     pointer-events: none;
-    opacity: .45;
+    opacity: .8;
   }
+  /* soft readability wash: keeps the left text legible without hiding the
+     particle field — much lighter than a full vignette so the animation
+     reaches every edge of the screen */
   .vhero-vignette {
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    background: radial-gradient(ellipse at center, transparent 40%, #07090F 100%);
+    background:
+      radial-gradient(ellipse 80% 70% at center, transparent 70%, rgba(7,9,15,.55) 100%),
+      linear-gradient(100deg, rgba(7,9,15,.72) 0%, rgba(7,9,15,.35) 42%, transparent 70%);
   }
   .vhero-scanlines {
     position: absolute;
@@ -1599,7 +1606,7 @@
 
   /* entrance + cue animation */
   @keyframes vfadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-  @keyframes vfadeCanvas { from { opacity: 0; } to { opacity: .45; } }
+  @keyframes vfadeCanvas { from { opacity: 0; } to { opacity: .8; } }
   @keyframes vpulse { 0%, 100% { opacity: .25; } 50% { opacity: .7; } }
   @media (prefers-reduced-motion: no-preference) {
     .vhero [data-v] {
@@ -3530,8 +3537,15 @@
     if (!canvas) return;
     var ctx = canvas.getContext('2d');
     var W, H, dpr, nodes = [], raf = 0, visible = true;
+    var LINK = 150;   // connection distance
 
-    function count() { return window.innerWidth < 768 ? 25 : 60; }
+    /* density scales with the actual viewport area so the field fills the
+       whole screen — never clustered in one corner */
+    function count() {
+      var mobile = window.innerWidth < 768;
+      var byArea = Math.round((W * H) / (mobile ? 26000 : 15000));
+      return Math.max(mobile ? 24 : 60, Math.min(mobile ? 55 : 160, byArea));
+    }
 
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -3547,7 +3561,7 @@
       for (var i = 0; i < n; i++) {
         nodes.push({
           x: Math.random() * W, y: Math.random() * H,
-          vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3,
+          vx: (Math.random() - .5) * .32, vy: (Math.random() - .5) * .32,
           mag: false
         });
       }
@@ -3568,8 +3582,8 @@
           var a = nodes[i], b = nodes[j];
           var dx = a.x - b.x, dy = a.y - b.y;
           var d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 140) {
-            var al = (1 - d / 140) * 0.5;
+          if (d < LINK) {
+            var al = (1 - d / LINK) * 0.8;
             ctx.strokeStyle = (a.mag || b.mag)
               ? 'rgba(255,45,149,' + al.toFixed(3) + ')'
               : 'rgba(0,240,255,' + al.toFixed(3) + ')';
@@ -3582,13 +3596,13 @@
         var q = nodes[i];
         ctx.beginPath();
         if (q.mag) {
-          ctx.shadowBlur = 12; ctx.shadowColor = '#FF2D95';
+          ctx.shadowBlur = 16; ctx.shadowColor = '#FF2D95';
           ctx.fillStyle = '#FF2D95';
-          ctx.arc(q.x, q.y, 2.5, 0, 6.2832);
+          ctx.arc(q.x, q.y, 3, 0, 6.2832);
         } else {
-          ctx.shadowBlur = 0;
-          ctx.fillStyle = 'rgba(0,240,255,0.6)';
-          ctx.arc(q.x, q.y, 1.5, 0, 6.2832);
+          ctx.shadowBlur = 6; ctx.shadowColor = 'rgba(0,240,255,.7)';
+          ctx.fillStyle = 'rgba(0,240,255,0.9)';
+          ctx.arc(q.x, q.y, 1.8, 0, 6.2832);
         }
         ctx.fill();
       }
