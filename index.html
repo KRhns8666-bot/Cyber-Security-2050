@@ -1667,27 +1667,26 @@
   }
 
   /* ============================================================
-     CINEMATIC COLD-OPEN — scroll-scrubbed film hero, dissolves
-     into the .vhero particle field below.
+     CINEMATIC COLD-OPEN — parallax: a FIXED scrubbing video backdrop
+     that the whole page scrolls over. Copy drifts through, then the
+     .vhero slides up and covers the footage.
      ============================================================ */
-  #coldopen{ position:relative; height:460vh; background:var(--bg); }
-  #coldopen.co-skip{ display:none; }              /* removed on error / reduced-motion */
-  html:not(.js) #coldopen{ display:none; }        /* no JS → skip straight to the hero */
-  .co-stage{
-    position:sticky; top:0; height:100vh; width:100%;
-    overflow:hidden; background:#000; z-index:0;
+  /* the fixed film backdrop, behind all page content */
+  .cinebg{
+    position:fixed; inset:0; z-index:0;
+    background:#000; overflow:hidden;
+    transition:opacity .3s linear;
   }
-  .co-video{
-    position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; background:#000;
-  }
-  .co-grade{
+  .cinebg.gone{ display:none; }                    /* freed once past the intro */
+  html:not(.js) .cinebg{ display:none; }
+  .cine-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; }
+  .cine-veil{
     position:absolute; inset:0; pointer-events:none;
-    background:linear-gradient(to bottom, rgba(7,9,15,.30) 0%, transparent 20%,
-              transparent 52%, rgba(7,9,15,.78) 100%);
+    background:linear-gradient(to bottom, rgba(7,9,15,.28) 0%, transparent 22%,
+              transparent 50%, rgba(7,9,15,.55) 100%);
   }
   .co-loader{
-    position:absolute; inset:0; z-index:8; display:flex; flex-direction:column;
+    position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
     align-items:center; justify-content:center; gap:1.1rem; background:var(--bg);
     transition:opacity .6s ease; font-family:var(--mono); color:var(--ink-dim);
     font-size:11px; letter-spacing:.3em; text-transform:uppercase;
@@ -1699,45 +1698,67 @@
     .co-ring{ animation:co-spin 1s linear infinite; }
     @keyframes co-spin{ to{ transform:rotate(360deg); } }
   }
-  /* centre title */
-  .co-badge{
-    position:absolute; left:0; right:0; top:24vh; z-index:5; text-align:center;
-    pointer-events:none; padding:0 24px;
+
+  /* page content stacks ABOVE the backdrop; transparent areas reveal it */
+  main{ position:relative; z-index:1; }
+
+  /* the transparent scroll region that reveals the film */
+  #coldopen{ position:relative; z-index:1; background:transparent; }
+  #coldopen.co-skip{ display:none; }
+  html:not(.js) #coldopen{ display:none; }
+  .co-panel{
+    min-height:96vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:0 24px;
   }
-  .co-badge h2{
-    font-size:clamp(2.2rem,6.5vw,4.6rem); font-weight:600; letter-spacing:-.04em;
-    line-height:.96; margin:0; text-shadow:0 2px 50px rgba(0,0,0,.7);
-  }
+  .co-badge h2{ font-size:clamp(2.2rem,6.5vw,4.6rem); font-weight:600; letter-spacing:-.04em;
+    line-height:.96; margin:0; text-shadow:0 2px 50px rgba(0,0,0,.75); }
   .co-badge h2 em{ font-style:normal; color:var(--accent); text-shadow:0 0 30px rgba(227,0,27,.55); }
   .co-badge span{ display:block; margin-top:1rem; font-family:var(--mono); font-size:11px;
     letter-spacing:.3em; text-transform:uppercase; color:var(--ink-dim); }
-  /* welded copy (lower third) */
-  .co-copy{
-    position:absolute; left:0; right:0; bottom:16vh; z-index:5; text-align:center;
-    padding:0 24px; opacity:0; pointer-events:none; transition:opacity .1s linear;
-  }
+  /* copy panels drift in/out as they cross the screen over the footage */
+  .co-copy{ opacity:0; transform:translateY(26px); transition:opacity .6s var(--ease), transform .6s var(--ease); }
+  .co-copy.in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){ .co-copy{ opacity:1; transform:none; transition:none; } }
   .co-copy .k{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:.32em;
     text-transform:uppercase; color:var(--ink-dim); margin-bottom:.9rem; }
-  .co-copy .h{ font-size:clamp(1.5rem,4vw,3rem); font-weight:600; letter-spacing:-.025em;
-    line-height:1.1; margin:0; text-wrap:balance; text-shadow:0 2px 40px rgba(0,0,0,.6); }
+  .co-copy .h{ font-size:clamp(1.6rem,4.2vw,3.1rem); font-weight:600; letter-spacing:-.025em;
+    line-height:1.1; margin:0; text-wrap:balance; text-shadow:0 2px 40px rgba(0,0,0,.65); }
   .co-copy .h b.red{ font-weight:600; color:var(--accent); text-shadow:0 0 24px rgba(227,0,27,.6); }
-  /* bottom scrubber + timecode */
-  .co-scrub{ position:absolute; left:0; right:0; bottom:0; z-index:6; height:2px;
-    background:rgba(255,255,255,.08); pointer-events:none; }
+  /* fixed HUD scrubber for the film */
+  .co-scrub{ position:fixed; left:0; right:0; bottom:0; z-index:6; height:2px;
+    background:rgba(255,255,255,.08); pointer-events:none; opacity:0; transition:opacity .3s; }
+  .co-scrub.on{ opacity:1; }
   .co-scrub i{ position:absolute; inset:0 auto 0 0; width:0%;
     background:linear-gradient(90deg,var(--accent-dim),var(--accent)); }
-  .co-tc{ position:absolute; right:clamp(16px,5vw,44px); bottom:16px; z-index:6;
+  .co-tc{ position:fixed; right:clamp(16px,5vw,44px); bottom:16px; z-index:6;
     font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:var(--ink-faint);
-    font-variant-numeric:tabular-nums; pointer-events:none; }
-  .co-skip{ position:absolute; left:clamp(16px,5vw,44px); bottom:14px; z-index:7;
+    font-variant-numeric:tabular-nums; pointer-events:none; opacity:0; transition:opacity .3s; }
+  .co-tc.on{ opacity:1; }
+  .co-skip{ position:fixed; left:clamp(16px,5vw,44px); bottom:14px; z-index:7;
     font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--ink-dim); text-decoration:none; border-bottom:1px solid transparent; }
+    color:var(--ink-dim); text-decoration:none; border-bottom:1px solid transparent; opacity:0; transition:opacity .3s; }
+  .co-skip.on{ opacity:1; }
   .co-skip:hover{ color:var(--ink); border-bottom-color:var(--accent); }
 </style>
 </head>
 <body>
 
 <a class="skip" href="#main">Skip to content</a>
+
+<!-- Fixed cinematic film backdrop — the whole page scrolls over it -->
+<div class="cinebg" id="cinebg" aria-hidden="true">
+  <video class="cine-video" id="co-video" muted playsinline preload="auto"
+    data-cdn="https://d8j0ntlcm91z4.cloudfront.net/user_3EQRy1gerRGWLKu1q4ZTyKukrQz/hf_20260722_160332_4ebe2102-c2dc-4875-95a0-4d07ad4df146.mp4"
+    src="assets/one-credential.mp4"></video>
+  <div class="cine-veil"></div>
+  <div class="co-loader" id="co-loader"><span class="co-ring"></span><span>loading the journey</span></div>
+</div>
+
+<!-- HUD for the film (fixed, only visible during the cold-open) -->
+<a class="co-skip" id="co-skip" href="#top">skip intro ↓</a>
+<span class="co-tc" id="co-tc">0.0s / 8.0s</span>
+<div class="co-scrub" id="co-scrubwrap"><i id="co-bar"></i></div>
 
 <header>
   <div class="bar">
@@ -1780,40 +1801,27 @@
 
 <main id="main">
 
-  <!-- ============ CINEMATIC COLD-OPEN (scroll-scrubbed film hero) ============ -->
+  <!-- ============ CINEMATIC COLD-OPEN (parallax over fixed film) ============ -->
   <div id="coldopen" aria-hidden="true">
-    <div class="co-stage">
-      <video class="co-video" id="co-video" muted playsinline preload="auto"
-        data-cdn="https://d8j0ntlcm91z4.cloudfront.net/user_3EQRy1gerRGWLKu1q4ZTyKukrQz/hf_20260722_160332_4ebe2102-c2dc-4875-95a0-4d07ad4df146.mp4"
-        src="assets/one-credential.mp4"></video>
-      <div class="co-grade"></div>
-      <div class="co-loader" id="co-loader"><span class="co-ring"></span><span>loading the journey</span></div>
-
-      <div class="co-badge" id="co-badge">
-        <h2>ONE&nbsp;<em>CREDENTIAL</em></h2>
-        <span>scroll to travel</span>
-      </div>
-
-      <div class="co-copy" data-a="0.03" data-b="0.17">
-        <span class="k">00:00</span>
-        <p class="h">One password, reused on a system<br>no one thought mattered.</p>
-      </div>
-      <div class="co-copy" data-a="0.31" data-b="0.46">
-        <span class="k">00:03</span>
-        <p class="h">It doesn't break in. It <b class="red">logs in.</b></p>
-      </div>
-      <div class="co-copy" data-a="0.60" data-b="0.75">
-        <span class="k">00:06</span>
-        <p class="h">Trust is transitive.<br>So is compromise.</p>
-      </div>
-      <div class="co-copy" data-a="0.87" data-b="1.0">
-        <span class="k">00:08</span>
-        <p class="h">Total compromise. <b class="red">Exploits used: zero.</b></p>
-      </div>
-
-      <a class="co-skip" href="#top">skip intro ↓</a>
-      <span class="co-tc" id="co-tc">0.0s / 8.0s</span>
-      <div class="co-scrub"><i id="co-bar"></i></div>
+    <div class="co-panel co-badge">
+      <h2>ONE&nbsp;<em>CREDENTIAL</em></h2>
+      <span>scroll to travel</span>
+    </div>
+    <div class="co-panel co-copy">
+      <div><span class="k">00:00</span>
+      <p class="h">One password, reused on a system<br>no one thought mattered.</p></div>
+    </div>
+    <div class="co-panel co-copy">
+      <div><span class="k">00:03</span>
+      <p class="h">It doesn't break in. It <b class="red">logs in.</b></p></div>
+    </div>
+    <div class="co-panel co-copy">
+      <div><span class="k">00:06</span>
+      <p class="h">Trust is transitive.<br>So is compromise.</p></div>
+    </div>
+    <div class="co-panel co-copy">
+      <div><span class="k">00:08</span>
+      <p class="h">Total compromise. <b class="red">Exploits used: zero.</b></p></div>
     </div>
   </div>
 
@@ -3831,41 +3839,46 @@
 
 <script>
 /* ============================================================
-   CINEMATIC COLD-OPEN — scroll-scrubbed film hero
-   Self-contained; degrades to the .vhero hero on any failure.
+   CINEMATIC COLD-OPEN — parallax: fixed film backdrop the page
+   scrolls over. Self-contained; degrades to the .vhero on failure.
    ============================================================ */
 (function(){
   'use strict';
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var wrap = document.getElementById('coldopen');
-  if(!wrap) return;
-  var v      = document.getElementById('co-video');
-  var loader = document.getElementById('co-loader');
-  var badge  = document.getElementById('co-badge');
-  var bar    = document.getElementById('co-bar');
-  var tc     = document.getElementById('co-tc');
-  var stage  = wrap.querySelector('.co-stage');
-  var copies = [].slice.call(wrap.querySelectorAll('.co-copy'));
+  var wrap   = document.getElementById('coldopen');
+  var cinebg = document.getElementById('cinebg');
+  if(!wrap || !cinebg) return;
+  var v       = document.getElementById('co-video');
+  var loader  = document.getElementById('co-loader');
+  var bar     = document.getElementById('co-bar');
+  var tc      = document.getElementById('co-tc');
+  var scrubw  = document.getElementById('co-scrubwrap');
+  var skip    = document.getElementById('co-skip');
+  var copies  = [].slice.call(wrap.querySelectorAll('.co-copy'));
 
   function clamp(v,a,b){ return v<a?a:v>b?b:v; }
-  function smooth(t){ return t*t*(3-2*t); }
 
-  /* reduced-motion users skip the film entirely (also avoids the 23MB fetch) */
-  function drop(){ wrap.classList.add('co-skip'); if(v){ v.removeAttribute('src'); try{v.load();}catch(e){} } }
+  /* reduced-motion / no video → remove the whole intro (and the 23MB fetch) */
+  function drop(){
+    wrap.classList.add('co-skip');
+    cinebg.classList.add('gone');
+    scrubw.classList.remove('on'); tc.classList.remove('on'); skip.classList.remove('on');
+    if(v){ v.removeAttribute('src'); try{ v.load(); }catch(e){} }
+  }
   if(RM){ drop(); return; }
 
   var dur=8, ready=false, progress=0, target=0, raf=0, triedCdn=false;
 
   v.addEventListener('loadedmetadata', function(){ dur=v.duration||8; });
   v.addEventListener('canplay', function(){
-    if(ready) return; ready=true; loader.classList.add('hide'); seek(0); ui(0);
+    if(ready) return; ready=true; loader.classList.add('hide'); seek(0);
   });
   v.addEventListener('error', function(){
     var cdn=v.getAttribute('data-cdn');
-    if(!triedCdn && cdn){ triedCdn=true; ready=false; v.src=cdn; try{v.load();}catch(e){} return; }
-    drop();   // give up → land on the real hero
+    if(!triedCdn && cdn){ triedCdn=true; ready=false; v.src=cdn; try{ v.load(); }catch(e){} return; }
+    drop();
   });
-  function prime(){ var p=v.play(); if(p&&p.then){ p.then(function(){v.pause();}).catch(function(){}); } }
+  function prime(){ var p=v.play(); if(p&&p.then){ p.then(function(){ v.pause(); }).catch(function(){}); } }
   window.addEventListener('touchstart', prime, {once:true, passive:true});
   window.addEventListener('click', prime, {once:true});
   window.addEventListener('scroll', function(){ prime(); }, {once:true, passive:true});
@@ -3876,10 +3889,20 @@
     if(Math.abs(v.currentTime-want)>0.015){ try{ v.currentTime=want; }catch(e){} }
   }
 
+  /* copy panels fade in/out as they cross the screen over the footage */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.target.classList.toggle('in', e.isIntersecting); });
+    }, { rootMargin:'-32% 0px -32% 0px', threshold:0 });
+    copies.forEach(function(c){ io.observe(c); });
+  } else {
+    copies.forEach(function(c){ c.classList.add('in'); });
+  }
+
   function read(){
     var r=wrap.getBoundingClientRect();
     var total=wrap.offsetHeight-window.innerHeight;
-    target=clamp(-r.top/total,0,1);
+    target=clamp(-r.top/(total||1),0,1);
     if(!raf) raf=requestAnimationFrame(tick);
   }
   function tick(){
@@ -3893,19 +3916,24 @@
   function ui(p){
     bar.style.width=(p*100)+'%';
     tc.textContent=(p*8).toFixed(1)+'s / 8.0s';
-    badge.style.opacity=String(clamp(1-p/0.06,0,1));
-    for(var i=0;i<copies.length;i++){
-      var c=copies[i], a=+c.dataset.a, b=+c.dataset.b, mid=(a+b)/2, half=(b-a)/2;
-      c.style.opacity=String(smooth(clamp(1-Math.abs(p-mid)/half,0,1)));
+    var active = p < 0.998;
+    scrubw.classList.toggle('on', active);
+    tc.classList.toggle('on', active);
+    skip.classList.toggle('on', active);
+    if(p >= 1){
+      cinebg.classList.add('gone');
+    } else {
+      cinebg.classList.remove('gone');
+      /* dissolve the film out over the final 12% as the hero rises over it */
+      cinebg.style.opacity = String(p <= 0.88 ? 1 : clamp((1-p)/0.12, 0, 1));
     }
-    /* dissolve into the .vhero red particle field over the final 10% */
-    stage.style.opacity = String(p <= 0.90 ? 1 : clamp((1-p)/0.10, 0, 1));
   }
 
   window.addEventListener('scroll', read, {passive:true});
-  window.addEventListener('resize', function(){ seek(progress); ui(progress); });
-  setTimeout(function(){ if(!ready && v.readyState>=2){ ready=true; loader.classList.add('hide'); seek(0);} }, 4500);
-  read(); ui(0);
+  window.addEventListener('resize', function(){ read(); seek(progress); ui(progress); });
+  setTimeout(function(){ if(!ready && v.readyState>=2){ ready=true; loader.classList.add('hide'); seek(progress);} }, 4500);
+  /* snap to current scroll on load (no ease-from-zero flash) */
+  read(); progress = target; ui(progress);
 })();
 </script>
 </body>
