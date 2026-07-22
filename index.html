@@ -1679,7 +1679,8 @@
   }
   .cinebg.gone{ display:none; }                    /* freed once past the intro */
   html:not(.js) .cinebg{ display:none; }
-  .cine-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; }
+  .cine-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000;
+    will-change:transform; transform-origin:center; }
   .cine-veil{
     position:absolute; inset:0; pointer-events:none;
     background:linear-gradient(to bottom, rgba(7,9,15,.28) 0%, transparent 22%,
@@ -3916,6 +3917,11 @@
   function ui(p){
     bar.style.width=(p*100)+'%';
     tc.textContent=(p*8).toFixed(1)+'s / 8.0s';
+    /* depth: gentle Ken-Burns zoom + vertical drift so the film reads as a
+       receding 3D layer behind the foreground, not a flat backdrop */
+    var sc = 1 + p * 0.09;
+    var dy = (p - 0.5) * 5;            // ~ -2.5vh..+2.5vh
+    v.style.transform = 'translateY(' + dy.toFixed(2) + 'vh) scale(' + sc.toFixed(4) + ')';
     var active = p < 0.998;
     scrubw.classList.toggle('on', active);
     tc.classList.toggle('on', active);
