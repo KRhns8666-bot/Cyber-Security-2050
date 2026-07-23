@@ -1749,7 +1749,7 @@
 
 <!-- Fixed cinematic film backdrop — the whole page scrolls over it -->
 <div class="cinebg" id="cinebg" aria-hidden="true">
-  <video class="cine-video" id="co-video" muted playsinline preload="auto"
+  <video class="cine-video" id="co-video" muted playsinline autoplay loop preload="auto"
     data-cdn="https://d8j0ntlcm91z4.cloudfront.net/user_3EQRy1gerRGWLKu1q4ZTyKukrQz/hf_20260722_160332_4ebe2102-c2dc-4875-95a0-4d07ad4df146.mp4"
     src="assets/one-credential.mp4"></video>
   <div class="cine-veil"></div>
@@ -3868,27 +3868,31 @@
   }
   if(RM){ drop(); return; }
 
-  var dur=8, ready=false, progress=0, target=0, raf=0, triedCdn=false;
+  var ready=false, triedCdn=false, progress=0, target=0, raf=0, paused=false;
 
-  v.addEventListener('loadedmetadata', function(){ dur=v.duration||8; });
+  /* Play the film SMOOTHLY (every frame, incl. the star-burst warp) instead of
+     scrubbing it by scroll — MP4 seek only lands on keyframes, which is what
+     made fast moments skip and stutter. Scroll now drives only the parallax,
+     the copy, and the dissolve into the hero. */
+  function playVid(){ if(paused) return; var p=v.play(); if(p&&p.then) p.catch(function(){}); }
+
   v.addEventListener('canplay', function(){
-    if(ready) return; ready=true; loader.classList.add('hide'); seek(0);
+    if(!ready){ ready=true; loader.classList.add('hide'); }
+    playVid();
   });
   v.addEventListener('error', function(){
     var cdn=v.getAttribute('data-cdn');
     if(!triedCdn && cdn){ triedCdn=true; ready=false; v.src=cdn; try{ v.load(); }catch(e){} return; }
     drop();
   });
-  function prime(){ var p=v.play(); if(p&&p.then){ p.then(function(){ v.pause(); }).catch(function(){}); } }
-  window.addEventListener('touchstart', prime, {once:true, passive:true});
-  window.addEventListener('click', prime, {once:true});
-  window.addEventListener('scroll', function(){ prime(); }, {once:true, passive:true});
-
-  function seek(p){
-    if(!ready) return;
-    var want=clamp(p,0,1)*Math.max(0.1,dur-0.04);
-    if(Math.abs(v.currentTime-want)>0.015){ try{ v.currentTime=want; }catch(e){} }
-  }
+  v.addEventListener('timeupdate', function(){
+    var d=v.duration||8;
+    bar.style.width=((v.currentTime/d)*100).toFixed(1)+'%';   // subtle "film is playing" cue
+  });
+  /* browsers that block muted-autoplay start it on the first interaction */
+  ['touchstart','click','scroll','keydown'].forEach(function(ev){
+    window.addEventListener(ev, playVid, {once:true, passive:true});
+  });
 
   /* copy panels fade in/out as they cross the screen over the footage */
   if('IntersectionObserver' in window){
@@ -3910,13 +3914,11 @@
     raf=0;
     progress += (target-progress)*0.2;
     if(Math.abs(target-progress)<0.0006) progress=target;
-    seek(progress); ui(progress);
+    ui(progress);
     if(progress!==target) raf=requestAnimationFrame(tick);
   }
 
   function ui(p){
-    bar.style.width=(p*100)+'%';
-    tc.textContent=(p*8).toFixed(1)+'s / 8.0s';
     /* depth: gentle Ken-Burns zoom + vertical drift so the film reads as a
        receding 3D layer behind the foreground, not a flat backdrop */
     var sc = 1 + p * 0.09;
@@ -3924,11 +3926,12 @@
     v.style.transform = 'translateY(' + dy.toFixed(2) + 'vh) scale(' + sc.toFixed(4) + ')';
     var active = p < 0.998;
     scrubw.classList.toggle('on', active);
-    tc.classList.toggle('on', active);
     skip.classList.toggle('on', active);
     if(p >= 1){
+      if(!paused){ paused=true; try{ v.pause(); }catch(e){} }   // stop decoding past the intro
       cinebg.classList.add('gone');
     } else {
+      if(paused){ paused=false; playVid(); }
       cinebg.classList.remove('gone');
       /* dissolve the film out over the final 12% as the hero rises over it */
       cinebg.style.opacity = String(p <= 0.88 ? 1 : clamp((1-p)/0.12, 0, 1));
@@ -3936,9 +3939,8 @@
   }
 
   window.addEventListener('scroll', read, {passive:true});
-  window.addEventListener('resize', function(){ read(); seek(progress); ui(progress); });
-  setTimeout(function(){ if(!ready && v.readyState>=2){ ready=true; loader.classList.add('hide'); seek(progress);} }, 4500);
-  /* snap to current scroll on load (no ease-from-zero flash) */
+  window.addEventListener('resize', function(){ read(); ui(progress); });
+  setTimeout(function(){ if(!ready && v.readyState>=2){ ready=true; loader.classList.add('hide'); playVid(); } }, 4500);
   read(); progress = target; ui(progress);
 })();
 </script>
