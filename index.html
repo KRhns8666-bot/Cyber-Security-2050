@@ -1741,6 +1741,72 @@
     color:var(--ink-dim); text-decoration:none; border-bottom:1px solid transparent; opacity:0; transition:opacity .3s; }
   .co-skip.on{ opacity:1; }
   .co-skip:hover{ color:var(--ink); border-bottom-color:var(--accent); }
+
+  /* ============================================================
+     SCAM ATLAS — APAC intelligence from official government data
+     ============================================================ */
+  #atlas{ border-top:1px solid var(--line); padding-block:var(--section-gap); }
+  .atlas-intro{ color:var(--ink-dim); max-width:60ch; margin-top:1.5rem; text-wrap:pretty; }
+  .atlas-intro strong{ color:var(--ink); font-weight:400; }
+  /* headline figures strip */
+  .atlas-figures{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line);
+    border-radius:6px; overflow:hidden; margin-top:2.5rem;
+  }
+  .atlas-fig{ background:var(--bg-raise); padding:1.5rem 1.375rem; }
+  .atlas-fig-n{ font-family:var(--mono); font-size:clamp(1.5rem,2.4vw,2.1rem); font-weight:700;
+    color:var(--accent); line-height:1; letter-spacing:-.02em; }
+  .atlas-fig-l{ display:block; margin-top:.6rem; font-size:.82rem; color:var(--ink-dim); line-height:1.4; }
+  .atlas-fig-l b{ color:var(--ink); font-weight:500; }
+  /* country cards */
+  .atlas-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap:1rem; margin-top:1.25rem;
+  }
+  .atlas-card{
+    background:var(--bg-raise); border:1px solid var(--line);
+    border-top:3px solid var(--accent-dim); border-radius:6px;
+    padding:1.5rem; display:flex; flex-direction:column; gap:.75rem;
+    transition:border-top-color 200ms, transform 150ms;
+  }
+  .atlas-card:hover{ border-top-color:var(--accent); transform:translateY(-2px); }
+  .atlas-card-top{ display:flex; align-items:center; gap:.7rem; }
+  .atlas-rank{ font-family:var(--mono); font-size:.7rem; color:var(--ink-faint); letter-spacing:.1em; }
+  .atlas-flag{ font-size:1.5rem; line-height:1; }
+  .atlas-country{ font-size:1.05rem; font-weight:700; color:var(--ink); }
+  .atlas-headline{ font-family:var(--mono); font-weight:700; color:var(--accent);
+    font-size:1.15rem; line-height:1.15; letter-spacing:-.01em; }
+  .atlas-headline span{ display:block; font-family:var(--sans); font-weight:400; font-size:.82rem;
+    color:var(--ink-dim); letter-spacing:0; margin-top:.3rem; }
+  .atlas-desc{ font-size:.86rem; color:var(--ink-dim); line-height:1.6; }
+  .atlas-stats{ list-style:none; margin:0; padding:.75rem 0 0; border-top:1px solid var(--line);
+    display:flex; flex-direction:column; gap:.4rem; }
+  .atlas-stats li{ display:flex; justify-content:space-between; gap:1rem; font-size:.82rem; color:var(--ink-dim); }
+  .atlas-stats li b{ font-family:var(--mono); color:var(--ink); font-weight:500; white-space:nowrap; }
+  .atlas-src{ font-size:.7rem; color:var(--ink-faint); line-height:1.5; }
+  .atlas-link{ margin-top:auto; font-family:var(--mono); font-size:.72rem; letter-spacing:.06em;
+    color:var(--accent); text-decoration:none; }
+  .atlas-link:hover{ text-decoration:underline; }
+  /* live-tracker CTA */
+  .atlas-cta{
+    margin-top:2.5rem; padding:2rem 1.75rem; text-align:center;
+    background:
+      radial-gradient(ellipse at center, rgba(227,0,27,.10), transparent 70%),
+      var(--bg-raise);
+    border:1px solid var(--line); border-radius:8px;
+  }
+  .atlas-cta h3{ font-size:clamp(1.3rem,2.6vw,1.8rem); font-weight:600; letter-spacing:-.02em; margin:0; }
+  .atlas-cta h3 em{ font-style:normal; color:var(--accent); }
+  .atlas-cta p{ color:var(--ink-dim); max-width:50ch; margin:.75rem auto 1.5rem; font-size:.92rem; }
+  .atlas-enter{
+    display:inline-block; font-family:var(--mono); font-size:.8rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--bg); background:var(--accent);
+    padding:.9rem 1.8rem; border-radius:3px; text-decoration:none;
+    transition:background 180ms, transform 120ms;
+  }
+  .atlas-enter:hover{ background:#ff2036; transform:translateY(-2px); }
+  .atlas-note{ margin-top:1.25rem; font-size:.78rem; color:var(--ink-faint); }
 </style>
 </head>
 <body>
@@ -1773,6 +1839,7 @@
         <li><a href="#cases">Case Files</a></li>
         <li><a href="#phish-lab" class="nav-highlight">Phish Lab</a></li>
         <li><a href="#scam-watch">Scam Watch</a></li>
+        <li><a href="#atlas">Scam Atlas</a></li>
         <li><a href="#resources">Resources</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#position">Position</a></li>
@@ -2600,6 +2667,142 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ============ SCAM ATLAS ============ -->
+  <section id="atlas" aria-labelledby="atlas-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Scam Atlas · APAC intelligence</span>
+        <h2 id="atlas-h">Eight countries. One picture of the fight.</h2>
+        <p class="atlas-intro">Every figure below comes from a government-published source — police
+        forces, national CERTs and anti-scam centres across Asia-Pacific. <strong>Scam Atlas</strong>
+        monitors these official portals and turns their scattered reports into one living map.
+        Latest official releases as of July 2026.</p>
+      </div>
+
+      <div class="atlas-figures" data-reveal>
+        <div class="atlas-fig"><div class="atlas-fig-n">S$913.1M</div><span class="atlas-fig-l">lost in <b>Singapore</b>, 2025</span></div>
+        <div class="atlas-fig"><div class="atlas-fig-n">₹55,050 Cr</div><span class="atlas-fig-l">reported in <b>India</b>, 2021–25</span></div>
+        <div class="atlas-fig"><div class="atlas-fig-n">¥142.3B</div><span class="atlas-fig-l">lost in <b>Japan</b>, 2025 — worst ever</span></div>
+        <div class="atlas-fig"><div class="atlas-fig-n">A$2.18B</div><span class="atlas-fig-l">lost in <b>Australia</b>, 2025</span></div>
+      </div>
+
+      <div class="atlas-grid">
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">01</span><span class="atlas-flag">🇸🇬</span><span class="atlas-country">Singapore</span></div>
+          <div class="atlas-headline">S$913.1M<span>lost to scams in 2025</span></div>
+          <p class="atlas-desc">First annual decline on record — yet scams remain the most prevalent crime type. Self-effected transfers made up 81.8% of cases.</p>
+          <ul class="atlas-stats">
+            <li>Scam &amp; cybercrime cases <b>41,974</b></li>
+            <li>Scam cases YoY <b>−27.6%</b></li>
+            <li>Gov-official impersonation <b>Rising</b></li>
+          </ul>
+          <p class="atlas-src">Source: Singapore Police Force — Annual Scam &amp; Cybercrime Brief 2025</p>
+          <a class="atlas-link" href="https://www.police.gov.sg" target="_blank" rel="noopener">ScamShield · police.gov.sg →</a>
+        </article>
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">02</span><span class="atlas-flag">🇮🇳</span><span class="atlas-country">India</span></div>
+          <div class="atlas-headline">₹55,050 Cr<span>reported in 6.59M+ fraud complaints (2021–25)</span></div>
+          <p class="atlas-desc">I4C runs the National Cyber Crime Reporting Portal and the Citizen Financial Cyber Fraud system — one of the largest public scam-reporting infrastructures on earth.</p>
+          <ul class="atlas-stats">
+            <li>Funds saved via CFCFRMS <b>₹11,158 Cr</b></li>
+            <li>Complaints filed on NCRP <b>6.59M+</b></li>
+            <li>Citizen helpline <b>1930</b></li>
+          </ul>
+          <p class="atlas-src">Source: Ministry of Home Affairs / I4C — NCRP &amp; CFCFRMS</p>
+          <a class="atlas-link" href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in · Chakshu →</a>
+        </article>
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">03</span><span class="atlas-flag">🇯🇵</span><span class="atlas-country">Japan</span></div>
+          <div class="atlas-headline">¥142.3B<span>lost to “special fraud” in 2025 — +98% YoY</span></div>
+          <p class="atlas-desc">Impersonated police officers are now Japan’s most profitable “crime unit” — losses nearly doubled in a single year, per NPA statistics.</p>
+          <ul class="atlas-stats">
+            <li>Fake-police scam cases <b>11,014 (×2)</b></li>
+            <li>SNS investment &amp; romance <b>¥183.4B</b></li>
+            <li>Record status <b>Worst ever</b></li>
+          </ul>
+          <p class="atlas-src">Source: National Police Agency — 2025 Fraud Statistics</p>
+          <a class="atlas-link" href="https://www.npa.go.jp" target="_blank" rel="noopener">npa.go.jp →</a>
+        </article>
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">04</span><span class="atlas-flag">🇦🇺</span><span class="atlas-country">Australia</span></div>
+          <div class="atlas-headline">A$2.18B<span>reported lost in 2025 across 481,523 reports</span></div>
+          <p class="atlas-desc">The National Anti-Scam Centre combines Scamwatch, ReportCyber, AFCX, IDCARE and ASIC data into one public picture — the model Scam Atlas extends.</p>
+          <ul class="atlas-stats">
+            <li>Investment scams <b>A$837.7M</b></li>
+            <li>Top channel <b>Online / social</b></li>
+            <li>Job scam reports <b>+102.4%</b></li>
+          </ul>
+          <p class="atlas-src">Source: ACCC / National Anti-Scam Centre — Targeting Scams 2025</p>
+          <a class="atlas-link" href="https://www.scamwatch.gov.au" target="_blank" rel="noopener">scamwatch.gov.au · cyber.gov.au →</a>
+        </article>
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">05</span><span class="atlas-flag">🇰🇷</span><span class="atlas-country">South Korea</span></div>
+          <div class="atlas-headline">₩642B<span>voice-phishing losses in H1 2025 alone</span></div>
+          <p class="atlas-desc">A pan-government task force now runs a 24/7 telecom &amp; financial fraud response centre — voice phishing is treated as a national emergency.</p>
+          <ul class="atlas-stats">
+            <li>Avg. loss per case (Q1) <b>₩53M</b></li>
+            <li>Gov-agency impersonation <b>51%</b></li>
+            <li>Trend since Oct 2025 <b>Falling −25%</b></li>
+          </ul>
+          <p class="atlas-src">Source: Korean National Police Agency — Voice Phishing Statistics</p>
+          <a class="atlas-link" href="https://www.police.go.kr" target="_blank" rel="noopener">police.go.kr · 112 →</a>
+        </article>
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">06</span><span class="atlas-flag">🇲🇾</span><span class="atlas-country">Malaysia</span></div>
+          <div class="atlas-headline">RM2.97B<span>lost to online scams in 2025 — +89% YoY</span></div>
+          <p class="atlas-desc">PDRM’s Commercial Crime Investigation Department publishes running totals; fake investment schemes are the single biggest loss driver.</p>
+          <ul class="atlas-stats">
+            <li>Cases recorded (PDRM) <b>66,204</b></li>
+            <li>Fake investments <b>RM1.47B</b></li>
+            <li>Report hotline <b>NSRC 997</b></li>
+          </ul>
+          <p class="atlas-src">Source: Royal Malaysia Police (PDRM) — CCID Statistics</p>
+          <a class="atlas-link" href="https://www.rmp.gov.my" target="_blank" rel="noopener">rmp.gov.my · NSRC 997 →</a>
+        </article>
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">07</span><span class="atlas-flag">🇹🇭</span><span class="atlas-country">Thailand</span></div>
+          <div class="atlas-headline">฿89B+<span>lost to cybercrime Jan–Nov 2025 — +45% YoY</span></div>
+          <p class="atlas-desc">Thai Police Online and the AOC 1441 centre freeze scam-linked mule accounts within the hour — Thailand is now the most scammed market in Asia by contact volume.</p>
+          <ul class="atlas-stats">
+            <li>Complaints filed (TPO) <b>~887,000</b></li>
+            <li>Daily losses <b>~฿70M</b></li>
+            <li>Report hotline <b>AOC 1441</b></li>
+          </ul>
+          <p class="atlas-src">Source: Royal Thai Police / CCSC — Thai Police Online (TPO)</p>
+          <a class="atlas-link" href="https://www.thaipoliceonline.go.th" target="_blank" rel="noopener">AOC 1441 · thaipoliceonline.go.th →</a>
+        </article>
+
+        <article class="atlas-card" data-reveal>
+          <div class="atlas-card-top"><span class="atlas-rank">08</span><span class="atlas-flag">🇳🇿</span><span class="atlas-country">New Zealand</span></div>
+          <div class="atlas-headline">NZ$25.7M<span>scam losses in 2024 — highest ever recorded</span></div>
+          <p class="atlas-desc">The NCSC publishes quarterly insights and runs a Phishing Disruption Service — a verified indicator feed organisations can act on directly.</p>
+          <ul class="atlas-stats">
+            <li>Q1 2025 losses (NCSC) <b>NZ$7.8M</b></li>
+            <li>Most reported <b>Scams &amp; fraud</b></li>
+            <li>Phishing disruption <b>PDS live feed</b></li>
+          </ul>
+          <p class="atlas-src">Source: CERT NZ / NCSC — Quarterly Cyber Security Insights</p>
+          <a class="atlas-link" href="https://www.ncsc.govt.nz" target="_blank" rel="noopener">ncsc.govt.nz · cert.govt.nz →</a>
+        </article>
+
+      </div>
+
+      <div class="atlas-cta" data-reveal>
+        <h3>The world’s scams, <em>on one radar.</em></h3>
+        <p>Scam Atlas watches it happen — live. Explore the interactive tracker, the 8-second journey inside a scam, and the full country intelligence.</p>
+        <a class="atlas-enter" href="https://scamatlas.kimi.page/" target="_blank" rel="noopener">Enter the live tracker →</a>
+        <p class="atlas-note">A sister project of Kai Cyber. Figures indexed from official government portals as each release drops.</p>
+      </div>
     </div>
   </section>
 
