@@ -1890,6 +1890,35 @@
   @media (max-width:520px){ .optin-btn{ width:100%; } }
   /* honeypot — off-screen, hidden from humans and assistive tech; only bots fill it */
   .optin-hp{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+
+  /* one-click live radar button (top of Scam Atlas) */
+  .atlas-radar{
+    display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap;
+    margin-bottom:2.75rem; padding:1.25rem 1.5rem;
+    background:radial-gradient(ellipse at left, rgba(227,0,27,.12), transparent 70%), var(--bg-raise);
+    border:1px solid var(--line); border-left:3px solid var(--accent);
+    border-radius:8px; text-decoration:none; color:inherit;
+    transition:border-color 200ms var(--ease), transform 150ms var(--ease), box-shadow 200ms var(--ease);
+  }
+  .atlas-radar:hover{ border-color:var(--accent); transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.4); }
+  .atlas-radar:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  .atlas-radar-live{
+    display:inline-flex; align-items:center; gap:.5rem; flex-shrink:0;
+    font-family:var(--mono); font-size:.68rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:#ff6b6b; background:rgba(255,107,107,.1); border:1px solid rgba(255,107,107,.28);
+    padding:.3em .8em; border-radius:2rem;
+  }
+  .atlas-radar-dot{ width:7px; height:7px; border-radius:50%; background:#ff6b6b; }
+  @media (prefers-reduced-motion:no-preference){ .atlas-radar-dot{ animation:dot-pulse 2.4s var(--ease) infinite; } }
+  .atlas-radar-txt{ flex:1; min-width:12rem; }
+  .atlas-radar-txt b{ display:block; font-size:1.05rem; color:var(--ink); font-weight:700; }
+  .atlas-radar-txt span{ display:block; font-size:.85rem; color:var(--ink-dim); margin-top:.2rem; }
+  .atlas-radar-go{
+    flex-shrink:0; font-family:var(--mono); font-size:.78rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--bg); background:var(--accent); padding:.75rem 1.4rem; border-radius:3px; transition:background 180ms;
+  }
+  .atlas-radar:hover .atlas-radar-go{ background:#ff2036; }
+  @media (max-width:560px){ .atlas-radar-go{ width:100%; text-align:center; } }
 </style>
 </head>
 <body>
@@ -2858,8 +2887,17 @@
         <p class="atlas-intro">Every figure below comes from a government-published source — police
         forces, national CERTs and anti-scam centres across Asia-Pacific. <strong>Scam Atlas</strong>
         monitors these official portals and turns their scattered reports into one living map.
-        Latest official releases as of July 2026.</p>
+        Latest official releases as of August 2026.</p>
       </div>
+
+      <a class="atlas-radar" href="https://scamatlas.kimi.page/" target="_blank" rel="noopener" data-reveal>
+        <span class="atlas-radar-live"><span class="atlas-radar-dot" aria-hidden="true"></span>Live</span>
+        <span class="atlas-radar-txt">
+          <b>Open the live scam radar</b>
+          <span>Every APAC scam, tracked in real time — one interactive map.</span>
+        </span>
+        <span class="atlas-radar-go">Enter →</span>
+      </a>
 
       <div class="atlas-figures" data-reveal>
         <div class="atlas-fig"><div class="atlas-fig-n">S$913.1M</div><span class="atlas-fig-l">lost in <b>Singapore</b>, 2025</span></div>
