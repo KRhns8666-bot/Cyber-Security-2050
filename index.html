@@ -1824,6 +1824,70 @@
   }
   .atlas-enter:hover{ background:#ff2036; transform:translateY(-2px); }
   .atlas-note{ margin-top:1.25rem; font-size:.78rem; color:var(--ink-faint); }
+
+  /* ============================================================
+     EMAIL OPT-IN — free guides + family guide waitlist
+     ============================================================ */
+  .optin{ padding-block:clamp(2.5rem,6vh,4rem); }
+  .optin-card{
+    background:var(--bg-raise);
+    border:1px solid var(--line);
+    border-top:3px solid var(--accent-dim);
+    border-radius:8px;
+    padding:clamp(1.75rem,4vw,2.75rem);
+    max-width:780px;
+  }
+  .optin--soon .optin-card{ border-top-color:var(--line); }
+  .optin .label{ display:block; margin-bottom:1rem; }
+  .optin-h{
+    font-size:clamp(1.5rem,3.4vw,2.4rem); font-weight:600;
+    letter-spacing:-.02em; line-height:1.08; margin:0; text-wrap:balance;
+  }
+  .optin-sub{ margin-top:1rem; color:var(--ink-dim); max-width:54ch; line-height:1.55; text-wrap:pretty; }
+  .optin-list{ list-style:none; margin:1.75rem 0 0; padding:0; display:flex; flex-direction:column; gap:.85rem; }
+  .optin-list li{ display:grid; grid-template-columns:2.2rem 1fr; gap:.75rem; align-items:start; }
+  .optin-list .n{ font-family:var(--mono); font-size:.8rem; color:var(--accent); padding-top:.2em; }
+  .optin-list .t{ color:var(--ink-dim); line-height:1.5; }
+  .optin-list .t b{ color:var(--ink); font-weight:500; }
+  .optin-form{ margin-top:1.75rem; }
+  .optin-row{ display:flex; gap:.6rem; flex-wrap:wrap; align-items:stretch; }
+  .optin-input{
+    flex:1 1 12rem; min-width:0;
+    font-family:var(--sans); font-size:1rem; color:var(--ink);
+    background:var(--bg); border:1px solid var(--line); border-radius:4px;
+    padding:.85rem 1rem;
+    transition:border-color 180ms var(--ease);
+  }
+  .optin-input::placeholder{ color:var(--ink-faint); }
+  .optin-input:hover{ border-color:var(--ink-faint); }
+  .optin-input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-color:var(--accent); }
+  .optin-btn{
+    appearance:none; cursor:pointer; white-space:nowrap;
+    font-family:var(--mono); font-size:.78rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent); background:transparent; border:1px solid var(--accent);
+    padding:.85rem 1.5rem; border-radius:4px;
+    transition:background 200ms var(--ease), color 200ms var(--ease);
+  }
+  .optin-btn:hover{ background:var(--accent); color:var(--bg); }
+  .optin-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  .optin-btn:disabled{ opacity:.55; cursor:default; }
+  .optin-err{ margin-top:.6rem; font-size:.82rem; color:#ff8484; min-height:1.1em; }
+  .optin-err:empty{ margin-top:0; min-height:0; }
+  .optin-fine{ margin-top:.9rem; font-size:.78rem; color:var(--ink-faint); line-height:1.5; }
+  .optin-done[hidden]{ display:none; }
+  .optin-done-h{ font-family:var(--mono); font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin:0; }
+  .optin-dl{ margin-top:1.1rem; display:flex; flex-direction:column; gap:.6rem; }
+  .optin-dl a{
+    display:flex; align-items:center; gap:.7rem;
+    background:var(--bg); border:1px solid var(--line); border-radius:4px;
+    padding:.85rem 1rem; color:var(--ink); text-decoration:none; font-size:.92rem; line-height:1.3;
+    transition:border-color 180ms var(--ease);
+  }
+  .optin-dl a:hover{ border-color:var(--accent); }
+  .optin-dl a:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .optin-dl .ic{ color:var(--accent); font-family:var(--mono); flex-shrink:0; }
+  .optin-done p{ color:var(--ink-dim); margin:.75rem 0 0; line-height:1.55; }
+  @media (max-width:520px){ .optin-btn{ width:100%; } }
 </style>
 </head>
 <body>
@@ -1957,6 +2021,62 @@
 
     <div class="vhero-scroll" aria-hidden="true">
       <span>scroll</span><i></i>
+    </div>
+  </section>
+  <hr class="slash-div">
+
+  <!-- ============ OPT-IN 1 · FREE GUIDES ============ -->
+  <section class="optin" id="guides" aria-labelledby="guides-h">
+    <div class="wrap">
+      <div class="optin-card" data-reveal>
+        <span class="label">Free field guides</span>
+        <h2 class="optin-h" id="guides-h">Spot the scam before it costs you.</h2>
+        <p class="optin-sub">Short, printable guides on how today's scams work, and the one-minute checks that stop them.</p>
+        <ul class="optin-list">
+          <li><span class="n" aria-hidden="true">01</span><span class="t"><b>The Boss Scam</b> — catch a fake CEO or deepfake video call in ten seconds.</span></li>
+          <li><span class="n" aria-hidden="true">00</span><span class="t"><b>The 30-Second Scam Check</b> — five signals shared by almost every scam.</span></li>
+        </ul>
+        <form class="optin-form" data-optin="guides" novalidate>
+          <div class="optin-row">
+            <label class="sr-only" for="guides-email">Your email address</label>
+            <input class="optin-input" id="guides-email" type="email" name="email" inputmode="email"
+                   autocomplete="email" placeholder="you@email.com" required>
+            <button class="optin-btn" type="submit">Send me the guides</button>
+          </div>
+          <p class="optin-err" data-err role="alert" aria-live="polite"></p>
+          <p class="optin-fine">No spam. One short scam-alert email a month, unsubscribe any time.</p>
+        </form>
+        <div class="optin-done" data-done hidden>
+          <p class="optin-done-h">✓ You're in.</p>
+          <div class="optin-dl">
+            <a href="/guides/boss-scam.pdf" download><span class="ic" aria-hidden="true">↓</span> The Boss Scam — spot a fake boss in 10 seconds</a>
+            <a href="/guides/scam-check-starter.pdf" download><span class="ic" aria-hidden="true">↓</span> The 30-Second Scam Check — five signals, one method</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OPT-IN 2 · FAMILY GUIDE WAITLIST ============ -->
+  <section class="optin optin--soon" id="family-guide" aria-labelledby="family-h">
+    <div class="wrap">
+      <div class="optin-card" data-reveal>
+        <span class="label">Coming soon</span>
+        <h2 class="optin-h" id="family-h">The Family Scam Guide</h2>
+        <p class="optin-sub">Full protection for your whole household, from kids to grandparents, against AI-powered scams. Leave your email and I'll personally reach out with early access.</p>
+        <form class="optin-form" data-optin="family" novalidate>
+          <div class="optin-row">
+            <label class="sr-only" for="family-email">Your email address</label>
+            <input class="optin-input" id="family-email" type="email" name="email" inputmode="email"
+                   autocomplete="email" placeholder="you@email.com" required>
+            <button class="optin-btn" type="submit">Notify me</button>
+          </div>
+          <p class="optin-err" data-err role="alert" aria-live="polite"></p>
+        </form>
+        <div class="optin-done" data-done hidden>
+          <p class="optin-done-h">✓ Thanks — I'll be in touch soon.</p>
+        </div>
+      </div>
     </div>
   </section>
   <hr class="slash-div">
@@ -4163,6 +4283,72 @@
   window.addEventListener('resize', function(){ read(); ui(progress); });
   setTimeout(function(){ if(!ready && v.readyState>=2){ ready=true; loader.classList.add('hide'); playVid(); } }, 4500);
   read(); progress = target; ui(progress);
+})();
+</script>
+
+<script>
+/* ============================================================
+   EMAIL OPT-IN — Web3Forms submit + success swap
+   ============================================================ */
+(function(){
+  'use strict';
+
+  /* ⬇⬇⬇  PASTE YOUR WEB3FORMS ACCESS KEY BETWEEN THE QUOTES  ⬇⬇⬇ */
+  var WEB3FORMS_KEY = 'PASTE_MY_KEY_HERE';
+  /* ⬆⬆⬆  Get a free key at https://web3forms.com — both forms use it  ⬆⬆⬆ */
+
+  var CFG = {
+    guides: { subject: 'New guide download — Kai Cyber',  source: 'kaicyber.org free guides' },
+    family: { subject: 'Family Guide interest — Kai Cyber', source: 'kaicyber.org family guide interest' }
+  };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  document.querySelectorAll('form[data-optin]').forEach(function(form){
+    var kind  = form.getAttribute('data-optin');
+    var input = form.querySelector('.optin-input');
+    var err   = form.querySelector('[data-err]');
+    var btn   = form.querySelector('.optin-btn');
+    var done  = form.parentNode.querySelector('[data-done]');
+
+    input.addEventListener('input', function(){ if(err) err.textContent = ''; });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = (input.value || '').trim();
+      if(!EMAIL_RE.test(email)){
+        if(err) err.textContent = 'Please enter a valid email address.';
+        input.focus();
+        return;
+      }
+      if(err) err.textContent = '';
+      if(btn) btn.disabled = true;
+
+      var cfg = CFG[kind] || {};
+      var payload = {
+        access_key: WEB3FORMS_KEY,
+        email: email,
+        from_name: 'Kai Cyber site',
+        subject: cfg.subject,
+        source: cfg.source
+      };
+
+      /* Never block the user: swap to the success state whether the POST
+         succeeds or fails. */
+      function finish(){
+        form.hidden = true;
+        if(done){ done.hidden = false; }
+      }
+      if(window.fetch){
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(finish, finish);
+      } else {
+        finish();
+      }
+    });
+  });
 })();
 </script>
 </body>
