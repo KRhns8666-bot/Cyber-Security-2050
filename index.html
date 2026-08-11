@@ -1888,6 +1888,8 @@
   .optin-dl .ic{ color:var(--accent); font-family:var(--mono); flex-shrink:0; }
   .optin-done p{ color:var(--ink-dim); margin:.75rem 0 0; line-height:1.55; }
   @media (max-width:520px){ .optin-btn{ width:100%; } }
+  /* honeypot — off-screen, hidden from humans and assistive tech; only bots fill it */
+  .optin-hp{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
 </style>
 </head>
 <body>
@@ -2037,6 +2039,9 @@
           <li><span class="n" aria-hidden="true">00</span><span class="t"><b>The 30-Second Scam Check</b> — five signals shared by almost every scam.</span></li>
         </ul>
         <form class="optin-form" data-optin="guides" novalidate>
+          <div class="optin-hp" aria-hidden="true">
+            <label>Leave this field empty<input type="text" name="botcheck" tabindex="-1" autocomplete="off"></label>
+          </div>
           <div class="optin-row">
             <label class="sr-only" for="guides-email">Your email address</label>
             <input class="optin-input" id="guides-email" type="email" name="email" inputmode="email"
@@ -2065,6 +2070,9 @@
         <h2 class="optin-h" id="family-h">The Family Scam Guide</h2>
         <p class="optin-sub">Full protection for your whole household, from kids to grandparents, against AI-powered scams. Leave your email and I'll personally reach out with early access.</p>
         <form class="optin-form" data-optin="family" novalidate>
+          <div class="optin-hp" aria-hidden="true">
+            <label>Leave this field empty<input type="text" name="botcheck" tabindex="-1" autocomplete="off"></label>
+          </div>
           <div class="optin-row">
             <label class="sr-only" for="family-email">Your email address</label>
             <input class="optin-input" id="family-email" type="email" name="email" inputmode="email"
@@ -4309,11 +4317,23 @@
     var err   = form.querySelector('[data-err]');
     var btn   = form.querySelector('.optin-btn');
     var done  = form.parentNode.querySelector('[data-done]');
+    var hp    = form.querySelector('input[name="botcheck"]');
+    /* record load time — near-instant submits are almost always bots */
+    var loadedAt = Date.now();
 
     input.addEventListener('input', function(){ if(err) err.textContent = ''; });
 
+    function finish(){
+      form.hidden = true;
+      if(done){ done.hidden = false; }
+    }
+
     form.addEventListener('submit', function(e){
       e.preventDefault();
+
+      /* Bot layer 1: honeypot filled → silently accept, send nothing. */
+      if(hp && hp.value){ finish(); return; }
+
       var email = (input.value || '').trim();
       if(!EMAIL_RE.test(email)){
         if(err) err.textContent = 'Please enter a valid email address.';
@@ -4329,15 +4349,10 @@
         email: email,
         from_name: 'Kai Cyber site',
         subject: cfg.subject,
-        source: cfg.source
+        source: cfg.source,
+        botcheck: '',                              /* Bot layer 2: Web3Forms server-side honeypot */
+        submit_ms: Date.now() - loadedAt           /* timing signal, for your reference in the email */
       };
-
-      /* Never block the user: swap to the success state whether the POST
-         succeeds or fails. */
-      function finish(){
-        form.hidden = true;
-        if(done){ done.hidden = false; }
-      }
       if(window.fetch){
         fetch('https://api.web3forms.com/submit', {
           method: 'POST',
