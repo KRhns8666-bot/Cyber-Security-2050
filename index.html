@@ -163,15 +163,15 @@
   /* desktop nav */
   nav ul {
     display: flex;
-    gap: clamp(0.9rem, 2vw, 2rem);
+    gap: clamp(0.5rem, 1.3vw, 1.25rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
   nav a {
     font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.13em;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-dim);
     transition: color 200ms var(--ease);
@@ -276,8 +276,8 @@
   }
   .nav-drawer a:hover { color: var(--ink); }
 
-  /* breakpoint: switch to hamburger */
-  @media (max-width: 768px) {
+  /* breakpoint: switch to hamburger (raised to 1024 to fit the fuller nav) */
+  @media (max-width: 1024px) {
     nav { display: none; }
     .nav-burger { display: flex; }
     .nav-drawer { display: block; }
@@ -1917,6 +1917,7 @@
     <!-- desktop nav (hidden ≤768px via CSS) -->
     <nav aria-label="Sections">
       <ul>
+        <li><a href="#guides" class="nav-highlight">Free Guides</a></li>
         <li><a href="#problems">Problems</a></li>
         <li><a href="#breach">The Breach</a></li>
         <li><a href="#cases">Case Files</a></li>
@@ -1938,6 +1939,7 @@
   <!-- mobile drawer -->
   <nav class="nav-drawer" id="nav-drawer" aria-label="Mobile menu">
     <ul>
+      <li><a href="#guides" class="nav-highlight">Free Guides</a></li>
       <li><a href="#problems">Problems</a></li>
       <li><a href="#breach">The Breach</a></li>
       <li><a href="#cases">Case Files</a></li>
@@ -2721,6 +2723,16 @@
 
           <div class="watch-alert watch-alert--critical">
             <div class="watch-meta">
+              <span class="watch-country">IN</span>
+              <span class="watch-level watch-level--critical">critical</span>
+              <span class="watch-date">Aug 2026</span>
+            </div>
+            <p class="watch-title">“Digital arrest” — fake police / CBI video calls</p>
+            <p class="watch-desc">Callers posing as police, CBI or customs claim a parcel or bank account is tied to a crime, then hold victims on a video call under “digital arrest” for hours while extorting transfers. ₹1,935 Cr lost across 2024–25. <strong>No real agency arrests anyone over a video call — hang up and dial 1930.</strong></p>
+          </div>
+
+          <div class="watch-alert watch-alert--critical">
+            <div class="watch-meta">
               <span class="watch-country">HK</span>
               <span class="watch-level watch-level--critical">critical</span>
               <span class="watch-date">Aug 2026</span>
@@ -2810,7 +2822,7 @@
           </div>
 
         </div>
-        <p class="watch-source">Sources: <a href="https://www.spf.gov.sg/scamalert" target="_blank" rel="noopener">SPF ScamAlert</a> · <a href="https://www.scamwatch.gov.au" target="_blank" rel="noopener">ACCC Scamwatch</a> · <a href="https://www.ccid.rmp.gov.my" target="_blank" rel="noopener">PDRM CCID</a> · <a href="https://www.scameter.hk" target="_blank" rel="noopener">HK Scameter</a> · <a href="https://www.cert.govt.nz" target="_blank" rel="noopener">CERT NZ</a> · Published threat advisories. Alerts based on confirmed campaigns; updated as new reports are issued.</p>
+        <p class="watch-source">Sources: <a href="https://www.spf.gov.sg/scamalert" target="_blank" rel="noopener">SPF ScamAlert</a> · <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">I4C India (1930)</a> · <a href="https://www.scamwatch.gov.au" target="_blank" rel="noopener">ACCC Scamwatch</a> · <a href="https://www.ccid.rmp.gov.my" target="_blank" rel="noopener">PDRM CCID</a> · <a href="https://www.scameter.hk" target="_blank" rel="noopener">HK Scameter</a> · <a href="https://www.cert.govt.nz" target="_blank" rel="noopener">CERT NZ</a> · Published threat advisories. Alerts based on confirmed campaigns; updated as new reports are issued.</p>
       </div>
 
       <!-- ===== RESOURCES ===== -->
