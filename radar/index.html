@@ -56,26 +56,31 @@
   .bar .nav a:hover{color:var(--ink)}
   .bar .nav a.hot{color:var(--accent)}
 
-  /* ---- hero strip ---- */
-  .top{padding:clamp(2rem,5vh,3.5rem) 0 clamp(1.25rem,3vh,2rem)}
-  .top h1{font-size:clamp(1.9rem,4.4vw,3.4rem);line-height:1.02;letter-spacing:-.03em;font-weight:600;margin:.6rem 0 .9rem;max-width:20ch;text-wrap:balance}
-  .top h1 em{font-style:normal;color:var(--accent)}
-  .top p{color:var(--ink-dim);max-width:60ch;margin:0}
+  /* ---- hero: text + stats (left) paired with the globe (right) ---- */
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,4vw,3rem);align-items:center;padding:clamp(2rem,5vh,3.5rem) 0 clamp(1.5rem,3vh,2.25rem)}
+  @media(max-width:960px){.hero{grid-template-columns:1fr}}
+  .hero h1{font-size:clamp(1.9rem,4.4vw,3.4rem);line-height:1.02;letter-spacing:-.03em;font-weight:600;margin:.6rem 0 .9rem;max-width:20ch;text-wrap:balance}
+  .hero h1 em{font-style:normal;background:linear-gradient(90deg,#22d3ee,#38bdf8,#f43f5e);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--ink-dim);max-width:60ch;margin:0;font-size:.94rem;line-height:1.6}
   .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
   .chip{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);border:1px solid var(--line);padding:.32em .7em;border-radius:2rem;background:var(--bg-raise)}
   .chip.sim{color:#f5c542;border-color:rgba(245,197,66,.35);background:rgba(245,197,66,.08)}
+  .hero-stats{margin-top:1.5rem}
+  .hero-globe-cap{margin-top:.6rem;text-align:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
 
-  /* ---- dashboard grid ---- */
-  .dash{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(280px,.9fr);gap:1rem;padding-bottom:1rem}
-  @media(max-width:960px){.dash{grid-template-columns:1fr}}
+  /* ---- shared panel + one/two-col row grids ---- */
+  .row1{padding-bottom:1rem}
+  .feedgrid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:1rem;padding-bottom:1rem}
+  @media(max-width:960px){.feedgrid{grid-template-columns:1fr}}
+  .intel{display:flex;flex-direction:column;gap:1rem}
   .panel{background:var(--bg-raise);border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative}
   .panel-h{display:flex;align-items:center;gap:.75rem;padding:.8rem 1rem;border-bottom:1px solid var(--line)}
   .panel-h .label{flex:1}
   .panel-b{padding:1rem}
 
   /* globe */
-  .globe{min-height:520px;display:flex;flex-direction:column}
-  .globe .stage{position:relative;flex:1;min-height:480px;background:radial-gradient(ellipse at 50% 45%, #0b0f1c 0%, #07090F 65%)}
+  .globe{min-height:420px;display:flex;flex-direction:column}
+  .globe .stage{position:relative;flex:1;min-height:380px;background:radial-gradient(ellipse at 50% 45%, #0b0f1c 0%, #07090F 65%)}
   .globe canvas{display:block;width:100%;height:100%;position:absolute;inset:0;cursor:grab}
   .globe canvas.drag{cursor:grabbing}
   .hud{position:absolute;left:1rem;bottom:.9rem;z-index:2;display:flex;gap:.5rem;flex-wrap:wrap;pointer-events:none}
@@ -107,7 +112,6 @@
   @keyframes rowin{from{opacity:0;transform:translateY(-6px);background:rgba(227,0,27,.12)}to{opacity:1;transform:none}}
 
   /* row 2 */
-  .row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem;padding-bottom:1rem}
   .bars{display:flex;flex-direction:column;gap:.55rem}
   .bar-row{display:grid;grid-template-columns:2.4rem 1fr auto;gap:.6rem;align-items:center;font-size:.82rem}
   .bar-row .cc{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.08em}
@@ -165,7 +169,7 @@
     <nav class="nav" aria-label="Radar">
       <a href="#globe" class="hot">Radar</a>
       <a href="#feed">Feed</a>
-      <a href="#check">Link check</a>
+      <a href="#checker">Message check</a>
       <a href="/#atlas">Country data</a>
       <a href="/#scam-watch">Scam watch</a>
       <a href="/">← Kai Cyber</a>
@@ -174,39 +178,18 @@
 </header>
 
 <main>
-  <section class="wrap top">
-    <span class="label">Scam Atlas · APAC scam intelligence</span>
-    <h1>The world's scams, <em>on one radar.</em></h1>
-    <p>A live threat globe, an APAC-weighted scam feed, country heat, scam-type breakdown and an instant link checker — all in one place. Built and hosted by Kai Cyber.</p>
-    <div class="chips">
-      <span class="chip sim">Simulated feed · modelled on URLhaus / PhishTank / OpenPhish / CERT</span>
-      <span class="chip" id="chip-events">— events</span>
-      <span class="chip" id="chip-updated">updated —</span>
-    </div>
-  </section>
-
-  <div class="wrap dash">
-    <!-- GLOBE -->
-    <section class="panel globe" id="globe" aria-label="Live threat globe">
-      <div class="panel-h">
-        <span class="label">Threat globe</span>
-        <span class="chip" id="chip-rot">auto-rotate</span>
+  <div class="wrap hero">
+    <!-- TEXT + STATS -->
+    <div>
+      <span class="label">Every scam. Every country. As it happens.</span>
+      <h1>The world's scams, <em>on one radar.</em></h1>
+      <p>Scam Atlas aggregates live threat feeds from phishing databases, CERTs and fraud agencies worldwide — so anyone can see which scams are spiking, where, and how to defend against them.</p>
+      <div class="chips">
+        <span class="chip sim">Simulated feed · modelled on URLhaus / PhishTank / OpenPhish / CERT</span>
+        <span class="chip" id="chip-events">— events</span>
+        <span class="chip" id="chip-updated">updated —</span>
       </div>
-      <div class="stage">
-        <canvas id="cv" aria-label="Rotating globe of scam activity. Pulsing markers show countries with recent activity; arcs show the route of active scam campaigns."></canvas>
-        <div class="legend" id="legend" aria-hidden="true"></div>
-        <div class="hud"><span class="chip">drag to orbit</span><span class="chip">scroll to zoom</span></div>
-        <div class="ctl" aria-label="Globe controls">
-          <button type="button" id="zin" aria-label="Zoom in">+</button>
-          <button type="button" id="zout" aria-label="Zoom out">−</button>
-          <button type="button" id="rot" aria-label="Toggle auto-rotate" aria-pressed="true">↻</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SIDE -->
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <section class="panel" aria-label="Live statistics">
+      <section class="panel hero-stats" aria-label="Live statistics">
         <div class="panel-h"><span class="label">Right now</span></div>
         <div class="stats">
           <div class="stat"><div class="n" id="s-events">0</div><span class="l">scam events tracked</span></div>
@@ -215,42 +198,72 @@
           <div class="stat"><div class="n" id="s-today">0</div><span class="l">scams detected today</span></div>
         </div>
       </section>
+    </div>
 
-      <section class="panel sotd" aria-label="Scam of the day">
-        <div class="panel-h"><span class="label">Scam of the day</span><span class="chip" id="sotd-date">—</span></div>
-        <div class="panel-b">
-          <h3 id="sotd-h">—</h3>
-          <p id="sotd-p">—</p>
-          <div class="tell" id="sotd-t">—</div>
+    <!-- GLOBE -->
+    <div>
+      <section class="panel globe" id="globe" aria-label="Live threat globe">
+        <div class="panel-h">
+          <span class="label">Threat globe</span>
+          <span class="chip" id="chip-rot">auto-rotate</span>
+        </div>
+        <div class="stage">
+          <canvas id="cv" aria-label="Rotating globe of scam activity. Pulsing markers show countries with recent activity; arcs show the route of active scam campaigns."></canvas>
+          <div class="legend" id="legend" aria-hidden="true"></div>
+          <div class="hud"><span class="chip">drag to orbit</span><span class="chip">scroll to zoom</span></div>
+          <div class="ctl" aria-label="Globe controls">
+            <button type="button" id="zin" aria-label="Zoom in">+</button>
+            <button type="button" id="zout" aria-label="Zoom out">−</button>
+            <button type="button" id="rot" aria-label="Toggle auto-rotate" aria-pressed="true">↻</button>
+          </div>
         </div>
       </section>
+      <p class="hero-globe-cap">Active incidents — last 60 min · drag to rotate · scroll to zoom</p>
     </div>
   </div>
 
-  <div class="wrap row2">
+  <div class="wrap feedgrid">
     <section class="panel" id="feed" aria-label="Live scam feed">
       <div class="panel-h"><span class="label">Live feed</span><span class="chip">newest first</span></div>
       <ul class="feed" id="feed-list" aria-live="polite" aria-relevant="additions"></ul>
     </section>
 
-    <section class="panel" aria-label="Country heatmap">
-      <div class="panel-h"><span class="label">Country heat</span><span class="chip">targets · last 60</span></div>
-      <div class="panel-b bars" id="heat"></div>
-    </section>
+    <div class="intel" id="intel">
+      <section class="panel" aria-label="Country heatmap">
+        <div class="panel-h"><span class="label">Country heat</span><span class="chip">targets · last 60</span></div>
+        <div class="panel-b bars" id="heat"></div>
+      </section>
 
-    <section class="panel" aria-label="Scam type breakdown">
-      <div class="panel-h"><span class="label">By scam type</span><span class="chip">share</span></div>
-      <div class="panel-b bars" id="types"></div>
-    </section>
+      <section class="panel" aria-label="Scam type breakdown">
+        <div class="panel-h"><span class="label">By scam type</span><span class="chip">share</span></div>
+        <div class="panel-b bars" id="types"></div>
+      </section>
+    </div>
   </div>
 
-  <section class="wrap checker" id="check">
+  <section class="wrap row1">
+    <section class="panel sotd" aria-label="Scam of the day">
+      <div class="panel-h"><span class="label">Scam of the day</span><span class="chip" id="sotd-date">—</span></div>
+      <div class="panel-b">
+        <h3 id="sotd-h">—</h3>
+        <p id="sotd-p">—</p>
+        <div class="tell" id="sotd-t">—</div>
+      </div>
+    </section>
+  </section>
+
+  <section class="wrap checker" id="checker">
+    <div class="mb-head" style="margin-bottom:1rem">
+      <span class="label">Am I being scammed?</span>
+      <h2 style="margin:.5rem 0 .25rem;font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:700;letter-spacing:-.01em">Instant message checker</h2>
+      <p style="margin:0;font-size:.86rem;color:var(--ink-faint)">Runs entirely in your browser — the message never leaves your device.</p>
+    </div>
     <div class="panel">
-      <div class="panel-h"><span class="label">Instant link checker</span><span class="chip">runs in your browser · nothing is sent anywhere</span></div>
+      <div class="panel-h"><span class="label">Paste a link or message</span><span class="chip">nothing is sent anywhere</span></div>
       <div class="panel-b">
         <form class="lc-row" id="lc" novalidate>
-          <label class="label" for="lc-in" style="position:absolute;left:-9999px">Paste a link</label>
-          <input class="lc-in" id="lc-in" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste a suspicious link, e.g. dbs-secure-verify.xyz/login">
+          <label class="label" for="lc-in" style="position:absolute;left:-9999px">Paste a link or message</label>
+          <input class="lc-in" id="lc-in" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Paste a suspicious link or message, e.g. dbs-secure-verify.xyz/login">
           <button class="lc-btn" type="submit">Check link</button>
         </form>
         <div class="lc-out" id="lc-out">
@@ -603,6 +616,42 @@
   var SHORT=['bit.ly','tinyurl.com','t.co','cutt.ly','is.gd','rb.gy','shorturl.at','tiny.cc','goo.gl','ow.ly','s.id'];
   var URGENT=['login','verify','secure','update','account','otp','unlock','suspend','prize','claim','reward','refund','urgent','confirm','wallet','kyc'];
 
+  var MSG_FLAGS=[
+    ['gift card',   'Asked to pay with gift cards — no bank, government office or real business ever does.'],
+    ['itunes card', 'Asked to pay with gift cards — no bank, government office or real business ever does.'],
+    ['wire transfer','Pressure to wire money quickly — a hallmark of urgent-transfer scams.'],
+    ['western union','Requests payment via a hard-to-trace money-transfer service.'],
+    ['moneygram',   'Requests payment via a hard-to-trace money-transfer service.'],
+    ['otp',         'Asks for your OTP — no bank or service will ever ask for this.'],
+    ['one time password','Asks for your one-time password — no bank or service will ever ask for this.'],
+    ['digital arrest','"Digital arrest" is not a real legal process anywhere — this is a script used to extort victims by video call.'],
+    ['remote access','Requests remote access to your device or screen — a classic tech-support-scam move.'],
+    ['anydesk',     'Names a remote-access app — a classic tech-support-scam move.'],
+    ['teamviewer',  'Names a remote-access app — a classic tech-support-scam move.'],
+    ["don't tell",  'Tells you to keep this secret from family or your bank — scammers isolate victims on purpose.'],
+    ['do not tell', 'Tells you to keep this secret from family or your bank — scammers isolate victims on purpose.'],
+    ['crypto wallet','Directs you to move funds into a crypto wallet — irreversible and untraceable once sent.'],
+    ['seed phrase', 'Asks for your wallet seed phrase — this hands over full control of your funds.'],
+    ['urgent',      'Uses urgency to stop you thinking it through — a classic pressure tactic.'],
+    ['act now',     'Uses urgency to stop you thinking it through — a classic pressure tactic.'],
+    ['24 hours',    'A short deadline is designed to rush you into a mistake.'],
+    ['arrest warrant','Threatens arrest to frighten you into paying — real agencies do not operate this way.'],
+    ['suspended your account','Threatens account suspension to create panic.']
+  ];
+  function checkMessage(text){
+    var low=text.toLowerCase(), hits=[];
+    MSG_FLAGS.forEach(function(f){ if(low.indexOf(f[0])>-1) hits.push(f[1]); });
+    var v = hits.length>=2 ? 'high' : hits.length===1 ? 'med' : 'low';
+    if(!hits.length) hits.push('No link was found and no common scam phrases were detected — but this check cannot confirm a message is genuine. When in doubt, contact the organisation directly using a number or address you already know.');
+    var preview = text.trim(); if(preview.length>140) preview=preview.slice(0,140)+'…';
+    return { verdict:v, reasons:hits, shown:preview };
+  }
+  function extractUrl(text){
+    var m=text.match(/https?:\/\/[^\s"'<>]+/i); if(m) return m[0];
+    m=text.match(/\bwww\.[^\s"'<>]+/i); if(m) return m[0];
+    m=text.match(/\b[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9-]+)*\.[a-z]{2,}(?:\/[^\s"'<>]*)?\b/i); if(m) return m[0];
+    return null;
+  }
   function checkLink(raw){
     var reasons=[], score=0, s=raw.trim();
     if(!/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) s='http://'+s;
@@ -632,9 +681,10 @@
   $('lc').addEventListener('submit', function(e){
     e.preventDefault();
     var raw=$('lc-in').value; if(!raw.trim()) return;
-    var r=checkLink(raw);
+    var url=extractUrl(raw);
+    var r = url ? checkLink(url) : checkMessage(raw);
     var vEl=$('lc-verdict'); vEl.className='verdict '+r.verdict;
-    vEl.textContent = r.verdict==='high'?'⚠ High risk — do not click':r.verdict==='med'?'⚠ Suspicious — verify first':'✓ Low risk from the address';
+    vEl.textContent = r.verdict==='high'?'⚠ High risk — do not click or reply':r.verdict==='med'?'⚠ Suspicious — verify first':'✓ Low risk from what was checked';
     $('lc-url').textContent = r.shown;          // text only — never a clickable link
     var ul=$('lc-list'); ul.textContent='';
     r.reasons.forEach(function(x){ var li=document.createElement('li'); if(r.verdict==='low') li.className='ok'; li.textContent=x; ul.appendChild(li); });
