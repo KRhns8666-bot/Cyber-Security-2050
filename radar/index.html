@@ -113,7 +113,7 @@
 
   /* row 2 */
   .bars{display:flex;flex-direction:column;gap:.55rem}
-  .bar-row{display:grid;grid-template-columns:2.4rem 1fr auto;gap:.6rem;align-items:center;font-size:.82rem}
+  .bar-row{display:grid;grid-template-columns:3.6rem 1fr auto;gap:.6rem;align-items:center;font-size:.82rem}
   .bar-row .cc{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.08em}
   .bar-row .name{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.06em;grid-column:1/2}
   .bar-row .track{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
@@ -365,6 +365,10 @@
     var m=Math.floor(s/60); if(m<60) return m+'m ago';
     return Math.floor(m/60)+'h '+(m%60)+'m ago';
   }
+  function flagEmoji(code){
+    return code.toUpperCase().replace(/./g, function(c){ return String.fromCodePoint(127397 + c.charCodeAt(0)); });
+  }
+  function sevDots(n){ return '●●●●●'.slice(0,n) + '○○○○○'.slice(0,5-n); }
 
   /* feed state — mirrors useScamFeed.ts: 18 events seeded 45s apart
      (newest first), a 40-item feed cap, and a running "detected today"
@@ -386,7 +390,7 @@
     var b=document.createElement('b'); b.textContent=e.type.name; t.appendChild(b);
     t.appendChild(document.createTextNode(' — '+e.detail));
     var m=document.createElement('span'); m.className='m';
-    m.textContent=e.country.name+' ('+e.country.code+') · severity '+e.severity+'/5';
+    m.textContent=flagEmoji(e.country.code)+' '+e.country.name+' · '+sevDots(e.severity);
     t.appendChild(m);
     var ago=document.createElement('span'); ago.className='ago'; ago.textContent=timeAgo(e.ts); ago.setAttribute('data-ts',e.ts);
     li.appendChild(dot); li.appendChild(t); li.appendChild(ago);
@@ -433,7 +437,7 @@
     var topId=Object.keys(tcounts).sort(function(a,b){ return tcounts[b]-tcounts[a]; })[0];
     $('s-top').textContent = topId ? byId[topId].name : '—';
 
-    var heat=Object.keys(counts).map(function(k){ return { label:k, n:counts[k], v:String(counts[k]) }; })
+    var heat=Object.keys(counts).map(function(k){ return { label:flagEmoji(k)+' '+k, n:counts[k], v:String(counts[k]) }; })
       .sort(function(a,b){ return b.n-a.n; }).slice(0,10);
     renderBars(heatEl, heat);
     var total=EVENTS.length||1;
