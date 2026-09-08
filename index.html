@@ -1920,6 +1920,50 @@
   }
   .atlas-radar:hover .atlas-radar-go{ background:#ff2036; }
   @media (max-width:560px){ .atlas-radar-go{ width:100%; text-align:center; } }
+
+  /* ============================================================
+     NAV — Scam Atlas dropdown (desktop) + grouped links (drawer)
+     ============================================================ */
+  .nav-dd{ position:relative; }
+  .nav-dd-btn{
+    appearance:none; background:none; border:0; padding:0; cursor:pointer;
+    font-family:var(--mono); font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-dim); display:inline-flex; align-items:center; gap:.4em; white-space:nowrap;
+    transition:color 200ms var(--ease);
+  }
+  .nav-dd-btn::after{
+    content:''; width:.38em; height:.38em; border-right:1px solid currentColor; border-bottom:1px solid currentColor;
+    transform:rotate(45deg) translateY(-.15em); opacity:.75; transition:transform 160ms var(--ease);
+  }
+  .nav-dd-btn:hover, .nav-dd.open > .nav-dd-btn, .nav-dd:focus-within > .nav-dd-btn{ color:var(--ink); }
+  .nav-dd.open > .nav-dd-btn::after{ transform:rotate(225deg) translateY(-.05em); }
+  .nav-dd-menu{
+    position:absolute; left:50%; top:calc(100% + 14px); transform:translateX(-50%) translateY(-4px);
+    min-width:13.5rem; margin:0; padding:.4rem; list-style:none; display:flex; flex-direction:column; gap:.1rem;
+    background:rgba(13,17,32,.94); backdrop-filter:blur(16px) saturate(160%); -webkit-backdrop-filter:blur(16px) saturate(160%);
+    border:1px solid rgba(255,255,255,.08); border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,.5);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity 160ms var(--ease), transform 160ms var(--ease), visibility 0s linear 160ms;
+  }
+  .nav-dd-menu::before{ content:''; position:absolute; left:0; right:0; top:-14px; height:14px; } /* hover bridge */
+  .nav-dd.open > .nav-dd-menu, .nav-dd:hover > .nav-dd-menu, .nav-dd:focus-within > .nav-dd-menu{
+    opacity:1; visibility:visible; pointer-events:auto; transform:translateX(-50%) translateY(0); transition-delay:0s;
+  }
+  .nav-dd-menu a{
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding:.6rem .75rem; border-radius:8px; color:var(--ink-dim); letter-spacing:.08em;
+  }
+  .nav-dd-menu a:hover, .nav-dd-menu a:focus-visible{ background:rgba(255,255,255,.05); color:var(--ink); }
+  .nav-dd-menu .tag{
+    display:inline-flex; align-items:center; gap:.35em; font-size:.56rem; letter-spacing:.14em; color:#ff6b6b;
+    background:rgba(255,107,107,.1); border:1px solid rgba(255,107,107,.28); padding:.15em .55em; border-radius:2rem;
+  }
+  .nav-dd-menu .tag::before{ content:''; width:5px; height:5px; border-radius:50%; background:#ff6b6b; }
+  @media (prefers-reduced-motion:reduce){ .nav-dd-menu, .nav-dd-btn::after{ transition:none; } }
+  /* drawer: grouped sub-links */
+  .nav-drawer .dd-group{ font-family:var(--mono); font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); padding:.75rem 0 .25rem; }
+  .nav-drawer .dd-sub a{ padding-left:1.1rem; }
+  .nav-drawer .dd-sub a .tag{ font-size:.56rem; letter-spacing:.14em; color:#ff6b6b; margin-left:.5em; }
 </style>
 </head>
 <body>
@@ -1952,8 +1996,14 @@
         <li><a href="#breach">The Breach</a></li>
         <li><a href="#cases">Case Files</a></li>
         <li><a href="#phish-lab" class="nav-highlight">Phish Lab</a></li>
-        <li><a href="#scam-watch">Scam Watch</a></li>
-        <li><a href="#atlas">Scam Atlas</a></li>
+        <li class="nav-dd">
+          <button class="nav-dd-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="dd-atlas">Scam Atlas</button>
+          <ul class="nav-dd-menu" id="dd-atlas">
+            <li><a href="/radar/">Live Radar <span class="tag">Live</span></a></li>
+            <li><a href="#atlas">Country Data</a></li>
+            <li><a href="#scam-watch">Scam Watch</a></li>
+          </ul>
+        </li>
         <li><a href="#resources">Resources</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#position">Position</a></li>
@@ -1974,8 +2024,10 @@
       <li><a href="#breach">The Breach</a></li>
       <li><a href="#cases">Case Files</a></li>
       <li><a href="#phish-lab" class="nav-highlight">Phish Lab</a></li>
-      <li><a href="#scam-watch">Scam Watch</a></li>
-      <li><a href="#atlas">Scam Atlas</a></li>
+      <li class="dd-group" aria-hidden="true">Scam Atlas</li>
+      <li class="dd-sub"><a href="/radar/">Live Radar <span class="tag">● Live</span></a></li>
+      <li class="dd-sub"><a href="#atlas">Country Data</a></li>
+      <li class="dd-sub"><a href="#scam-watch">Scam Watch</a></li>
       <li><a href="#resources">Resources</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#position">Position</a></li>
@@ -2891,7 +2943,7 @@
         Latest official releases as of August 2026.</p>
       </div>
 
-      <a class="atlas-radar" href="https://scamatlas.kimi.page/tracker" target="_blank" rel="noopener" data-reveal>
+      <a class="atlas-radar" href="/radar/" data-reveal>
         <span class="atlas-radar-live"><span class="atlas-radar-dot" aria-hidden="true"></span>Live</span>
         <span class="atlas-radar-txt">
           <b>Open the live scam radar</b>
@@ -3018,8 +3070,8 @@
       <div class="atlas-cta" data-reveal>
         <h3>The world’s scams, <em>on one radar.</em></h3>
         <p>Scam Atlas watches it happen — live. Explore the interactive tracker, the 8-second journey inside a scam, and the full country intelligence.</p>
-        <a class="atlas-enter" href="https://scamatlas.kimi.page/tracker" target="_blank" rel="noopener">Enter the live tracker →</a>
-        <p class="atlas-note">A sister project of Kai Cyber. Figures indexed from official government portals as each release drops.</p>
+        <a class="atlas-enter" href="/radar/">Enter the live radar →</a>
+        <p class="atlas-note">Built and hosted by Kai Cyber. Figures indexed from official government portals as each release drops.</p>
       </div>
     </div>
   </section>
@@ -3105,6 +3157,8 @@
     <span class="credit"><b>KAI CYBER</b> — free scam awareness for every generation.</span>
     <span>
       <a href="#guides" style="color:var(--accent);transition:color 200ms" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--accent)'">Free guides →</a>
+      &nbsp;·&nbsp;
+      <a href="/radar/" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">Live Radar →</a>
       &nbsp;·&nbsp;
       <a href="https://www.youtube.com/@KaiCyberAcademy" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">YouTube →</a>
       &nbsp;·&nbsp;
@@ -4438,6 +4492,33 @@
       }
     });
   });
+})();
+</script>
+
+<script>
+/* ============================================================
+   NAV — Scam Atlas dropdown: click/keyboard toggle, Esc + outside-click close
+   (hover/focus-within are handled in CSS)
+   ============================================================ */
+(function(){
+  'use strict';
+  var dds=[].slice.call(document.querySelectorAll('.nav-dd'));
+  if(!dds.length) return;
+  function setOpen(dd, on){
+    dd.classList.toggle('open', on);
+    var b=dd.querySelector('.nav-dd-btn'); if(b) b.setAttribute('aria-expanded', String(on));
+  }
+  function closeAll(except){ dds.forEach(function(d){ if(d!==except) setOpen(d,false); }); }
+  dds.forEach(function(dd){
+    var btn=dd.querySelector('.nav-dd-btn');
+    btn.addEventListener('click', function(e){ e.stopPropagation(); var on=!dd.classList.contains('open'); closeAll(dd); setOpen(dd,on); });
+    dd.addEventListener('keydown', function(e){
+      if(e.key==='Escape'){ setOpen(dd,false); btn.focus(); }
+      if(e.key==='ArrowDown' && document.activeElement===btn){ e.preventDefault(); setOpen(dd,true); var f=dd.querySelector('.nav-dd-menu a'); if(f) f.focus(); }
+    });
+    dd.querySelectorAll('.nav-dd-menu a').forEach(function(a){ a.addEventListener('click', function(){ setOpen(dd,false); }); });
+  });
+  document.addEventListener('click', function(){ closeAll(null); });
 })();
 </script>
 </body>

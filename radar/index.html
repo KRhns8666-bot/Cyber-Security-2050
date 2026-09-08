@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Scam Atlas Live Radar — the world's scams on one radar. A live threat globe, APAC-weighted scam feed, country heatmap and an instant link checker. A Kai Cyber project.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07090F">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://kaicyber.org/radar/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kai Cyber">
+<meta property="og:url" content="https://kaicyber.org/radar/">
+<meta property="og:title" content="Scam Atlas — Live Radar · Kai Cyber">
+<meta property="og:description" content="Every scam. Every APAC country. On one radar. Live threat globe, scam feed, country heatmap and instant link checker.">
+<meta property="og:image" content="https://kaicyber.org/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Scam Atlas — Live Radar · Kai Cyber">
+<meta name="twitter:description" content="Every scam. Every APAC country. On one radar.">
+<meta name="twitter:image" content="https://kaicyber.org/assets/og-image.jpg">
+<title>Scam Atlas — Live Radar · Kai Cyber</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2307090F'/%3E%3Ccircle cx='8' cy='8' r='3.5' fill='%23E3001B'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root{
+    --bg:#07090F; --bg-raise:#0D1120; --line:#1C2238;
+    --ink:#F2F4F8; --ink-dim:#8A96B0; --ink-faint:#48536A;
+    --accent:#E3001B; --accent-dim:#8C0010; --safe:#00C853;
+    --sans:-apple-system,"Helvetica Neue",Helvetica,"Arial Nova",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --col:min(1280px, 100% - 2*clamp(16px,4vw,48px));
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:clamp(.95rem,1vw,1.05rem);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:var(--ink);text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  .wrap{width:var(--col);margin-inline:auto}
+  .label{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim)}
+
+  /* ---- top bar ---- */
+  header{position:sticky;top:0;z-index:50;background:rgba(7,9,15,.72);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;gap:1rem;padding:.85rem 0;flex-wrap:wrap}
+  .mark{font-family:var(--mono);font-size:.82rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+  .mark b{color:var(--accent)}
+  .crumb{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .crumb span{color:var(--ink-dim)}
+  .live{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ff6b6b;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.28);padding:.28em .8em;border-radius:2rem}
+  .live i{width:6px;height:6px;border-radius:50%;background:#ff6b6b}
+  .bar .nav{margin-left:auto;display:flex;gap:1.2rem;flex-wrap:wrap}
+  .bar .nav a{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);transition:color 180ms}
+  .bar .nav a:hover{color:var(--ink)}
+  .bar .nav a.hot{color:var(--accent)}
+
+  /* ---- hero strip ---- */
+  .top{padding:clamp(2rem,5vh,3.5rem) 0 clamp(1.25rem,3vh,2rem)}
+  .top h1{font-size:clamp(1.9rem,4.4vw,3.4rem);line-height:1.02;letter-spacing:-.03em;font-weight:600;margin:.6rem 0 .9rem;max-width:20ch;text-wrap:balance}
+  .top h1 em{font-style:normal;color:var(--accent)}
+  .top p{color:var(--ink-dim);max-width:60ch;margin:0}
+  .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+  .chip{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);border:1px solid var(--line);padding:.32em .7em;border-radius:2rem;background:var(--bg-raise)}
+  .chip.sim{color:#f5c542;border-color:rgba(245,197,66,.35);background:rgba(245,197,66,.08)}
+
+  /* ---- dashboard grid ---- */
+  .dash{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(280px,.9fr);gap:1rem;padding-bottom:1rem}
+  @media(max-width:960px){.dash{grid-template-columns:1fr}}
+  .panel{background:var(--bg-raise);border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative}
+  .panel-h{display:flex;align-items:center;gap:.75rem;padding:.8rem 1rem;border-bottom:1px solid var(--line)}
+  .panel-h .label{flex:1}
+  .panel-b{padding:1rem}
+
+  /* globe */
+  .globe{min-height:520px;display:flex;flex-direction:column}
+  .globe .stage{position:relative;flex:1;min-height:480px;background:radial-gradient(ellipse at 50% 45%, #0b0f1c 0%, #07090F 65%)}
+  .globe canvas{display:block;width:100%;height:100%;position:absolute;inset:0;cursor:grab}
+  .globe canvas.drag{cursor:grabbing}
+  .hud{position:absolute;left:1rem;bottom:.9rem;z-index:2;display:flex;gap:.5rem;flex-wrap:wrap;pointer-events:none}
+  .hud .chip{background:rgba(7,9,15,.7);backdrop-filter:blur(6px)}
+  .legend{position:absolute;right:1rem;top:.9rem;z-index:2;display:grid;gap:.3rem;background:rgba(7,9,15,.66);border:1px solid var(--line);border-radius:8px;padding:.6rem .75rem;backdrop-filter:blur(6px)}
+  .legend div{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim)}
+  .legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .ctl{position:absolute;right:1rem;bottom:.9rem;z-index:2;display:flex;gap:.4rem}
+  .ctl button{appearance:none;cursor:pointer;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:rgba(7,9,15,.7);color:var(--ink);font-family:var(--mono);font-size:.9rem;backdrop-filter:blur(6px);transition:border-color 160ms,color 160ms}
+  .ctl button:hover{border-color:var(--accent);color:var(--accent)}
+  @media(max-width:600px){.legend{display:none}}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line)}
+  .stat{background:var(--bg-raise);padding:.95rem 1rem}
+  .stat .n{font-family:var(--mono);font-size:clamp(1.3rem,2.2vw,1.8rem);font-weight:700;color:var(--accent);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat .l{display:block;margin-top:.4rem;font-size:.74rem;color:var(--ink-dim);line-height:1.35}
+
+  /* ticker */
+  .feed{list-style:none;margin:0;padding:0;max-height:420px;overflow:auto;scrollbar-width:thin}
+  .feed li{display:grid;grid-template-columns:8px 1fr auto;gap:.7rem;align-items:start;padding:.65rem 1rem;border-bottom:1px solid var(--line);font-size:.86rem}
+  .feed li:last-child{border-bottom:0}
+  .feed .dot{width:8px;height:8px;border-radius:50%;margin-top:.45em;box-shadow:0 0 10px currentColor}
+  .feed .t{color:var(--ink)}
+  .feed .t b{font-weight:600}
+  .feed .m{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--ink-faint);margin-top:.2rem}
+  .feed .ago{font-family:var(--mono);font-size:.64rem;color:var(--ink-faint);white-space:nowrap}
+  @media(prefers-reduced-motion:no-preference){.feed li.new{animation:rowin .5s var(--ease)}}
+  @keyframes rowin{from{opacity:0;transform:translateY(-6px);background:rgba(227,0,27,.12)}to{opacity:1;transform:none}}
+
+  /* row 2 */
+  .row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem;padding-bottom:1rem}
+  .bars{display:flex;flex-direction:column;gap:.55rem}
+  .bar-row{display:grid;grid-template-columns:2.4rem 1fr auto;gap:.6rem;align-items:center;font-size:.82rem}
+  .bar-row .cc{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.08em}
+  .bar-row .name{font-family:var(--mono);font-size:.7rem;color:var(--ink-dim);letter-spacing:.06em;grid-column:1/2}
+  .bar-row .track{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+  .bar-row .fill{height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width 600ms var(--ease)}
+  .bar-row .v{font-family:var(--mono);font-size:.68rem;color:var(--ink);font-variant-numeric:tabular-nums;min-width:2.2rem;text-align:right}
+
+  /* scam of the day */
+  .sotd h3{margin:.2rem 0 .5rem;font-size:1.05rem;font-weight:700;letter-spacing:-.01em}
+  .sotd p{color:var(--ink-dim);font-size:.9rem;margin:0 0 .75rem}
+  .sotd .tell{border-left:3px solid var(--accent);padding:.6rem .9rem;background:rgba(227,0,27,.07);border-radius:0 6px 6px 0;font-size:.88rem}
+  .sotd .tell b{color:var(--accent);font-weight:600}
+
+  /* link checker */
+  .checker{padding-bottom:clamp(2rem,5vh,3rem)}
+  .lc-row{display:flex;gap:.6rem;flex-wrap:wrap}
+  .lc-in{flex:1 1 16rem;min-width:0;font-family:var(--mono);font-size:.92rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.8rem .95rem}
+  .lc-in:focus-visible{border-color:var(--accent)}
+  .lc-btn{appearance:none;cursor:pointer;font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:transparent;border:1px solid var(--accent);padding:.8rem 1.3rem;border-radius:6px;transition:background 180ms,color 180ms}
+  .lc-btn:hover{background:var(--accent);color:var(--bg)}
+  .lc-out{margin-top:1rem;display:none}
+  .lc-out.on{display:block}
+  .verdict{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.45em .9em;border-radius:2rem;border:1px solid}
+  .verdict.low{color:var(--safe);border-color:rgba(0,200,83,.4);background:rgba(0,200,83,.08)}
+  .verdict.med{color:#f5c542;border-color:rgba(245,197,66,.4);background:rgba(245,197,66,.08)}
+  .verdict.high{color:#ff6b6b;border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.1)}
+  .lc-url{font-family:var(--mono);font-size:.8rem;color:var(--ink-dim);word-break:break-all;margin:.7rem 0 .4rem;padding:.6rem .8rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;user-select:all}
+  .lc-list{list-style:none;margin:.6rem 0 0;padding:0;display:flex;flex-direction:column;gap:.45rem}
+  .lc-list li{display:flex;gap:.6rem;font-size:.86rem;color:var(--ink-dim)}
+  .lc-list li::before{content:'⚑';color:#ff6b6b;flex-shrink:0}
+  .lc-list li.ok::before{content:'✓';color:var(--safe)}
+  .lc-note{margin-top:.8rem;font-size:.76rem;color:var(--ink-faint)}
+
+  /* footer */
+  footer{border-top:1px solid var(--line)}
+  .foot{display:flex;flex-wrap:wrap;gap:.6rem 2rem;justify-content:space-between;padding:1.6rem 0 2.4rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--ink-faint)}
+  .foot a{color:var(--ink-dim)}
+  .foot a:hover{color:var(--accent)}
+  .foot a.hot{color:var(--accent)}
+
+  @media(prefers-reduced-motion:no-preference){
+    .live i{animation:pulse 2.4s var(--ease) infinite}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.55);opacity:.45}}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="mark" href="/" aria-label="Kai Cyber — home">KAI<b>·</b>CYBER</a>
+    <span class="crumb">Scam Atlas <span>/ Live Radar</span></span>
+    <span class="live"><i aria-hidden="true"></i>Live</span>
+    <nav class="nav" aria-label="Radar">
+      <a href="#globe" class="hot">Radar</a>
+      <a href="#feed">Feed</a>
+      <a href="#check">Link check</a>
+      <a href="/#atlas">Country data</a>
+      <a href="/#scam-watch">Scam watch</a>
+      <a href="/">← Kai Cyber</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="wrap top">
+    <span class="label">Scam Atlas · APAC scam intelligence</span>
+    <h1>The world's scams, <em>on one radar.</em></h1>
+    <p>A live threat globe, an APAC-weighted scam feed, country heat, scam-type breakdown and an instant link checker — all in one place. Built and hosted by Kai Cyber.</p>
+    <div class="chips">
+      <span class="chip sim">Simulated feed · modelled on URLhaus / PhishTank / OpenPhish / CERT</span>
+      <span class="chip" id="chip-events">— events</span>
+      <span class="chip" id="chip-updated">updated —</span>
+    </div>
+  </section>
+
+  <div class="wrap dash">
+    <!-- GLOBE -->
+    <section class="panel globe" id="globe" aria-label="Live threat globe">
+      <div class="panel-h">
+        <span class="label">Threat globe</span>
+        <span class="chip" id="chip-rot">auto-rotate</span>
+      </div>
+      <div class="stage">
+        <canvas id="cv" aria-label="Rotating globe of scam activity. Pulsing markers show countries with recent activity; arcs show the route of active scam campaigns."></canvas>
+        <div class="legend" id="legend" aria-hidden="true"></div>
+        <div class="hud"><span class="chip">drag to orbit</span><span class="chip">scroll to zoom</span></div>
+        <div class="ctl" aria-label="Globe controls">
+          <button type="button" id="zin" aria-label="Zoom in">+</button>
+          <button type="button" id="zout" aria-label="Zoom out">−</button>
+          <button type="button" id="rot" aria-label="Toggle auto-rotate" aria-pressed="true">↻</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIDE -->
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <section class="panel" aria-label="Live statistics">
+        <div class="panel-h"><span class="label">Right now</span></div>
+        <div class="stats">
+          <div class="stat"><div class="n" id="s-events">0</div><span class="l">scam events tracked</span></div>
+          <div class="stat"><div class="n" id="s-countries">0</div><span class="l">countries active</span></div>
+          <div class="stat"><div class="n" id="s-top">—</div><span class="l">top scam type</span></div>
+          <div class="stat"><div class="n" id="s-loss">$0</div><span class="l">est. losses (session)</span></div>
+        </div>
+      </section>
+
+      <section class="panel sotd" aria-label="Scam of the day">
+        <div class="panel-h"><span class="label">Scam of the day</span><span class="chip" id="sotd-date">—</span></div>
+        <div class="panel-b">
+          <h3 id="sotd-h">—</h3>
+          <p id="sotd-p">—</p>
+          <div class="tell" id="sotd-t">—</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="wrap row2">
+    <section class="panel" id="feed" aria-label="Live scam feed">
+      <div class="panel-h"><span class="label">Live feed</span><span class="chip">newest first</span></div>
+      <ul class="feed" id="feed-list" aria-live="polite" aria-relevant="additions"></ul>
+    </section>
+
+    <section class="panel" aria-label="Country heatmap">
+      <div class="panel-h"><span class="label">Country heat</span><span class="chip">targets · last 60</span></div>
+      <div class="panel-b bars" id="heat"></div>
+    </section>
+
+    <section class="panel" aria-label="Scam type breakdown">
+      <div class="panel-h"><span class="label">By scam type</span><span class="chip">share</span></div>
+      <div class="panel-b bars" id="types"></div>
+    </section>
+  </div>
+
+  <section class="wrap checker" id="check">
+    <div class="panel">
+      <div class="panel-h"><span class="label">Instant link checker</span><span class="chip">runs in your browser · nothing is sent anywhere</span></div>
+      <div class="panel-b">
+        <form class="lc-row" id="lc" novalidate>
+          <label class="label" for="lc-in" style="position:absolute;left:-9999px">Paste a link</label>
+          <input class="lc-in" id="lc-in" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste a suspicious link, e.g. dbs-secure-verify.xyz/login">
+          <button class="lc-btn" type="submit">Check link</button>
+        </form>
+        <div class="lc-out" id="lc-out">
+          <span class="verdict" id="lc-verdict"></span>
+          <div class="lc-url" id="lc-url"></div>
+          <ul class="lc-list" id="lc-list"></ul>
+          <p class="lc-note">Heuristic check only — a "low risk" result is not proof a link is safe. When in doubt, don't click: open the official site by typing the address yourself.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span><b style="color:var(--ink)">SCAM ATLAS</b> — a Kai Cyber project. Feed is simulated; APAC statistics on the main site are official government figures.</span>
+    <span><a href="/#atlas">Country data →</a> &nbsp;·&nbsp; <a href="/#guides" class="hot">Free guides →</a> &nbsp;·&nbsp; <a href="/">kaicyber.org</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* =========================================================
+     DATA — all generated locally. Nothing here is a real URL.
+     ========================================================= */
+  var TYPES = [
+    { id:'invest',  name:'Investment / pig-butchering', color:'#E3001B', loss:[8000,180000] },
+    { id:'phish',   name:'Phishing / smishing',          color:'#F59E0B', loss:[200,6000] },
+    { id:'imperson',name:'Gov / bank impersonation',     color:'#FF6B35', loss:[3000,90000] },
+    { id:'deepfake',name:'Voice clone / deepfake',       color:'#FF2D95', loss:[2000,60000] },
+    { id:'darrest', name:'Digital arrest',               color:'#B1001A', loss:[10000,250000] },
+    { id:'job',     name:'Job scam',                     color:'#8B5CF6', loss:[500,15000] },
+    { id:'romance', name:'Romance',                      color:'#FF7AA2', loss:[3000,120000] },
+    { id:'ecom',    name:'E-commerce / parcel',          color:'#00C2A8', loss:[40,1500] }
+  ];
+  // [code, name, lat, lon, targetWeight, originWeight]
+  var C = [
+    ['SG','Singapore',1.35,103.82,9,0],['MY','Malaysia',3.14,101.69,8,1],['IN','India',20.59,78.96,10,3],
+    ['JP','Japan',35.68,139.69,7,0],['AU','Australia',-33.87,151.21,7,0],['KR','South Korea',37.57,126.98,6,0],
+    ['TH','Thailand',13.76,100.5,7,2],['NZ','New Zealand',-41.29,174.78,3,0],['ID','Indonesia',-6.21,106.85,6,1],
+    ['PH','Philippines',14.6,120.98,6,2],['VN','Vietnam',21.03,105.85,4,1],['HK','Hong Kong',22.32,114.17,6,1],
+    ['TW','Taiwan',25.03,121.57,5,0],['CN','China',31.23,121.47,4,3],['BD','Bangladesh',23.81,90.41,2,0],
+    ['PK','Pakistan',33.69,73.04,2,1],['LK','Sri Lanka',6.93,79.86,2,0],['AE','UAE',25.2,55.27,2,1],
+    ['KH','Cambodia',11.56,104.92,1,6],['MM','Myanmar',16.87,96.2,1,6],['LA','Laos',17.97,102.63,1,4],
+    ['NG','Nigeria',6.52,3.38,1,3],['GB','United Kingdom',51.51,-0.13,2,0],['US','United States',40.71,-74.01,3,1],
+    ['DE','Germany',52.52,13.4,1,0],['BR','Brazil',-23.55,-46.63,1,0]
+  ].map(function(r){ return { code:r[0], name:r[1], lat:r[2], lon:r[3], tw:r[4], ow:r[5] }; });
+  var byCode = {}; C.forEach(function(c){ byCode[c.code]=c; });
+
+  var TEMPLATES = {
+    invest:   ['fake "AI trading" app','crypto "guaranteed returns" group','celebrity-endorsed investment ad','bank-branded investment app'],
+    phish:    ['parcel "customs fee" SMS','bank "account locked" email','tax-refund phishing page','OTP-harvesting login page'],
+    imperson: ['fake police video call','central-bank "safe account" call','spoofed bank hotline','fake court summons'],
+    deepfake: ['cloned-voice "family emergency"','deepfake CFO video call','AI voice "grandchild" call','deepfake CEO ad'],
+    darrest:  ['"digital arrest" video call','fake CBI/customs detention','courier-linked "money laundering" case'],
+    job:      ['overseas "high-pay" job ad','task-scam "like videos for pay"','fake recruiter on messaging app'],
+    romance:  ['dating-app romance → crypto','"wrong number" friendship','social-media love scam'],
+    ecom:     ['fake marketplace seller','live-stream "auction" fraud','fake delivery fee page']
+  };
+  var CHANNELS = ['WhatsApp','Telegram','SMS','Facebook','Instagram','TikTok','LINE','WeChat','email','phone call','video call','LinkedIn'];
+
+  function rnd(a,b){ return a + Math.random()*(b-a); }
+  function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
+  function weighted(list, key){
+    var tot=0,i; for(i=0;i<list.length;i++) tot+=list[i][key];
+    var r=Math.random()*tot; for(i=0;i<list.length;i++){ r-=list[i][key]; if(r<=0) return list[i]; }
+    return list[list.length-1];
+  }
+  var seq=0;
+  function makeEvent(ts){
+    var type = pick(TYPES);
+    var target = weighted(C,'tw');
+    var origin = weighted(C.filter(function(c){ return c.ow>0 && c.code!==target.code; }),'ow');
+    var loss = Math.round(rnd(type.loss[0], type.loss[1]));
+    return { id:++seq, type:type, target:target, origin:origin, loss:loss, ts:ts||Date.now(),
+             what:pick(TEMPLATES[type.id]), via:pick(CHANNELS) };
+  }
+  function timeAgo(ts){
+    var s=Math.max(1,Math.round((Date.now()-ts)/1000));
+    if(s<60) return s+'s ago'; var m=Math.round(s/60); if(m<60) return m+'m ago'; return Math.round(m/60)+'h ago';
+  }
+  function money(n){ return n>=1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n>=1e3 ? '$'+Math.round(n/1e3)+'K' : '$'+n; }
+
+  /* seed the feed with history over the last ~20 minutes */
+  var EVENTS=[]; var now=Date.now();
+  for(var i=0;i<42;i++) EVENTS.push(makeEvent(now - Math.round(rnd(5,1200))*1000));
+  EVENTS.sort(function(a,b){ return a.ts-b.ts; });
+  var MAX=60;
+
+  /* =========================================================
+     UI — feed, stats, bars, scam of the day
+     ========================================================= */
+  var $ = function(id){ return document.getElementById(id); };
+  var feedEl=$('feed-list'), heatEl=$('heat'), typesEl=$('types');
+
+  function esc(s){ return String(s); } // all strings are ours; textContent is used everywhere anyway
+
+  function renderFeedItem(e, isNew){
+    var li=document.createElement('li'); if(isNew && !RM) li.className='new';
+    var dot=document.createElement('span'); dot.className='dot'; dot.style.color=e.type.color; dot.style.background=e.type.color;
+    var t=document.createElement('span'); t.className='t';
+    var b=document.createElement('b'); b.textContent=e.type.name; t.appendChild(b);
+    t.appendChild(document.createTextNode(' · '+e.what));
+    var m=document.createElement('span'); m.className='m';
+    m.textContent=e.origin.code+' → '+e.target.code+' · via '+e.via+' · est. '+money(e.loss);
+    t.appendChild(m);
+    var ago=document.createElement('span'); ago.className='ago'; ago.textContent=timeAgo(e.ts); ago.setAttribute('data-ts',e.ts);
+    li.appendChild(dot); li.appendChild(t); li.appendChild(ago);
+    return li;
+  }
+  function renderFeedAll(){
+    feedEl.textContent='';
+    for(var i=EVENTS.length-1;i>=0;i--) feedEl.appendChild(renderFeedItem(EVENTS[i],false));
+  }
+  function refreshAgo(){
+    var els=feedEl.querySelectorAll('.ago');
+    for(var i=0;i<els.length;i++) els[i].textContent=timeAgo(+els[i].getAttribute('data-ts'));
+    $('chip-updated').textContent='updated '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+
+  function renderBars(el, rows, labelKey){
+    el.textContent='';
+    var max = rows.length ? rows[0].n : 1;
+    rows.forEach(function(r){
+      var row=document.createElement('div'); row.className='bar-row';
+      var cc=document.createElement('span'); cc.className='cc'; cc.textContent=r.label;
+      var track=document.createElement('div'); track.className='track';
+      var fill=document.createElement('div'); fill.className='fill'; if(r.color) fill.style.background=r.color;
+      track.appendChild(fill);
+      var v=document.createElement('span'); v.className='v'; v.textContent=r.v;
+      row.appendChild(cc); row.appendChild(track); row.appendChild(v); el.appendChild(row);
+      requestAnimationFrame(function(){ fill.style.width=Math.round(100*r.n/max)+'%'; });
+    });
+  }
+  function renderStats(){
+    var counts={}, tcounts={}, loss=0, countries={};
+    EVENTS.forEach(function(e){
+      counts[e.target.code]=(counts[e.target.code]||0)+1;
+      tcounts[e.type.id]=(tcounts[e.type.id]||0)+1;
+      loss+=e.loss; countries[e.target.code]=1; countries[e.origin.code]=1;
+    });
+    $('s-events').textContent=String(EVENTS.length);
+    $('s-countries').textContent=String(Object.keys(countries).length);
+    $('s-loss').textContent=money(loss);
+    $('chip-events').textContent=EVENTS.length+' events';
+    var topT=Object.keys(tcounts).sort(function(a,b){ return tcounts[b]-tcounts[a]; })[0];
+    var tt = TYPES.filter(function(t){ return t.id===topT; })[0];
+    $('s-top').textContent = tt ? tt.name.split(' /')[0].split(' (')[0] : '—';
+
+    var heat=Object.keys(counts).map(function(k){ return { label:k, n:counts[k], v:String(counts[k]) }; })
+      .sort(function(a,b){ return b.n-a.n; }).slice(0,10);
+    renderBars(heatEl, heat);
+    var types=TYPES.map(function(t){ var n=tcounts[t.id]||0; return { label:t.id.slice(0,4).toUpperCase(), n:n, v:Math.round(100*n/EVENTS.length)+'%', color:t.color, name:t.name }; })
+      .sort(function(a,b){ return b.n-a.n; });
+    renderBars(typesEl, types);
+  }
+
+  /* legend */
+  (function(){ var l=$('legend'); TYPES.forEach(function(t){ var d=document.createElement('div'); var i=document.createElement('i'); i.style.background=t.color; d.appendChild(i); d.appendChild(document.createTextNode(t.name)); l.appendChild(d); }); })();
+
+  /* scam of the day — deterministic by date */
+  var SOTD=[
+    { h:'The "digital arrest"', p:'A caller claims to be police, CBI or customs. A parcel "in your name" contains drugs, or your account is "linked to laundering". They keep you on a video call for hours and demand transfers to "clear your name".', t:'<b>The tell:</b> no real agency arrests anyone over a video call, and none will ever ask you to move money. Hang up. Call the official number yourself.' },
+    { h:'The cloned voice', p:'A child, grandchild or spouse calls in distress — stranded, arrested, in hospital — and needs money right now. The voice is real enough. It was cloned from seconds of social-media audio.', t:'<b>The tell:</b> urgency + secrecy + money. Hang up and call them back on the number you already have. Agree a family codeword today.' },
+    { h:'The "safe account"', p:'Your bank\'s fraud team (from what looks like the bank\'s real number) says your account is compromised. To protect it, move your balance to a "safe account" they set up for you.', t:'<b>The tell:</b> banks never ask you to move money to another account to keep it safe. Caller ID can be faked. Call the number on your card.' },
+    { h:'Pig-butchering', p:'A friendly stranger — wrong number, dating app, LinkedIn — becomes a friend over weeks. Then a tip: a crypto or "AI trading" platform that\'s been working for them. Early "profits" show. Then the platform freezes when you try to withdraw.', t:'<b>The tell:</b> a stranger who becomes a friend who mentions investing is running a script. Never invest through a platform someone else introduced.' },
+    { h:'The parcel fee', p:'A text says your parcel is held: pay a small customs or redelivery fee. The page looks like the courier. It takes your card — and the OTP.', t:'<b>The tell:</b> couriers and customs never collect fees by text link. Track parcels only on the official site you type yourself.' },
+    { h:'The deepfake boss', p:'A video call from your CEO or CFO — face, voice, mannerisms — approving an urgent, confidential wire transfer. Real-time deepfake.', t:'<b>The tell:</b> urgency + confidentiality + a transfer. Verify on a separate, known channel before a cent moves. Every time.' },
+    { h:'The overseas job', p:'A high-paying job in Thailand or Cambodia, flights paid. On arrival, passports are taken and workers are forced to run scams on others.', t:'<b>The tell:</b> too-good pay, vague employer, pressure to travel fast. Verify the company on its own official website before booking anything.' }
+  ];
+  (function(){
+    var d=new Date(); var idx=(d.getFullYear()*372 + d.getMonth()*31 + d.getDate()) % SOTD.length;
+    var s=SOTD[idx];
+    $('sotd-h').textContent=s.h; $('sotd-p').textContent=s.p;
+    $('sotd-t').innerHTML=s.t;   // authored content only
+    $('sotd-date').textContent=d.toLocaleDateString([], {day:'2-digit',month:'short'});
+  })();
+
+  /* =========================================================
+     GLOBE — orthographic projection on canvas, no libraries
+     ========================================================= */
+  var cv=$('cv'), ctx=cv.getContext('2d');
+  var W=0,H=0,dpr=1, R=0, cx=0, cy=0;
+  var view={ yaw: 1.6, pitch: 0.28, zoom: 1 };     // start centered near APAC
+  var auto = !RM;
+  var raf=0, visible=true, dragging=false, lx=0, ly=0, vx=0;
+
+  var GOLD=Math.PI*(3-Math.sqrt(5));
+  var SHELL=[]; (function(){ var N=1800; for(var i=0;i<N;i++){ var y=1-2*(i+.5)/N, r=Math.sqrt(1-y*y), p=i*GOLD; SHELL.push([r*Math.cos(p), y, r*Math.sin(p)]); } })();
+  var STARS=[]; (function(){ for(var i=0;i<180;i++) STARS.push([Math.random(),Math.random(),Math.random()*1.4+.3, Math.random()*.5+.25]); })();
+
+  function ll(lat,lon){ var la=lat*Math.PI/180, lo=lon*Math.PI/180; var c=Math.cos(la); return [c*Math.cos(lo), Math.sin(la), c*Math.sin(lo)]; }
+  function rot(v){
+    var x=v[0],y=v[1],z=v[2], cy_=Math.cos(view.yaw), sy=Math.sin(view.yaw), cp=Math.cos(view.pitch), sp=Math.sin(view.pitch);
+    var x1=x*cy_ - z*sy, z1=x*sy + z*cy_;
+    var y2=y*cp - z1*sp, z2=y*sp + z1*cp;
+    return [x1,y2,z2];
+  }
+  function proj(v){ var r=rot(v); return { x:cx + r[0]*R, y:cy - r[1]*R, z:r[2] }; }
+
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    var rect=cv.getBoundingClientRect(); W=Math.round(rect.width)||600; H=Math.round(rect.height)||480;
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+    cx=W/2; cy=H/2*1.02; R=Math.min(W,H)*0.40*view.zoom;
+    if(RM) draw(performance.now());
+  }
+
+  function slerp(a,b,t){
+    var d=a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; d=Math.max(-1,Math.min(1,d)); var o=Math.acos(d);
+    if(o<1e-4) return a.slice();
+    var s=Math.sin(o), A=Math.sin((1-t)*o)/s, B=Math.sin(t*o)/s;
+    return [a[0]*A+b[0]*B, a[1]*A+b[1]*B, a[2]*A+b[2]*B];
+  }
+
+  function draw(now){
+    ctx.clearRect(0,0,W,H);
+    // stars
+    for(var i=0;i<STARS.length;i++){ var s=STARS[i]; ctx.globalAlpha=s[3]; ctx.fillStyle='#cfd6e6'; ctx.beginPath(); ctx.arc(s[0]*W,s[1]*H,s[2]*.6,0,6.283); ctx.fill(); }
+    ctx.globalAlpha=1;
+    // atmosphere
+    var g=ctx.createRadialGradient(cx,cy,R*0.96,cx,cy,R*1.22);
+    g.addColorStop(0,'rgba(227,0,27,0)'); g.addColorStop(0.18,'rgba(227,0,27,.22)'); g.addColorStop(0.5,'rgba(120,10,30,.10)'); g.addColorStop(1,'rgba(7,9,15,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,R*1.22,0,6.283); ctx.fill();
+    // sphere body
+    var b=ctx.createRadialGradient(cx-R*.35,cy-R*.35,R*.1,cx,cy,R);
+    b.addColorStop(0,'#141a2e'); b.addColorStop(.6,'#0c1020'); b.addColorStop(1,'#070a14');
+    ctx.fillStyle=b; ctx.beginPath(); ctx.arc(cx,cy,R,0,6.283); ctx.fill();
+    // fibonacci shell
+    for(i=0;i<SHELL.length;i++){ var p=proj(SHELL[i]); if(p.z<=0.02) continue; var a=0.10+0.42*p.z; ctx.fillStyle='rgba(138,150,176,'+a.toFixed(3)+')'; ctx.fillRect(p.x-.7,p.y-.7,1.4,1.4); }
+    // graticule
+    ctx.lineWidth=1; ctx.strokeStyle='rgba(138,150,176,.10)';
+    var lat,lon,k,pt,prev;
+    for(lat=-60;lat<=60;lat+=30){ ctx.beginPath(); prev=null; for(k=0;k<=72;k++){ pt=proj(ll(lat,k*5-180)); if(pt.z>0){ if(prev) ctx.lineTo(pt.x,pt.y); else ctx.moveTo(pt.x,pt.y); prev=pt; } else prev=null; } ctx.stroke(); }
+    for(lon=-180;lon<180;lon+=30){ ctx.beginPath(); prev=null; for(k=0;k<=36;k++){ pt=proj(ll(k*5-90,lon)); if(pt.z>0){ if(prev) ctx.lineTo(pt.x,pt.y); else ctx.moveTo(pt.x,pt.y); prev=pt; } else prev=null; } ctx.stroke(); }
+    // limb
+    ctx.strokeStyle='rgba(227,0,27,.35)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(cx,cy,R,0,6.283); ctx.stroke();
+
+    // arcs for recent events
+    var t=now/1000, recent=EVENTS.slice(-22);
+    for(i=0;i<recent.length;i++){
+      var e=recent[i], age=(Date.now()-e.ts)/1000;
+      var A=ll(e.origin.lat,e.origin.lon), B=ll(e.target.lat,e.target.lon);
+      var lift=0.22;
+      ctx.beginPath(); prev=null; var pts=[];
+      for(k=0;k<=40;k++){ var tt=k/40; var v=slerp(A,B,tt); var h=1+lift*Math.sin(tt*Math.PI); v=[v[0]*h,v[1]*h,v[2]*h]; var q=proj(v); pts.push(q); }
+      var col=e.type.color;
+      ctx.lineWidth=1.1; ctx.strokeStyle=col; ctx.globalAlpha=0.55;
+      for(k=0;k<pts.length;k++){ if(pts[k].z>-0.05){ if(prev) ctx.lineTo(pts[k].x,pts[k].y); else ctx.moveTo(pts[k].x,pts[k].y); prev=pts[k]; } else prev=null; }
+      ctx.stroke(); ctx.globalAlpha=1;
+      // traveling pulse
+      var f=RM?0.5:((t*0.35 + e.id*0.13)%1); var pi=Math.min(pts.length-1,Math.floor(f*pts.length)); var pp=pts[pi];
+      if(pp.z>-0.05){ ctx.fillStyle='#fff'; ctx.shadowBlur=10; ctx.shadowColor=col; ctx.beginPath(); ctx.arc(pp.x,pp.y,2.2,0,6.283); ctx.fill(); ctx.shadowBlur=0; }
+      // target marker + pulse ring
+      var tp=proj(B); if(tp.z>0){
+        ctx.fillStyle=col; ctx.beginPath(); ctx.arc(tp.x,tp.y,2.6,0,6.283); ctx.fill();
+        if(!RM && age<40){ var ph=((t*0.9 + e.id)%1); ctx.strokeStyle=col; ctx.globalAlpha=(1-ph)*0.7; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(tp.x,tp.y,3+ph*16,0,6.283); ctx.stroke(); ctx.globalAlpha=1; }
+      }
+      var op=proj(A); if(op.z>0){ ctx.fillStyle='rgba(255,255,255,.55)'; ctx.beginPath(); ctx.arc(op.x,op.y,1.6,0,6.283); ctx.fill(); }
+    }
+    // country labels for a few hot targets
+    ctx.font='10px ui-monospace, Menlo, monospace'; ctx.fillStyle='rgba(242,244,248,.75)'; ctx.textAlign='left';
+    var hot={}; recent.forEach(function(e){ hot[e.target.code]=1; });
+    Object.keys(hot).forEach(function(code){ var c=byCode[code]; var q=proj(ll(c.lat,c.lon)); if(q.z>0.25) ctx.fillText(code, q.x+6, q.y+3); });
+  }
+
+  function loop(now){
+    raf=0;
+    if(auto && !dragging) view.yaw += 0.0022 + vx; else view.yaw += vx;
+    vx*=0.94;
+    draw(now);
+    if(visible) raf=requestAnimationFrame(loop);
+  }
+  function play(){ if(!raf && visible && !RM) raf=requestAnimationFrame(loop); }
+  function stop(){ cancelAnimationFrame(raf); raf=0; }
+
+  /* interaction */
+  cv.addEventListener('pointerdown', function(e){ dragging=true; cv.classList.add('drag'); lx=e.clientX; ly=e.clientY; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove', function(e){ if(!dragging) return; var dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY; view.yaw += dx*0.006; vx=dx*0.0006; view.pitch=Math.max(-1.2,Math.min(1.2,view.pitch + dy*0.005)); if(RM) draw(performance.now()); });
+  function up(){ dragging=false; cv.classList.remove('drag'); }
+  cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up); cv.addEventListener('pointerleave',up);
+  cv.addEventListener('wheel', function(e){ e.preventDefault(); view.zoom=Math.max(.7,Math.min(1.9, view.zoom*(e.deltaY>0?0.93:1.07))); resize(); }, {passive:false});
+  $('zin').addEventListener('click', function(){ view.zoom=Math.min(1.9,view.zoom*1.15); resize(); });
+  $('zout').addEventListener('click', function(){ view.zoom=Math.max(.7,view.zoom/1.15); resize(); });
+  $('rot').addEventListener('click', function(){ auto=!auto; this.setAttribute('aria-pressed',String(auto)); $('chip-rot').textContent=auto?'auto-rotate':'rotation paused'; if(RM) draw(performance.now()); });
+  if(RM){ $('chip-rot').textContent='static (reduced motion)'; }
+
+  if('ResizeObserver' in window) new ResizeObserver(resize).observe(cv.parentNode); else window.addEventListener('resize',resize);
+  if('IntersectionObserver' in window){ new IntersectionObserver(function(en){ visible=en[0].isIntersecting; if(visible) play(); else stop(); }).observe(cv); }
+  document.addEventListener('visibilitychange', function(){ if(document.hidden) stop(); else play(); });
+  resize(); if(RM) draw(performance.now()); else play();
+
+  /* =========================================================
+     FEED LOOP
+     ========================================================= */
+  renderFeedAll(); renderStats(); refreshAgo();
+  function tick(){
+    var e=makeEvent(); EVENTS.push(e); if(EVENTS.length>MAX) EVENTS.shift();
+    feedEl.insertBefore(renderFeedItem(e,true), feedEl.firstChild);
+    while(feedEl.children.length>MAX) feedEl.removeChild(feedEl.lastChild);
+    renderStats();
+    setTimeout(tick, RM ? 9000 : rnd(2600,5200));
+  }
+  setTimeout(tick, 2500);
+  setInterval(refreshAgo, 5000);
+
+  /* =========================================================
+     LINK CHECKER — heuristic, local, never renders a link
+     ========================================================= */
+  var BRANDS=['dbs','posb','ocbc','uob','maybank','cimb','publicbank','commbank','nab','anz','westpac','sbi','hdfc','icici','axis','paypal','apple','icloud','google','microsoft','amazon','shopee','lazada','grab','singpass','myinfo','iras','cpf','usps','dhl','fedex','ninjavan','poslaju','netflix','facebook','instagram','whatsapp','telegram','line','wechat','scb','kbank','bangkokbank','anz','bnz','nzta','mygov','ato','centrelink','medicare'];
+  var BAD_TLD=['xyz','top','icu','click','link','zip','mov','tk','ml','ga','cf','gq','buzz','rest','cam','work','monster','sbs','cfd','bond','lol','pw','cc'];
+  var SHORT=['bit.ly','tinyurl.com','t.co','cutt.ly','is.gd','rb.gy','shorturl.at','tiny.cc','goo.gl','ow.ly','s.id'];
+  var URGENT=['login','verify','secure','update','account','otp','unlock','suspend','prize','claim','reward','refund','urgent','confirm','wallet','kyc'];
+
+  function checkLink(raw){
+    var reasons=[], score=0, s=raw.trim();
+    if(!/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) s='http://'+s;
+    var u; try{ u=new URL(s); }catch(e){ return { verdict:'high', reasons:['Not a valid link — treat anything you cannot read clearly as unsafe.'], shown:raw }; }
+    var host=u.hostname.toLowerCase(), path=(u.pathname+u.search).toLowerCase();
+    var labels=host.split('.'), tld=labels[labels.length-1], reg=labels.slice(-2).join('.');
+    if(u.protocol!=='https:'){ score+=2; reasons.push('Not HTTPS — real banks and services always use a padlock (https).'); }
+    if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host)){ score+=4; reasons.push('The address is a raw IP number, not a company name.'); }
+    if(host.indexOf('xn--')>-1 || /[^\x00-\x7F]/.test(raw)){ score+=4; reasons.push('Contains look-alike (non-Latin) characters — a classic spoof of a real name.'); }
+    if(u.username||u.password||raw.indexOf('@')>-1){ score+=4; reasons.push('Has an "@" — the part after it is where you really go. The part before is bait.'); }
+    if(BAD_TLD.indexOf(tld)>-1){ score+=2; reasons.push('Ends in ".'+tld+'" — a cheap domain ending heavily used by scam pages.'); }
+    if(SHORT.indexOf(reg)>-1){ score+=2; reasons.push('A link shortener hides the real destination.'); }
+    if(labels.length>=4){ score+=2; reasons.push('Many dots in the address — the real site is only the last two parts ("'+reg+'").'); }
+    if((host.match(/-/g)||[]).length>=2){ score+=1; reasons.push('Multiple hyphens in the name — common in look-alike domains.'); }
+    var hit=BRANDS.filter(function(b){ return host.indexOf(b)>-1; });
+    if(hit.length){
+      var brandIsReg = hit.some(function(b){ return reg===b+'.com' || reg===b+'.com.sg' || reg===b+'.com.my' || reg===b+'.com.au' || reg===b+'.co.nz' || reg===b+'.co.in' || reg===b+'.in' || reg===b+'.gov.sg' || reg===b+'.gov.au' || reg===b+'.co.th' || reg===b+'.co.jp' || reg.indexOf(b+'.')===0; });
+      if(!brandIsReg){ score+=4; reasons.push('Mentions "'+hit[0]+'" but the real site is "'+reg+'" — a brand name inside a different domain is the #1 phishing tell.'); }
+    }
+    var uw=URGENT.filter(function(w){ return path.indexOf(w)>-1; });
+    if(uw.length){ score+=1; reasons.push('Path uses pressure words ("'+uw.slice(0,3).join('", "')+'") — real sites rarely need them in the link.'); }
+    if(s.length>110){ score+=1; reasons.push('Unusually long link — extra length is often used to hide the real domain.'); }
+    var v = score>=6?'high':score>=3?'med':'low';
+    if(!reasons.length) reasons.push('No obvious red flags in the address itself.');
+    return { verdict:v, reasons:reasons, shown:host+(u.pathname!=='/'?u.pathname:'')+(u.search||'') };
+  }
+  $('lc').addEventListener('submit', function(e){
+    e.preventDefault();
+    var raw=$('lc-in').value; if(!raw.trim()) return;
+    var r=checkLink(raw);
+    var vEl=$('lc-verdict'); vEl.className='verdict '+r.verdict;
+    vEl.textContent = r.verdict==='high'?'⚠ High risk — do not click':r.verdict==='med'?'⚠ Suspicious — verify first':'✓ Low risk from the address';
+    $('lc-url').textContent = r.shown;          // text only — never a clickable link
+    var ul=$('lc-list'); ul.textContent='';
+    r.reasons.forEach(function(x){ var li=document.createElement('li'); if(r.verdict==='low') li.className='ok'; li.textContent=x; ul.appendChild(li); });
+    $('lc-out').classList.add('on');
+  });
+})();
+</script>
+</body>
+</html>
