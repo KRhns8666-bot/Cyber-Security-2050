@@ -1,8 +1,16 @@
 # Kai Cyber — Design Language
 
-A single-page site about the permanent problems of security. Built to read the
-same way in 2036 as it does today. Nothing here references a tool, a vendor, a
-trend, or a year.
+A site about the permanent problems of security, and about spotting the scams
+that exploit them. Nothing here references a tool, a vendor, a trend, or a
+year — the six problems, and the tells that expose a scam, don't age.
+
+> **Note on this document's history:** the site launched with a single-accent
+> teal palette and a canvas-only hero. It has since moved to a red/navy
+> palette and a cinematic video-scrubbed hero, and grown a second page (the
+> Scam Atlas live radar). The principles below — typography, layout rhythm,
+> motion discipline — held through that evolution and still govern the
+> current site; the palette table and the absolute "one file" claims in
+> §8 are updated to match what's actually deployed today.
 
 ---
 
@@ -11,32 +19,37 @@ trend, or a year.
 1. **Timeless over current.** No glassmorphism, no gradients-as-decoration, no
    borrowed dashboard aesthetics. If an element would identify the year it was
    built, it is removed.
-2. **One accent.** A single restrained teal carries every signal: emphasis,
-   interaction, compromise. Everything else is achromatic.
+2. **One accent, one warning.** A single dominant accent carries brand,
+   emphasis, and interaction; a second color is reserved strictly for
+   "this is safe / correct" so the two are never confused. Everything else is
+   achromatic.
 3. **Typography is the interface.** Hierarchy comes from scale, weight, and
    space — not from boxes, cards, or shadows.
 4. **Whitespace is structural.** Sections breathe at viewport scale. Density is
    reserved for the one place it means something: the network.
 5. **Calm authority.** Swiss poster discipline meets the quiet of a security
    operations floor at 3 a.m. The site never raises its voice.
-6. **Nothing that can break.** One file. No requests beyond the document
-   itself. No dependency that can rot, redirect, or disappear.
+6. **Nothing that can break.** Static HTML, CSS, and vanilla JS. No build
+   step, no framework, no dependency that can rot, redirect, or disappear.
 
 ## 2. Palette
 
-| Token        | Value                  | Use                                        |
-| ------------ | ---------------------- | ------------------------------------------ |
-| `--bg`       | `#0B0C0D`              | Page ground. Near-black, faintly warm-gray |
-| `--bg-raise` | `#101214`              | Visualization field, subtle separation     |
-| `--line`     | `#222628`              | Hairline rules, borders                    |
-| `--ink`      | `#E7EAE9`              | Primary text                               |
-| `--ink-dim`  | `#8C9492`              | Secondary text, labels                     |
-| `--ink-faint`| `#565E5C`              | Tertiary: numerals, metadata               |
-| `--accent`   | `#46B5A2`              | The one color. Links, focus, compromise    |
-| `--accent-dim`| `#2C6E63`             | Accent at rest (edges, traces)             |
+| Token          | Value       | Use                                         |
+| -------------- | ----------- | -------------------------------------------- |
+| `--bg`         | `#07090F`   | Page ground. Near-black navy                 |
+| `--bg-raise`   | `#0D1120`   | Cards, visualization field, subtle separation|
+| `--line`       | `#1C2238`   | Hairline rules, borders                      |
+| `--ink`        | `#F2F4F8`   | Primary text                                 |
+| `--ink-dim`    | `#8A96B0`   | Secondary text, labels                       |
+| `--ink-faint`  | `#48536A`   | Tertiary: numerals, metadata                 |
+| `--accent`     | `#E3001B`   | The dominant color. Brand, links, focus, compromise |
+| `--accent-dim` | `#8C0010`   | Accent at rest (edges, traces)               |
+| `--safe`       | `#00C853`   | Reserved exclusively for "correct / safe" states (e.g. the phishing lab's right answers) — never used for brand or emphasis |
 
 Rules:
-- The accent never appears as a large fill outside the visualization.
+- The accent never appears as a large fill outside the visualization or a CTA.
+- `--safe` (green) and `--accent` (red) are never both used to mean the same
+  thing — green always means safe, red always means danger or brand.
 - No pure white (`#FFF`) and no pure black (`#000`) anywhere.
 - Contrast: body text ≥ 12:1, secondary text ≥ 5:1, accent on bg ≥ 5:1.
 
@@ -142,12 +155,19 @@ with the network cable cut.
 
 ## 8. Craftsmanship Standards
 
-- Single `index.html`. Zero external requests on the critical path — the page
-  is complete before the optional live wire is even attempted. Loads and
-  renders in well under one second on any connection, because there is
-  nothing to wait for.
-- Semantic structure: one `h1`, ordered heading levels, `header/main/section/
-  footer`, skip link, visible focus rings (2px accent outline, 3px offset).
+- No framework, no build step, no npm dependency. Every page — `index.html`,
+  `radar/index.html`, the standalone demo pages — is hand-written HTML, CSS,
+  and vanilla JS that runs as-is, with no compile or bundle step between the
+  source and what ships.
+- The critical text and layout render with zero blocking external requests.
+  The homepage's video hero, the Scam Atlas live radar, the email-capture
+  forms (posted to Web3Forms), and the live breach-advisory wire are each
+  optional enhancements layered on top: every one of them fails silently and
+  leaves the page fully usable if it can't load — the site never depends on
+  the network being kind.
+- Semantic structure: one `h1` per page, ordered heading levels, `header/main/
+  section/footer`, skip link, visible focus rings (2px accent outline, 3px
+  offset).
 - Keyboard: every interactive element reachable and operable; no traps.
 - Responsive from 320px to 3440px+ with no horizontal scroll at any width.
 - 60fps: animation work is transform/opacity/canvas only; the rAF loop does no
