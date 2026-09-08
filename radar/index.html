@@ -212,7 +212,7 @@
           <div class="stat"><div class="n" id="s-events">0</div><span class="l">scam events tracked</span></div>
           <div class="stat"><div class="n" id="s-countries">0</div><span class="l">countries active</span></div>
           <div class="stat"><div class="n" id="s-top">—</div><span class="l">top scam type</span></div>
-          <div class="stat"><div class="n" id="s-loss">$0</div><span class="l">est. losses (session)</span></div>
+          <div class="stat"><div class="n" id="s-today">0</div><span class="l">scams detected today</span></div>
         </div>
       </section>
 
@@ -277,71 +277,88 @@
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* =========================================================
-     DATA — all generated locally. Nothing here is a real URL.
+     DATA — ported from the real Scam Atlas source (scamData.ts,
+     useScamFeed.ts): exact scam types + colors, exact 23-country
+     list and weights, exact brand list and detail templates, exact
+     event generator and feed timing. Nothing here is a real URL,
+     brand account, or reported figure — the feed is clearly
+     labelled as simulated throughout this page.
      ========================================================= */
   var TYPES = [
-    { id:'invest',  name:'Investment / pig-butchering', color:'#E3001B', loss:[8000,180000] },
-    { id:'phish',   name:'Phishing / smishing',          color:'#F59E0B', loss:[200,6000] },
-    { id:'imperson',name:'Gov / bank impersonation',     color:'#FF6B35', loss:[3000,90000] },
-    { id:'deepfake',name:'Voice clone / deepfake',       color:'#FF2D95', loss:[2000,60000] },
-    { id:'darrest', name:'Digital arrest',               color:'#B1001A', loss:[10000,250000] },
-    { id:'job',     name:'Job scam',                     color:'#8B5CF6', loss:[500,15000] },
-    { id:'romance', name:'Romance',                      color:'#FF7AA2', loss:[3000,120000] },
-    { id:'ecom',    name:'E-commerce / parcel',          color:'#00C2A8', loss:[40,1500] }
+    { id:'phishing',       name:'Phishing',         color:'#22d3ee' },
+    { id:'digital-arrest', name:'Digital Arrest',   color:'#f43f5e' },
+    { id:'crypto',         name:'Crypto Fraud',     color:'#f59e0b' },
+    { id:'romance',        name:'Romance Scam',     color:'#e879f9' },
+    { id:'tech-support',   name:'Tech Support',     color:'#a3e635' },
+    { id:'smishing',       name:'Smishing',         color:'#38bdf8' },
+    { id:'investment',     name:'Investment Fraud', color:'#fb923c' },
+    { id:'job-scam',       name:'Job Scam',         color:'#94a3b8' }
   ];
-  // [code, name, lat, lon, targetWeight, originWeight]
+  var byId={}; TYPES.forEach(function(t){ byId[t.id]=t; });
+
+  // exact order preserved — ARC_PAIRS below references these by index
   var C = [
-    ['SG','Singapore',1.35,103.82,9,0],['MY','Malaysia',3.14,101.69,8,1],['IN','India',20.59,78.96,10,3],
-    ['JP','Japan',35.68,139.69,7,0],['AU','Australia',-33.87,151.21,7,0],['KR','South Korea',37.57,126.98,6,0],
-    ['TH','Thailand',13.76,100.5,7,2],['NZ','New Zealand',-41.29,174.78,3,0],['ID','Indonesia',-6.21,106.85,6,1],
-    ['PH','Philippines',14.6,120.98,6,2],['VN','Vietnam',21.03,105.85,4,1],['HK','Hong Kong',22.32,114.17,6,1],
-    ['TW','Taiwan',25.03,121.57,5,0],['CN','China',31.23,121.47,4,3],['BD','Bangladesh',23.81,90.41,2,0],
-    ['PK','Pakistan',33.69,73.04,2,1],['LK','Sri Lanka',6.93,79.86,2,0],['AE','UAE',25.2,55.27,2,1],
-    ['KH','Cambodia',11.56,104.92,1,6],['MM','Myanmar',16.87,96.2,1,6],['LA','Laos',17.97,102.63,1,4],
-    ['NG','Nigeria',6.52,3.38,1,3],['GB','United Kingdom',51.51,-0.13,2,0],['US','United States',40.71,-74.01,3,1],
-    ['DE','Germany',52.52,13.4,1,0],['BR','Brazil',-23.55,-46.63,1,0]
-  ].map(function(r){ return { code:r[0], name:r[1], lat:r[2], lon:r[3], tw:r[4], ow:r[5] }; });
+    ['IN','India',21.0,78.0,20],['US','United States',39.8,-98.6,9],['NG','Nigeria',9.1,8.7,4],
+    ['GB','United Kingdom',54.0,-2.0,4],['SG','Singapore',1.35,103.8,9],['RU','Russia',61.5,90.0,4],
+    ['BR','Brazil',-10.8,-52.9,3],['AU','Australia',-25.3,133.8,7],['PH','Philippines',12.9,121.8,7],
+    ['ZA','South Africa',-30.6,22.9,2],['DE','Germany',51.2,10.4,2],['CA','Canada',56.1,-106.3,2],
+    ['AE','UAE',24.0,54.0,5],['JP','Japan',36.2,138.3,7],['ID','Indonesia',-2.5,118.0,6],
+    ['FR','France',46.6,2.4,2],['HK','Hong Kong',22.3,114.2,5],['MX','Mexico',23.6,-102.6,2],
+    ['KR','South Korea',36.5,127.9,7],['TH','Thailand',15.9,101.0,7],['VN','Vietnam',14.1,108.3,5],
+    ['MY','Malaysia',4.2,102.0,6],['TW','Taiwan',23.7,121.0,4]
+  ].map(function(r){ return { code:r[0], name:r[1], lat:r[2], lon:r[3], w:r[4] }; });
   var byCode = {}; C.forEach(function(c){ byCode[c.code]=c; });
 
+  // 18 fixed decorative routes, independent of the live feed — matches
+  // the source's separate Arcs component (index pairs into C above)
+  var ARC_PAIRS=[[0,1],[2,4],[5,3],[6,1],[8,0],[9,12],[11,0],[14,16],[7,10],[17,1],[18,0],[19,4],[21,0],[13,22],[20,16],[8,19],[4,18],[21,7]];
+  var ARC_COLORS=['#f43f5e','#22d3ee','#f59e0b'];
+
+  var SCAM_BRANDS=['HDFC Bank','DBS Bank','PayPal','Amazon','Microsoft','FedEx','Apple','Netflix','Chase Bank','Coinbase','Binance','India Post','AT&T','DHL','WhatsApp','Income Tax Dept','UPS','Wells Fargo'];
+
   var TEMPLATES = {
-    invest:   ['fake "AI trading" app','crypto "guaranteed returns" group','celebrity-endorsed investment ad','bank-branded investment app'],
-    phish:    ['parcel "customs fee" SMS','bank "account locked" email','tax-refund phishing page','OTP-harvesting login page'],
-    imperson: ['fake police video call','central-bank "safe account" call','spoofed bank hotline','fake court summons'],
-    deepfake: ['cloned-voice "family emergency"','deepfake CFO video call','AI voice "grandchild" call','deepfake CEO ad'],
-    darrest:  ['"digital arrest" video call','fake CBI/customs detention','courier-linked "money laundering" case'],
-    job:      ['overseas "high-pay" job ad','task-scam "like videos for pay"','fake recruiter on messaging app'],
-    romance:  ['dating-app romance → crypto','"wrong number" friendship','social-media love scam'],
-    ecom:     ['fake marketplace seller','live-stream "auction" fraud','fake delivery fee page']
+    phishing: ['Phishing kit impersonating {brand} login page detected','Credential-harvesting page cloning {brand} flagged by feed','Fake {brand} password-reset email linking to spoofed portal'],
+    'digital-arrest': ['Fake "police" video call demanding verification fee reported','Fraudster posing as customs official claims parcel contains contraband','Victim coerced into "digital custody" by fake CBI officer via video call','Fake court summons threat used to extort immediate payment'],
+    crypto: ['Pig-butchering wallet drainer active on fake exchange domain','Rug-pull token promoted through deepfake celebrity video','Fake {brand} staking portal siphoning wallet approvals'],
+    romance: ['Romance-baiting profile funneling victims to crypto platform','Military romance persona requesting emergency gift cards','Long-con dating scam escalates to "customs fee" payment request'],
+    'tech-support': ['Pop-up posing as {brand} security alert with callback number','Remote-access trojan pushed via fake antivirus renewal call','Fake refund desk requesting screen-share to banking app'],
+    smishing: ['SMS blast claiming unpaid toll, links to card skimmer','Fake {brand} delivery-failure text harvesting card details','OTP-relay smishing wave targeting mobile banking users'],
+    investment: ['Guaranteed-returns "AI trading bot" scheme flagged','Fake IPO allotment messages demanding advance fees','Ponzi-style forex club collapses, exit-scam pattern detected'],
+    'job-scam': ['Fake remote-job offer requiring "training deposit"','Task-scam app paying small amounts then locking withdrawals','Impersonated recruiter from {brand} harvesting ID documents']
   };
-  var CHANNELS = ['WhatsApp','Telegram','SMS','Facebook','Instagram','TikTok','LINE','WeChat','email','phone call','video call','LinkedIn'];
 
   function rnd(a,b){ return a + Math.random()*(b-a); }
   function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
-  function weighted(list, key){
-    var tot=0,i; for(i=0;i<list.length;i++) tot+=list[i][key];
-    var r=Math.random()*tot; for(i=0;i<list.length;i++){ r-=list[i][key]; if(r<=0) return list[i]; }
+  function weighted(list){
+    var tot=0,i; for(i=0;i<list.length;i++) tot+=list[i].w;
+    var r=Math.random()*tot; for(i=0;i<list.length;i++){ r-=list[i].w; if(r<=0) return list[i]; }
     return list[list.length-1];
   }
   var seq=0;
-  function makeEvent(ts){
-    var type = pick(TYPES);
-    var target = weighted(C,'tw');
-    var origin = weighted(C.filter(function(c){ return c.ow>0 && c.code!==target.code; }),'ow');
-    var loss = Math.round(rnd(type.loss[0], type.loss[1]));
-    return { id:++seq, type:type, target:target, origin:origin, loss:loss, ts:ts||Date.now(),
-             what:pick(TEMPLATES[type.id]), via:pick(CHANNELS) };
+  function generateEvent(backdateMs){
+    var type=pick(TYPES), country=weighted(C), brand=pick(SCAM_BRANDS);
+    var detail=pick(TEMPLATES[type.id]).replace('{brand}',brand);
+    return {
+      id:++seq, type:type, country:country, brand:brand, detail:detail,
+      lat: country.lat + (Math.random()-0.5)*12,
+      lon: country.lon + (Math.random()-0.5)*12,
+      ts: Date.now() - (backdateMs||0),
+      severity: 1 + Math.floor(Math.random()*5)
+    };
   }
   function timeAgo(ts){
-    var s=Math.max(1,Math.round((Date.now()-ts)/1000));
-    if(s<60) return s+'s ago'; var m=Math.round(s/60); if(m<60) return m+'m ago'; return Math.round(m/60)+'h ago';
+    var s=Math.max(1,Math.floor((Date.now()-ts)/1000));
+    if(s<60) return s+'s ago';
+    var m=Math.floor(s/60); if(m<60) return m+'m ago';
+    return Math.floor(m/60)+'h '+(m%60)+'m ago';
   }
-  function money(n){ return n>=1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n>=1e3 ? '$'+Math.round(n/1e3)+'K' : '$'+n; }
 
-  /* seed the feed with history over the last ~20 minutes */
-  var EVENTS=[]; var now=Date.now();
-  for(var i=0;i<42;i++) EVENTS.push(makeEvent(now - Math.round(rnd(5,1200))*1000));
-  EVENTS.sort(function(a,b){ return a.ts-b.ts; });
-  var MAX=60;
+  /* feed state — mirrors useScamFeed.ts: 18 events seeded 45s apart
+     (newest first), a 40-item feed cap, and a running "detected today"
+     counter kept deliberately separate from the visible feed length. */
+  var MAX=40, MARKER_TTL=60000, detectedToday=41209;
+  var EVENTS=[]; for(var si=0; si<18; si++) EVENTS.push(generateEvent((18-si)*45000));
+  EVENTS.sort(function(a,b){ return b.ts-a.ts; });
 
   /* =========================================================
      UI — feed, stats, bars, scam of the day
@@ -349,16 +366,14 @@
   var $ = function(id){ return document.getElementById(id); };
   var feedEl=$('feed-list'), heatEl=$('heat'), typesEl=$('types');
 
-  function esc(s){ return String(s); } // all strings are ours; textContent is used everywhere anyway
-
   function renderFeedItem(e, isNew){
     var li=document.createElement('li'); if(isNew && !RM) li.className='new';
     var dot=document.createElement('span'); dot.className='dot'; dot.style.color=e.type.color; dot.style.background=e.type.color;
     var t=document.createElement('span'); t.className='t';
     var b=document.createElement('b'); b.textContent=e.type.name; t.appendChild(b);
-    t.appendChild(document.createTextNode(' · '+e.what));
+    t.appendChild(document.createTextNode(' — '+e.detail));
     var m=document.createElement('span'); m.className='m';
-    m.textContent=e.origin.code+' → '+e.target.code+' · via '+e.via+' · est. '+money(e.loss);
+    m.textContent=e.country.name+' ('+e.country.code+') · severity '+e.severity+'/5';
     t.appendChild(m);
     var ago=document.createElement('span'); ago.className='ago'; ago.textContent=timeAgo(e.ts); ago.setAttribute('data-ts',e.ts);
     li.appendChild(dot); li.appendChild(t); li.appendChild(ago);
@@ -366,7 +381,7 @@
   }
   function renderFeedAll(){
     feedEl.textContent='';
-    for(var i=EVENTS.length-1;i>=0;i--) feedEl.appendChild(renderFeedItem(EVENTS[i],false));
+    for(var i=0;i<EVENTS.length;i++) feedEl.appendChild(renderFeedItem(EVENTS[i],false));
   }
   function refreshAgo(){
     var els=feedEl.querySelectorAll('.ago');
@@ -389,24 +404,27 @@
     });
   }
   function renderStats(){
-    var counts={}, tcounts={}, loss=0, countries={};
+    // country baseline is re-rolled on every call — matches the source's
+    // own useMemo behaviour (its baseline depends on `events` too)
+    var counts={}, tcounts={}, countriesSeen={};
+    C.forEach(function(c){ counts[c.code]=Math.floor(c.w*(3+Math.random()*4)); });
     EVENTS.forEach(function(e){
-      counts[e.target.code]=(counts[e.target.code]||0)+1;
+      counts[e.country.code]=(counts[e.country.code]||0)+1;
       tcounts[e.type.id]=(tcounts[e.type.id]||0)+1;
-      loss+=e.loss; countries[e.target.code]=1; countries[e.origin.code]=1;
+      countriesSeen[e.country.code]=1;
     });
     $('s-events').textContent=String(EVENTS.length);
-    $('s-countries').textContent=String(Object.keys(countries).length);
-    $('s-loss').textContent=money(loss);
-    $('chip-events').textContent=EVENTS.length+' events';
-    var topT=Object.keys(tcounts).sort(function(a,b){ return tcounts[b]-tcounts[a]; })[0];
-    var tt = TYPES.filter(function(t){ return t.id===topT; })[0];
-    $('s-top').textContent = tt ? tt.name.split(' /')[0].split(' (')[0] : '—';
+    $('s-countries').textContent=String(Object.keys(countriesSeen).length);
+    $('s-today').textContent=detectedToday.toLocaleString();
+    $('chip-events').textContent=EVENTS.length+' in feed';
+    var topId=Object.keys(tcounts).sort(function(a,b){ return tcounts[b]-tcounts[a]; })[0];
+    $('s-top').textContent = topId ? byId[topId].name : '—';
 
     var heat=Object.keys(counts).map(function(k){ return { label:k, n:counts[k], v:String(counts[k]) }; })
       .sort(function(a,b){ return b.n-a.n; }).slice(0,10);
     renderBars(heatEl, heat);
-    var types=TYPES.map(function(t){ var n=tcounts[t.id]||0; return { label:t.id.slice(0,4).toUpperCase(), n:n, v:Math.round(100*n/EVENTS.length)+'%', color:t.color, name:t.name }; })
+    var total=EVENTS.length||1;
+    var types=TYPES.map(function(t){ var n=tcounts[t.id]||0; return { label:t.id.slice(0,4).toUpperCase(), n:n, v:Math.round(100*n/total)+'%', color:t.color }; })
       .sort(function(a,b){ return b.n-a.n; });
     renderBars(typesEl, types);
   }
@@ -433,7 +451,12 @@
   })();
 
   /* =========================================================
-     GLOBE — orthographic projection on canvas, no libraries
+     GLOBE — orthographic projection on canvas, no libraries.
+     Composition ported from the real Globe.tsx: cyan fresnel
+     atmosphere, a 2200-point fibonacci shell, a 20° graticule
+     with the equator highlighted, persistent country dots, 18
+     decorative traffic arcs, and per-event pulse markers with a
+     halo + expanding ring that fade over the 60s marker lifetime.
      ========================================================= */
   var cv=$('cv'), ctx=cv.getContext('2d');
   var W=0,H=0,dpr=1, R=0, cx=0, cy=0;
@@ -442,8 +465,9 @@
   var raf=0, visible=true, dragging=false, lx=0, ly=0, vx=0;
 
   var GOLD=Math.PI*(3-Math.sqrt(5));
-  var SHELL=[]; (function(){ var N=1800; for(var i=0;i<N;i++){ var y=1-2*(i+.5)/N, r=Math.sqrt(1-y*y), p=i*GOLD; SHELL.push([r*Math.cos(p), y, r*Math.sin(p)]); } })();
+  var SHELL=[]; (function(){ var N=2200; for(var i=0;i<N;i++){ var y=1-(i/(N-1))*2, r=Math.sqrt(1-y*y), p=i*GOLD; SHELL.push([r*Math.cos(p)*0.995, y*0.995, r*Math.sin(p)*0.995]); } })();
   var STARS=[]; (function(){ for(var i=0;i<180;i++) STARS.push([Math.random(),Math.random(),Math.random()*1.4+.3, Math.random()*.5+.25]); })();
+  var ARCS=ARC_PAIRS.map(function(pair,i){ return { a:C[pair[0]], b:C[pair[1]], color:ARC_COLORS[i%3], speed:0.08+Math.random()*0.12, offset:Math.random() }; });
 
   function ll(lat,lon){ var la=lat*Math.PI/180, lo=lon*Math.PI/180; var c=Math.cos(la); return [c*Math.cos(lo), Math.sin(la), c*Math.sin(lo)]; }
   function rot(v){
@@ -474,49 +498,59 @@
     // stars
     for(var i=0;i<STARS.length;i++){ var s=STARS[i]; ctx.globalAlpha=s[3]; ctx.fillStyle='#cfd6e6'; ctx.beginPath(); ctx.arc(s[0]*W,s[1]*H,s[2]*.6,0,6.283); ctx.fill(); }
     ctx.globalAlpha=1;
-    // atmosphere
-    var g=ctx.createRadialGradient(cx,cy,R*0.96,cx,cy,R*1.22);
-    g.addColorStop(0,'rgba(227,0,27,0)'); g.addColorStop(0.18,'rgba(227,0,27,.22)'); g.addColorStop(0.5,'rgba(120,10,30,.10)'); g.addColorStop(1,'rgba(7,9,15,0)');
+    // fresnel-style atmosphere (cyan, as in the source shader)
+    var g=ctx.createRadialGradient(cx,cy,R*0.94,cx,cy,R*1.22);
+    g.addColorStop(0,'rgba(33,191,230,0)'); g.addColorStop(0.35,'rgba(33,191,230,.16)'); g.addColorStop(0.7,'rgba(20,110,140,.09)'); g.addColorStop(1,'rgba(7,9,15,0)');
     ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,R*1.22,0,6.283); ctx.fill();
     // sphere body
     var b=ctx.createRadialGradient(cx-R*.35,cy-R*.35,R*.1,cx,cy,R);
-    b.addColorStop(0,'#141a2e'); b.addColorStop(.6,'#0c1020'); b.addColorStop(1,'#070a14');
+    b.addColorStop(0,'#0e1b2e'); b.addColorStop(.6,'#081120'); b.addColorStop(1,'#030b16');
     ctx.fillStyle=b; ctx.beginPath(); ctx.arc(cx,cy,R,0,6.283); ctx.fill();
-    // fibonacci shell
-    for(i=0;i<SHELL.length;i++){ var p=proj(SHELL[i]); if(p.z<=0.02) continue; var a=0.10+0.42*p.z; ctx.fillStyle='rgba(138,150,176,'+a.toFixed(3)+')'; ctx.fillRect(p.x-.7,p.y-.7,1.4,1.4); }
-    // graticule
-    ctx.lineWidth=1; ctx.strokeStyle='rgba(138,150,176,.10)';
+    // fibonacci point shell (teal)
+    for(i=0;i<SHELL.length;i++){ var p=proj(SHELL[i]); if(p.z<=0.02) continue; var a=0.08+0.40*p.z; ctx.fillStyle='rgba(14,116,144,'+a.toFixed(3)+')'; ctx.fillRect(p.x-.7,p.y-.7,1.4,1.4); }
+    // graticule — 20° grid, equator highlighted
     var lat,lon,k,pt,prev;
-    for(lat=-60;lat<=60;lat+=30){ ctx.beginPath(); prev=null; for(k=0;k<=72;k++){ pt=proj(ll(lat,k*5-180)); if(pt.z>0){ if(prev) ctx.lineTo(pt.x,pt.y); else ctx.moveTo(pt.x,pt.y); prev=pt; } else prev=null; } ctx.stroke(); }
-    for(lon=-180;lon<180;lon+=30){ ctx.beginPath(); prev=null; for(k=0;k<=36;k++){ pt=proj(ll(k*5-90,lon)); if(pt.z>0){ if(prev) ctx.lineTo(pt.x,pt.y); else ctx.moveTo(pt.x,pt.y); prev=pt; } else prev=null; } ctx.stroke(); }
+    ctx.lineWidth=1; ctx.strokeStyle='rgba(30,125,156,.30)';
+    for(lat=-60;lat<=60;lat+=20){ if(lat===0) continue; ctx.beginPath(); prev=null; for(k=0;k<=72;k++){ pt=proj(ll(lat,k*5-180)); if(pt.z>0){ if(prev) ctx.lineTo(pt.x,pt.y); else ctx.moveTo(pt.x,pt.y); prev=pt; } else prev=null; } ctx.stroke(); }
+    for(lon=-180;lon<180;lon+=20){ ctx.beginPath(); prev=null; for(k=0;k<=36;k++){ pt=proj(ll(k*5-90,lon)); if(pt.z>0){ if(prev) ctx.lineTo(pt.x,pt.y); else ctx.moveTo(pt.x,pt.y); prev=pt; } else prev=null; } ctx.stroke(); }
+    ctx.strokeStyle='rgba(103,232,249,.5)'; ctx.beginPath(); prev=null;
+    for(k=0;k<=72;k++){ pt=proj(ll(0,k*5-180)); if(pt.z>0){ if(prev) ctx.lineTo(pt.x,pt.y); else ctx.moveTo(pt.x,pt.y); prev=pt; } else prev=null; }
+    ctx.stroke();
     // limb
-    ctx.strokeStyle='rgba(227,0,27,.35)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(cx,cy,R,0,6.283); ctx.stroke();
+    ctx.strokeStyle='rgba(103,232,249,.28)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(cx,cy,R,0,6.283); ctx.stroke();
+    // persistent country dots — every tracked country, always visible
+    for(i=0;i<C.length;i++){ var cp=proj(ll(C[i].lat,C[i].lon)); if(cp.z>0.05){ ctx.fillStyle='rgba(103,232,249,'+(0.35+0.5*cp.z).toFixed(3)+')'; ctx.beginPath(); ctx.arc(cp.x,cp.y,1.6,0,6.283); ctx.fill(); } }
 
-    // arcs for recent events
-    var t=now/1000, recent=EVENTS.slice(-22);
-    for(i=0;i<recent.length;i++){
-      var e=recent[i], age=(Date.now()-e.ts)/1000;
-      var A=ll(e.origin.lat,e.origin.lon), B=ll(e.target.lat,e.target.lon);
-      var lift=0.22;
-      ctx.beginPath(); prev=null; var pts=[];
-      for(k=0;k<=40;k++){ var tt=k/40; var v=slerp(A,B,tt); var h=1+lift*Math.sin(tt*Math.PI); v=[v[0]*h,v[1]*h,v[2]*h]; var q=proj(v); pts.push(q); }
-      var col=e.type.color;
-      ctx.lineWidth=1.1; ctx.strokeStyle=col; ctx.globalAlpha=0.55;
+    // 18 decorative traffic arcs — continuous, independent of the live feed
+    var t=now/1000;
+    for(i=0;i<ARCS.length;i++){
+      var arc=ARCS[i], A=ll(arc.a.lat,arc.a.lon), Bv=ll(arc.b.lat,arc.b.lon), lift=0.22;
+      var pts=[]; for(k=0;k<=40;k++){ var tt=k/40; var v=slerp(A,Bv,tt); var h=1+lift*Math.sin(tt*Math.PI); v=[v[0]*h,v[1]*h,v[2]*h]; pts.push(proj(v)); }
+      ctx.lineWidth=1; ctx.strokeStyle=arc.color; ctx.globalAlpha=0.28; ctx.beginPath(); prev=null;
       for(k=0;k<pts.length;k++){ if(pts[k].z>-0.05){ if(prev) ctx.lineTo(pts[k].x,pts[k].y); else ctx.moveTo(pts[k].x,pts[k].y); prev=pts[k]; } else prev=null; }
       ctx.stroke(); ctx.globalAlpha=1;
-      // traveling pulse
-      var f=RM?0.5:((t*0.35 + e.id*0.13)%1); var pi=Math.min(pts.length-1,Math.floor(f*pts.length)); var pp=pts[pi];
-      if(pp.z>-0.05){ ctx.fillStyle='#fff'; ctx.shadowBlur=10; ctx.shadowColor=col; ctx.beginPath(); ctx.arc(pp.x,pp.y,2.2,0,6.283); ctx.fill(); ctx.shadowBlur=0; }
-      // target marker + pulse ring
-      var tp=proj(B); if(tp.z>0){
-        ctx.fillStyle=col; ctx.beginPath(); ctx.arc(tp.x,tp.y,2.6,0,6.283); ctx.fill();
-        if(!RM && age<40){ var ph=((t*0.9 + e.id)%1); ctx.strokeStyle=col; ctx.globalAlpha=(1-ph)*0.7; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(tp.x,tp.y,3+ph*16,0,6.283); ctx.stroke(); ctx.globalAlpha=1; }
-      }
-      var op=proj(A); if(op.z>0){ ctx.fillStyle='rgba(255,255,255,.55)'; ctx.beginPath(); ctx.arc(op.x,op.y,1.6,0,6.283); ctx.fill(); }
+      var f=RM?0.5:((t*arc.speed+arc.offset)%1); var pi=Math.min(pts.length-1,Math.floor(f*pts.length)); var pp=pts[pi];
+      if(pp.z>-0.05){ ctx.fillStyle=arc.color; ctx.shadowBlur=8; ctx.shadowColor=arc.color; ctx.beginPath(); ctx.arc(pp.x,pp.y,1.8,0,6.283); ctx.fill(); ctx.shadowBlur=0; }
     }
-    // country labels for a few hot targets
+
+    // live event markers — dot + halo + expanding ring, fading over the
+    // 60s marker lifetime (MARKER_TTL)
+    var markers=EVENTS.filter(function(e){ return (Date.now()-e.ts) < MARKER_TTL; });
+    for(i=0;i<markers.length;i++){
+      var e=markers[i], age=(Date.now()-e.ts)/1000, life=Math.min(age/60,1);
+      var mp=proj(ll(e.lat,e.lon)); if(mp.z<=0) continue;
+      var col=e.type.color;
+      ctx.fillStyle=col; ctx.globalAlpha=0.2*(1-life*0.5); ctx.beginPath(); ctx.arc(mp.x,mp.y,5.5,0,6.283); ctx.fill(); ctx.globalAlpha=1;
+      ctx.fillStyle=col; ctx.beginPath(); ctx.arc(mp.x,mp.y,2.6,0,6.283); ctx.fill();
+      if(!RM){
+        var rt=(age%2.4)/2.4;
+        ctx.strokeStyle=col; ctx.globalAlpha=(1-rt)*0.8*(1-life*0.6); ctx.lineWidth=1.2;
+        ctx.beginPath(); ctx.arc(mp.x,mp.y,2.6+rt*15,0,6.283); ctx.stroke(); ctx.globalAlpha=1;
+      }
+    }
+    // country labels for currently active markers
     ctx.font='10px ui-monospace, Menlo, monospace'; ctx.fillStyle='rgba(242,244,248,.75)'; ctx.textAlign='left';
-    var hot={}; recent.forEach(function(e){ hot[e.target.code]=1; });
+    var hot={}; markers.forEach(function(e){ hot[e.country.code]=1; });
     Object.keys(hot).forEach(function(code){ var c=byCode[code]; var q=proj(ll(c.lat,c.lon)); if(q.z>0.25) ctx.fillText(code, q.x+6, q.y+3); });
   }
 
@@ -551,11 +585,12 @@
      ========================================================= */
   renderFeedAll(); renderStats(); refreshAgo();
   function tick(){
-    var e=makeEvent(); EVENTS.push(e); if(EVENTS.length>MAX) EVENTS.shift();
+    var e=generateEvent(); EVENTS.unshift(e); if(EVENTS.length>MAX) EVENTS.pop();
+    detectedToday += 1 + Math.floor(Math.random()*14);
     feedEl.insertBefore(renderFeedItem(e,true), feedEl.firstChild);
     while(feedEl.children.length>MAX) feedEl.removeChild(feedEl.lastChild);
     renderStats();
-    setTimeout(tick, RM ? 9000 : rnd(2600,5200));
+    setTimeout(tick, RM ? 9000 : rnd(2200,6400));
   }
   setTimeout(tick, 2500);
   setInterval(refreshAgo, 5000);
