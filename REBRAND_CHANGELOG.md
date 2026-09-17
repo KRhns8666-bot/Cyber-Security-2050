@@ -1,5 +1,14 @@
 # Rebrand Changelog — Kai Cyber → KaiGuardian
 
+> **⚠️ SUPERSEDED (domain):** This document's original "domain unchanged"
+> decision no longer holds. A legal requirement to stop using the "Kai Cyber"
+> name means the site is now also **migrating off `kaicyber.org` to
+> `kaiguardian.org`, with no redirect** (full retirement of the old domain).
+> All shipped files now reference `kaiguardian.org`. See **`DOMAIN_MIGRATION.md`**
+> for the migration steps and status. The brand-copy history below remains
+> accurate; only the domain decision changed.
+
+
 **Scope:** Public-facing brand migration from **Kai Cyber / Kai Cyber Academy**
 to **KaiGuardian** on the existing site. **The domain `kaicyber.org` is kept
 unchanged** (free rebrand — brand name only, no new domain, no redirects).

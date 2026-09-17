@@ -14,14 +14,20 @@ may still need owner action after the KaiGuardian rebrand.
 
 ## Owner action needed
 
-- [ ] **YouTube channel rename.** Display text across the site now reads
-  "KaiGuardian", but the links still point to `@KaiCyberAcademy` (still the
-  live, working channel). Once you rename the channel to the new handle:
+- [ ] **YouTube channel rename — REQUIRED (legal).** The handle
+  `@KaiCyberAcademy` still contains "KaiCyber". Because the move to
+  kaiguardian.org is driven by a legal requirement to stop using the "Kai
+  Cyber" name, this channel must be renamed too. Once renamed:
   - Replace `https://www.youtube.com/@KaiCyberAcademy` with the new
     `https://www.youtube.com/@NEW_HANDLE` in:
     - `index.html` (3 places — Resources card, About link, footer link)
     - `README.md` (1 place)
   - Each spot has a `<!-- TODO ... -->` comment marking it.
+
+- [ ] **Domain migration to kaiguardian.org.** See `DOMAIN_MIGRATION.md` for
+  the full step-by-step. The repository code is already updated to the new
+  domain on this branch; the remaining work is registering the domain and the
+  Cloudflare DNS steps, which only the owner can do.
 
 ## Verify visually (no code change expected)
 
@@ -35,5 +41,3 @@ may still need owner action after the KaiGuardian rebrand.
 
 - No analytics property, JSON-LD, web manifest, or RSS feed in the repo carries
   a brand string.
-- Domain unchanged (`kaicyber.org`) — no DNS, redirect, or email (SPF/DMARC)
-  changes required for this rebrand.

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kaicyber.org/sitemap.xml
+Sitemap: https://kaiguardian.org/sitemap.xml

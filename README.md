@@ -1,6 +1,6 @@
 # KaiGuardian
 
-**Live at [kaicyber.org](https://kaicyber.org)**
+**Live at [kaiguardian.org](https://kaiguardian.org)**
 
 A scam-awareness site for the Asia-Pacific region — free field guides,
 an interactive phishing lab, a live "Scam Atlas" threat radar, and
@@ -34,7 +34,7 @@ or 3D library.
 
 Hosted on GitHub Pages via the workflow in `.github/workflows/pages.yml`
 — every push to `main` deploys automatically. The custom domain
-(`kaicyber.org`) is configured through the `CNAME` file plus DNS records
+(`kaiguardian.org`) is configured through the `CNAME` file plus DNS records
 at the registrar; see `CNAME` for the current domain.
 
 ## Design
