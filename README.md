@@ -1,11 +1,11 @@
-# Kai Cyber
+# KaiGuardian
 
 **Live at [kaicyber.org](https://kaicyber.org)**
 
 A scam-awareness site for the Asia-Pacific region — free field guides,
 an interactive phishing lab, a live "Scam Atlas" threat radar, and
 country-level scam intelligence sourced from official government data.
-Built by [@KaiCyberAcademy](https://www.youtube.com/@KaiCyberAcademy).
+Built by [KaiGuardian](https://www.youtube.com/@KaiCyberAcademy) <!-- TODO: update to @NEW_HANDLE once the YouTube channel is renamed -->.
 
 ## What's here
 

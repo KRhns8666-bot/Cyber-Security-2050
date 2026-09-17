@@ -1,4 +1,4 @@
-# Kai Cyber — Design Language
+# KaiGuardian — Design Language
 
 A site about the permanent problems of security, and about spotting the scams
 that exploit them. Nothing here references a tool, a vendor, a trend, or a
