@@ -1265,7 +1265,9 @@
     justify-content: center;
     font-size: 4.5rem;
     line-height: 1;
+    overflow: hidden;
   }
+  .about-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .about-name { font-weight: 700; font-size: 1.05rem; text-align: center; color: var(--ink); }
   .about-handle { font-family: var(--mono); font-size: .72rem; color: var(--accent); text-align: center; letter-spacing: .06em; }
   .about-stat-row {
@@ -3053,7 +3055,13 @@
       </div>
       <div class="about-grid" data-reveal>
         <div class="about-avatar-col">
-          <div class="about-avatar" aria-hidden="true">🛡️</div>
+          <!-- Mascot: upload the KaiGuardian lion to assets/mascot-kaiguardian.png.
+               If the image is missing it falls back to the 🛡️ emoji (no broken image). -->
+          <div class="about-avatar">
+            <img src="assets/mascot-kaiguardian.png" width="160" height="160"
+                 alt="KaiGuardian mascot — a friendly cyber-guardian lion"
+                 onerror="this.parentElement.textContent='🛡️';this.parentElement.setAttribute('aria-hidden','true');">
+          </div>
           <p class="about-name">KaiGuardian</p>
           <!-- TODO: update handle to @NEW_HANDLE once the YouTube channel is renamed -->
           <p class="about-handle">KaiGuardian · YouTube</p>
