@@ -1525,6 +1525,63 @@
     color: var(--ink-dim);
     margin-bottom: 1.5rem;
   }
+  /* ---------- Scroll story: Stop · Check · Protect ---------- */
+  .story { background: radial-gradient(ellipse 60% 50% at 80% 40%, rgba(45,212,191,.07), transparent 70%); }
+  .story-steps { display: grid; gap: 1.5rem; }
+  .story-step { border: 1px solid var(--line); border-radius: 14px; padding: clamp(1.25rem, 3vw, 2rem);
+    background: linear-gradient(180deg, rgba(17,27,50,.85), rgba(10,18,36,.85)); }
+  .story-step h3 { font-size: clamp(1.35rem, 2.2vw, 1.8rem); line-height: 1.25; margin: 0 0 .75rem; color: var(--ink); }
+  .story-step p { margin: 0; color: var(--ink-dim); font-size: 1.1rem; line-height: 1.7; max-width: 52ch; }
+  .story-vis { position: relative; margin: 1.5rem 0 0; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--line);
+    background:
+      linear-gradient(rgba(45,212,191,.045) 1px, transparent 1px) 0 0 / 28px 28px,
+      linear-gradient(90deg, rgba(45,212,191,.045) 1px, transparent 1px) 0 0 / 28px 28px,
+      radial-gradient(ellipse at 50% 30%, rgba(45,212,191,.10), transparent 70%), var(--bg);
+    display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .vis-cap { align-self: flex-start; font-family: var(--mono); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .phone { width: min(300px, 100%); border-radius: 26px; border: 1px solid #2B3A5C; background: #0E1830; padding: .9rem .9rem 1.4rem;
+    box-shadow: 0 20px 50px rgba(0,0,0,.45); }
+  .phone-top { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .7rem; color: var(--ink-faint); margin-bottom: .8rem; }
+  .bubble { background: #1A2744; color: var(--ink); border-radius: 16px 16px 16px 4px; padding: .8rem .9rem; font-size: .95rem; line-height: 1.5; }
+  .bubble .from { display: block; font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); margin-bottom: .35rem; }
+  .bubble mark { background: rgba(245,165,36,.18); color: #FFD08A; border-bottom: 2px solid var(--warn); padding: 0 .15em; border-radius: 2px; }
+  .bubble mark.lnk { text-decoration: underline; text-decoration-color: var(--warn); }
+  .vis-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+  .vis-tags li { font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; color: var(--warn);
+    border: 1px solid rgba(245,165,36,.4); background: rgba(245,165,36,.08); border-radius: 999px; padding: .3rem .75rem; }
+  .vis-tags--ok li { color: var(--accent); border-color: rgba(45,212,191,.4); background: rgba(45,212,191,.08); }
+  .phone--dim { opacity: .55; }
+  .bubble--dim { text-decoration: line-through; text-decoration-color: rgba(246,241,231,.35); }
+  .bubble .nolink { display: block; margin-top: .4rem; font-family: var(--mono); font-size: .72rem; color: var(--warn); text-decoration: none; }
+  .verify { width: min(320px, 100%); border: 1px solid rgba(45,212,191,.45); border-radius: 14px; background: rgba(45,212,191,.07); padding: 1rem 1.1rem; }
+  .verify-h { margin: 0 0 .6rem; font-weight: 600; color: var(--ink); }
+  .verify ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+  .verify li { display: flex; gap: .55rem; color: var(--ink-dim); font-size: .95rem; line-height: 1.45; }
+  .verify .ok { color: var(--accent); font-weight: 700; }
+  .family { width: min(300px, 100%); height: auto; }
+  .family .shield { fill: rgba(45,212,191,.06); stroke: var(--accent); stroke-width: 3; stroke-linejoin: round;
+    filter: drop-shadow(0 0 14px rgba(45,212,191,.35)); }
+  .family .fam { fill: var(--ink); opacity: .92; }
+  .family .tick { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* desktop enhancement (added by JS): sticky visual beside the scrolling steps */
+  @media (min-width: 900px) {
+    .story.is-sticky .story-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+    .story.is-sticky .story-steps { gap: 0; }
+    .story.is-sticky .story-step { min-height: 72vh; display: flex; flex-direction: column; justify-content: center;
+      border: 0; background: none; padding: 0; opacity: .45; transition: opacity .4s var(--ease); }
+    .story.is-sticky .story-step.is-active { opacity: 1; }
+    .story.is-sticky .story-step > .story-vis { display: none; }
+    .story-sticky { position: sticky; top: 15vh; height: 70vh; }
+    .story-frame { position: relative; height: 100%; }
+    .story-frame .story-vis { position: absolute; inset: 0; margin: 0; justify-content: center;
+      opacity: 0; transform: translateY(10px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+    .story-frame .story-vis.is-on { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .story.is-sticky .story-step, .story-frame .story-vis { transition: none; transform: none; }
+  }
+
   /* ---------- Stop · Check · Protect ---------- */
   .scp-grid { list-style: none; margin: 0; padding: 0; display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 2.5vw, 2rem); }
@@ -2119,30 +2176,71 @@
   </section>
   <hr class="slash-div">
 
-  <!-- ============ STOP · CHECK · PROTECT ============ -->
-  <section id="protect" class="scp" aria-labelledby="scp-h">
+  <!-- ============ STOP · CHECK · PROTECT (scroll story) ============ -->
+  <section id="protect" class="story" aria-labelledby="scp-h">
     <div class="wrap">
-      <div class="section-head" data-reveal>
+      <div class="section-head">
         <span class="label">How to stay safe</span>
-        <h2 id="scp-h">Three steps that beat almost every scam</h2>
+        <h2 id="scp-h">Stop. Check. Protect.</h2>
       </div>
-      <ol class="scp-grid" data-reveal>
-        <li class="scp-step">
-          <span class="scp-k">01 · Stop</span>
-          <h3>Pause when a message rushes you.</h3>
-          <p>Scammers create panic: a deadline, a threat, a prize that expires. Real banks, police and family members give you time. If you feel rushed, that is the moment to stop.</p>
-        </li>
-        <li class="scp-step">
-          <span class="scp-k">02 · Check</span>
-          <h3>Check with a number or website you already trust.</h3>
-          <p>Don't use the phone number or link in the message. Hang up, then call the official number on your card or type the company's real web address yourself. If unsure, ask someone you trust.</p>
-        </li>
-        <li class="scp-step">
-          <span class="scp-k">03 · Protect</span>
-          <h3>Protect your money and accounts.</h3>
-          <p>Never share passwords or one-time codes (OTPs &mdash; the short codes sent by text to approve a login or payment). If money has already moved, call your bank straight away and report it.</p>
-        </li>
-      </ol>
+      <div class="story-grid">
+        <div class="story-steps">
+          <article class="story-step" data-step="0">
+            <span class="scp-k">01 &middot; Stop</span>
+            <h3>Unexpected message? Take a breath.</h3>
+            <p>Scammers create panic &mdash; a deadline, a threat, a prize that expires. Real banks, police and family members give you time. If a message makes you feel rushed, that feeling is your cue to stop.</p>
+          <figure class="story-vis vis-stop" role="img" aria-label="Example of a fictional scam text message. Warning signs are highlighted: an urgent tone, a 30-minute deadline and an unknown link.">
+            <span class="vis-cap">Example message &middot; fictional</span>
+            <div class="phone">
+              <div class="phone-top"><span>Messages</span><span>now</span></div>
+              <div class="bubble">
+                <span class="from">+65 8xxx xxxx</span>
+                <mark>URGENT:</mark> Your YourBank account will be <mark>suspended in 30 minutes</mark>. Verify now: <mark class="lnk">bit.ly/yb-verify-now</mark>
+              </div>
+            </div>
+            <ul class="vis-tags"><li>Pressure</li><li>Deadline</li><li>Unknown link</li></ul>
+          </figure>
+          </article>
+          <article class="story-step" data-step="1">
+            <span class="scp-k">02 &middot; Check</span>
+            <h3>Verify through a channel you already trust.</h3>
+            <p>Don&rsquo;t reply, call back or tap the link in the message. Use a number or website you already know is real &mdash; the one on your card, your bank&rsquo;s app, or a family member&rsquo;s saved number.</p>
+          <figure class="story-vis vis-check" role="img" aria-label="The suspicious message is set aside. Instead, the person calls the number printed on their bank card or opens the bank's official app.">
+            <span class="vis-cap">Verify independently</span>
+            <div class="phone phone--dim">
+              <div class="bubble bubble--dim"><span class="from">+65 8xxx xxxx</span>URGENT: Your account will be suspended&hellip; <span class="nolink">Link not opened</span></div>
+            </div>
+            <div class="verify">
+              <p class="verify-h">Check a channel you already trust</p>
+              <ul>
+                <li><span class="ok" aria-hidden="true">&#10003;</span>Call the number on the back of your card</li>
+                <li><span class="ok" aria-hidden="true">&#10003;</span>Or open your bank&rsquo;s official app yourself</li>
+                <li><span class="ok" aria-hidden="true">&#10003;</span>Ask someone you trust before acting</li>
+              </ul>
+            </div>
+          </figure>
+          </article>
+          <article class="story-step" data-step="2">
+            <span class="scp-k">03 &middot; Protect</span>
+            <h3>Keep your money, accounts and family safe.</h3>
+            <p>Never share passwords or one-time codes (OTPs &mdash; the short codes sent by text to approve a login or payment). Agree a family codeword. If money has already moved, call your bank straight away and report it.</p>
+          <figure class="story-vis vis-protect" role="img" aria-label="A glowing shield surrounds a simple illustration of a family: a grandparent, two adults and a child.">
+            <span class="vis-cap">Protected together</span>
+            <svg class="family" viewBox="0 0 320 300" aria-hidden="true" focusable="false">
+              <path class="shield" d="M160 14 L276 56 V140 C276 214 226 262 160 286 C94 262 44 214 44 140 V56 Z"/>
+              <g class="fam">
+                <circle cx="104" cy="132" r="15"/><path d="M80 214 q0-46 24-46 q24 0 24 46 z"/>
+                <circle cx="148" cy="120" r="17"/><path d="M121 214 q0-54 27-54 q27 0 27 54 z"/>
+                <circle cx="196" cy="122" r="16"/><path d="M170 214 q0-52 26-52 q26 0 26 52 z"/>
+                <circle cx="232" cy="160" r="11"/><path d="M215 214 q0-34 17-34 q17 0 17 34 z"/>
+              </g>
+              <path class="tick" d="M136 244 l16 14 l30-30"/>
+            </svg>
+            <ul class="vis-tags vis-tags--ok"><li>Family codeword</li><li>Never share OTPs</li><li>Report fast</li></ul>
+          </figure>
+          </article>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -4428,7 +4526,9 @@
   function clamp(v,a,b){ return v<a?a:v>b?b:v; }
 
   /* reduced-motion / no video → remove the whole intro (and the 23MB fetch) */
+  var dropped = false;
   function drop(){
+    dropped = true;                 /* once dropped, scrolling must never bring the HUD/film back */
     wrap.classList.add('co-skip');
     cinebg.classList.add('gone');
     scrubw.classList.remove('on'); tc.classList.remove('on'); skip.classList.remove('on');
@@ -4473,6 +4573,7 @@
   }
 
   function read(){
+    if(dropped) return;
     var r=wrap.getBoundingClientRect();
     var total=wrap.offsetHeight-window.innerHeight;
     target=clamp(-r.top/(total||1),0,1);
@@ -4487,6 +4588,7 @@
   }
 
   function ui(p){
+    if(dropped) return;
     /* depth: gentle Ken-Burns zoom + vertical drift so the film reads as a
        receding 3D layer behind the foreground, not a flat backdrop */
     var sc = 1 + p * 0.09;
@@ -4679,6 +4781,45 @@
   });
   function later(){ (window.requestIdleCallback || function(f){ setTimeout(f, 300); })(start); }
   if (document.readyState === 'complete') later(); else window.addEventListener('load', later);
+})();
+</script>
+
+<script>
+/* Scroll story — desktop enhancement: sticky visual that follows the step in view.
+   Without JS (or on small screens) the steps stay as stacked cards with their own visuals. */
+(function(){
+  'use strict';
+  var sec = document.getElementById('protect');
+  if (!sec || !('IntersectionObserver' in window) || !window.matchMedia) return;
+  var mq = matchMedia('(min-width: 900px)');
+  var steps = [].slice.call(sec.querySelectorAll('.story-step'));
+  var grid = sec.querySelector('.story-grid');
+  var aside = null, frames = [];
+  function build(){
+    if (aside) return;
+    aside = document.createElement('div');
+    aside.className = 'story-sticky'; aside.setAttribute('aria-hidden', 'true');
+    var frame = document.createElement('div'); frame.className = 'story-frame';
+    steps.forEach(function(st){
+      var c = st.querySelector('.story-vis').cloneNode(true);
+      c.removeAttribute('role'); c.removeAttribute('aria-label');
+      frame.appendChild(c); frames.push(c);
+    });
+    aside.appendChild(frame); grid.appendChild(aside);
+  }
+  function activate(n){
+    steps.forEach(function(st, k){ st.classList.toggle('is-active', k === n); });
+    frames.forEach(function(f, k){ f.classList.toggle('is-on', k === n); });
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting) activate(+e.target.getAttribute('data-step')); });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  function apply(){
+    if (mq.matches) { build(); sec.classList.add('is-sticky'); activate(0); steps.forEach(function(st){ io.observe(st); }); }
+    else { sec.classList.remove('is-sticky'); io.disconnect(); }
+  }
+  apply();
+  if (mq.addEventListener) mq.addEventListener('change', apply);
 })();
 </script>
 </body>
