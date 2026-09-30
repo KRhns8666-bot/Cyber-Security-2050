@@ -34,24 +34,28 @@ year — the six problems, and the tells that expose a scam, don't age.
 
 ## 2. Palette
 
+Theme: **“Your family’s digital guardian.”** Midnight navy, warm white text, teal
+highlights and restrained amber for warnings.
+
 | Token          | Value       | Use                                         |
 | -------------- | ----------- | -------------------------------------------- |
-| `--bg`         | `#07090F`   | Page ground. Near-black navy                 |
-| `--bg-raise`   | `#0D1120`   | Cards, visualization field, subtle separation|
-| `--line`       | `#1C2238`   | Hairline rules, borders                      |
-| `--ink`        | `#F2F4F8`   | Primary text                                 |
-| `--ink-dim`    | `#8A96B0`   | Secondary text, labels                       |
-| `--ink-faint`  | `#48536A`   | Tertiary: numerals, metadata                 |
-| `--accent`     | `#E3001B`   | The dominant color. Brand, links, focus, compromise |
-| `--accent-dim` | `#8C0010`   | Accent at rest (edges, traces)               |
-| `--safe`       | `#00C853`   | Reserved exclusively for "correct / safe" states (e.g. the phishing lab's right answers) — never used for brand or emphasis |
+| `--bg`         | `#0A1224`   | Page ground. Midnight navy                   |
+| `--bg-raise`   | `#111B32`   | Cards, visual panels, subtle separation      |
+| `--line`       | `#22304D`   | Hairline rules, borders                      |
+| `--ink`        | `#F6F1E7`   | Primary text (warm white)                    |
+| `--ink-dim`    | `#B4BDCD`   | Secondary text, labels                       |
+| `--ink-faint`  | `#7A879E`   | Tertiary: numerals, metadata                 |
+| `--accent`     | `#2DD4BF`   | Teal. Brand, links, focus, highlights        |
+| `--accent-dim` | `#0F766E`   | Teal at rest / on light paper (print guides) |
+| `--warn`       | `#F5A524`   | Amber. Warnings and red flags **only**       |
+| `--safe`       | `#22C55E`   | Reserved for “correct / safe” states (e.g. the phishing lab’s right answers) |
 
 Rules:
-- The accent never appears as a large fill outside the visualization or a CTA.
-- `--safe` (green) and `--accent` (red) are never both used to mean the same
-  thing — green always means safe, red always means danger or brand.
-- No pure white (`#FFF`) and no pure black (`#000`) anywhere.
-- Contrast: body text ≥ 12:1, secondary text ≥ 5:1, accent on bg ≥ 5:1.
+- Teal carries brand and emphasis; amber is reserved for warnings (scam red
+  flags, alert severity, “trap” answers, compromised systems in the breach demo).
+- No flashing, glitching or busy backgrounds behind paragraphs. A faint teal
+  grid appears only inside visual panels.
+- Contrast: body text ≥ 12:1, secondary text ≥ 7:1, accent and warning on bg ≥ 8:1.
 
 ## 3. Typography
 
