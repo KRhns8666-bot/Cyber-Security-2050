@@ -4,16 +4,16 @@ Tracks images, video and configuration the site needs. Updated 30 September 2026
 
 ## Done
 
-- [x] **Hero image** — `assets/hero-kai-maya.webp` (desktop), `assets/hero-kai-maya-mobile.webp`
-  (mobile crop) and `assets/hero-kai-maya.jpg` (fallback / video poster). Generated in
-  Higgsfield with the Kai Tan and Maya-Tan characters.
+- [x] **Hero image** — futuristic 2050 megacity keyframe: `assets/hero-city.webp` (desktop,
+  also the video poster), `assets/hero-city-mobile.webp` (mobile crop), `assets/hero-city.jpg`
+  (fallback). Generated in Higgsfield; no characters.
 - [x] **Mascot** — `assets/mascot-kaiguardian.webp` (Kai the lion, from the Higgsfield
   element), shown in the About section.
 - [x] **YouTube** — all links use `@KaiGuardianAcademy`; the Watch and learn section uses
   four real channel videos (click-to-play).
 - [x] **Guide PDFs** — `guides/scam-check-starter.pdf`, `guides/boss-scam.pdf`,
   `guides/family-scam-guide.pdf` (KaiGuardian branding).
-- [x] **Social preview** — `assets/og-image.jpg` rebuilt from the Kai + Maya hero (teal/amber).
+- [x] **Social preview** — `assets/og-image.jpg` rebuilt from the futuristic city keyframe (teal/amber).
 - [x] **Favicon** — inline SVG, no brand text.
 
 ## Still needed
