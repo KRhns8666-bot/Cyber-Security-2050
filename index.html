@@ -1639,6 +1639,12 @@
     border: 1px solid var(--line); background: rgba(10,18,36,.75); color: var(--ink);
     font-family: var(--mono); font-size: .8rem; letter-spacing: .06em; cursor: pointer; }
   .gh-toggle:hover { border-color: var(--accent); }
+  /* scroll depth: the city pushes in and the copy drifts up as you scroll (native scroll, no hijack) */
+  @media (prefers-reduced-motion: no-preference) {
+    .gh { --p: 0; }
+    .gh-media { transform: scale(calc(1 + var(--p) * .14)); transform-origin: 60% 45%; will-change: transform; }
+    .gh-content { transform: translateY(calc(var(--p) * -48px)); opacity: calc(1 - var(--p) * .85); }
+  }
   .gh-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   @media (max-width: 760px) {
     .gh { display: block; min-height: 0; }
@@ -4766,6 +4772,7 @@
   if (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')) return;  /* prefer the poster */
 
   var lbl = btn.querySelector('.gh-lbl'), ico = btn.querySelector('.gh-ico');
+  var userPaused = false, onScreen = true;
   function setState(playing){
     btn.setAttribute('aria-pressed', playing ? 'false' : 'true');
     lbl.textContent = playing ? 'Pause background video' : 'Play background video';
@@ -4781,9 +4788,17 @@
   }
   v.addEventListener('error', giveUp);
   btn.addEventListener('click', function(){
-    if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(giveUp); setState(true); }
-    else { v.pause(); setState(false); }
+    if (v.paused) { userPaused = false; var p = v.play(); if (p && p.catch) p.catch(giveUp); setState(true); }
+    else { userPaused = true; v.pause(); setState(false); }
   });
+  /* save battery: pause while the hero is off-screen, resume on return (unless the visitor paused it) */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(es){
+      onScreen = es[0].isIntersecting;
+      if (!v.src) return;
+      if (!onScreen) v.pause(); else if (!userPaused) { var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    }).observe(document.getElementById('top'));
+  }
   function later(){ (window.requestIdleCallback || function(f){ setTimeout(f, 300); })(start); }
   if (document.readyState === 'complete') later(); else window.addEventListener('load', later);
 })();
@@ -4825,6 +4840,25 @@
   }
   apply();
   if (mq.addEventListener) mq.addEventListener('change', apply);
+})();
+</script>
+
+<script>
+/* Hero scroll depth — sets --p (0→1) as the hero scrolls away. Motion-safe only. */
+(function(){
+  'use strict';
+  var hero = document.getElementById('top');
+  if (!hero || !window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var raf = 0;
+  function upd(){
+    raf = 0;
+    var r = hero.getBoundingClientRect();
+    var p = Math.min(1, Math.max(0, -r.top / (r.height || 1)));
+    hero.style.setProperty('--p', p.toFixed(3));
+  }
+  window.addEventListener('scroll', function(){ if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  window.addEventListener('resize', upd);
+  upd();
 })();
 </script>
 </body>
