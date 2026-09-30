@@ -5,7 +5,7 @@
 A scam-awareness site for the Asia-Pacific region — free field guides,
 an interactive phishing lab, a live "Scam Atlas" threat radar, and
 country-level scam intelligence sourced from official government data.
-Built by [KaiGuardian](https://www.youtube.com/@KaiCyberAcademy) <!-- TODO: update to @NEW_HANDLE once the YouTube channel is renamed -->.
+Built by KaiGuardian — videos on [KaiGuardian Academy](https://www.youtube.com/@KaiGuardianAcademy).
 
 ## What's here
 

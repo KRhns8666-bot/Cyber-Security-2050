@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Practical scam awareness, phishing training, family digital-safety guides and APAC scam intelligence for children, adults and seniors.">
+<meta name="description" content="Learn to spot online scams, recognise AI impersonation and protect your family with KaiGuardian’s practical guides, videos and scam-awareness training.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#07090F">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -14,17 +14,17 @@
 <meta property="og:site_name" content="KaiGuardian">
 <meta property="og:locale" content="en">
 <meta property="og:url" content="https://kaiguardian.org/">
-<meta property="og:title" content="KaiGuardian — Digital Safety for Every Family">
-<meta property="og:description" content="Practical scam awareness, phishing training, family digital-safety guides and APAC scam intelligence for children, adults and seniors.">
+<meta property="og:title" content="KaiGuardian | Scam Awareness &amp; Digital Safety for Families">
+<meta property="og:description" content="Learn to spot online scams, recognise AI impersonation and protect your family with KaiGuardian’s practical guides, videos and scam-awareness training.">
 <meta property="og:image" content="https://kaiguardian.org/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="KaiGuardian — Digital Safety for Every Family">
+<meta property="og:image:alt" content="KaiGuardian — scam awareness and digital safety for families">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="KaiGuardian — Digital Safety for Every Family">
-<meta name="twitter:description" content="Practical scam awareness, phishing training, family digital-safety guides and APAC scam intelligence for children, adults and seniors.">
+<meta name="twitter:title" content="KaiGuardian | Scam Awareness &amp; Digital Safety for Families">
+<meta name="twitter:description" content="Learn to spot online scams, recognise AI impersonation and protect your family with KaiGuardian’s practical guides, videos and scam-awareness training.">
 <meta name="twitter:image" content="https://kaiguardian.org/assets/og-image.jpg">
-<title>KaiGuardian — Digital Safety for Every Family</title>
+<title>KaiGuardian | Scam Awareness &amp; Digital Safety for Families</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2307090F'/%3E%3Ccircle cx='8' cy='8' r='3.5' fill='%23E3001B'/%3E%3C/svg%3E">
 <script>document.documentElement.classList.add('js');</script>
 <style>
@@ -1875,7 +1875,9 @@
   .optin-btn:disabled{ opacity:.55; cursor:default; }
   .optin-err{ margin-top:.6rem; font-size:.82rem; color:#ff8484; min-height:1.1em; }
   .optin-err:empty{ margin-top:0; min-height:0; }
-  .optin-fine{ margin-top:.9rem; font-size:.78rem; color:var(--ink-faint); line-height:1.5; }
+  .optin-fine{ margin-top:.9rem; font-size:.92rem; color:var(--ink-dim); line-height:1.6; max-width:62ch; }
+  .optin-fine strong{ color:var(--ink); font-weight:600; }
+  .optin-fine a{ color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
   .optin-done[hidden]{ display:none; }
   .optin-done-h{ font-family:var(--mono); font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin:0; }
   .optin-dl{ margin-top:1.1rem; display:flex; flex-direction:column; gap:.6rem; }
@@ -2119,13 +2121,13 @@
   <section class="optin" id="guides" aria-labelledby="guides-h">
     <div class="wrap">
       <div class="optin-card" data-reveal>
-        <span class="label">Free field guides</span>
-        <h2 class="optin-h" id="guides-h">The fakes get better. The tells don't change.</h2>
-        <p class="optin-sub">Right now scammers are running deepfake video ads (AI-generated fake videos of real people) and cloned-voice calls across the region. These three short, printable guides give you the ten-second checks that beat them — no tech knowledge needed.</p>
+        <span class="label">Free guides</span>
+        <h2 class="optin-h" id="guides-h">Get the free scam checklist</h2>
+        <p class="optin-sub">Three short, printable guides in plain English &mdash; including help with deepfake video calls (AI-generated fake videos of real people) and cloned-voice calls. No tech knowledge needed.</p>
         <ul class="optin-list">
-          <li><span class="n" aria-hidden="true">01</span><span class="t"><b>The Boss Scam</b> — spot a fake CEO or deepfake video call in ten seconds, before a cent moves.</span></li>
-          <li><span class="n" aria-hidden="true">00</span><span class="t"><b>The 30-Second Scam Check</b> — the five signals behind almost every scam, from voice clones to fake bank calls.</span></li>
-          <li><span class="n" aria-hidden="true">02</span><span class="t"><b>The Family Scam Guide</b> — the family codeword, four household rules, and what to teach kids, adults and seniors.</span></li>
+          <li><span class="n" aria-hidden="true">01</span><span class="t"><b>The 30-Second Scam Check</b> — the checklist: five warning signs behind almost every scam, and one habit that beats them.</span></li>
+          <li><span class="n" aria-hidden="true">02</span><span class="t"><b>The Boss Scam</b> — spot a fake boss, CEO or deepfake video call before any money moves.</span></li>
+          <li><span class="n" aria-hidden="true">03</span><span class="t"><b>The Family Scam Guide</b> — the family codeword, four household rules, and what to teach kids, adults and seniors.</span></li>
         </ul>
         <form class="optin-form" data-optin="guides" novalidate>
           <div class="optin-hp" aria-hidden="true">
@@ -2135,16 +2137,16 @@
             <label class="sr-only" for="guides-email">Your email address</label>
             <input class="optin-input" id="guides-email" type="email" name="email" inputmode="email"
                    autocomplete="email" placeholder="you@email.com" required>
-            <button class="optin-btn" type="submit">Send me the guides</button>
+            <button class="optin-btn" type="submit">Get the free guides</button>
           </div>
           <p class="optin-err" data-err role="alert" aria-live="polite"></p>
-          <p class="optin-fine">No spam. One short scam-alert email a month — like the alerts above. Unsubscribe any time.</p>
+          <p class="optin-fine"><strong>What you get:</strong> the three guides unlock on this page straight away, ready to download. We may also email you occasional KaiGuardian scam alerts &mdash; no spam, and you can ask us to remove you at any time. Read our <a href="/privacy.html">privacy notice</a>.</p>
         </form>
         <div class="optin-done" data-done hidden>
-          <p class="optin-done-h">✓ You're in.</p>
+          <p class="optin-done-h">✓ Thanks &mdash; your guides are ready below.</p>
           <div class="optin-dl">
-            <a href="/guides/boss-scam.pdf" download><span class="ic" aria-hidden="true">↓</span> The Boss Scam — spot a fake boss in 10 seconds</a>
             <a href="/guides/scam-check-starter.pdf" download><span class="ic" aria-hidden="true">↓</span> The 30-Second Scam Check — five signals, one method</a>
+            <a href="/guides/boss-scam.pdf" download><span class="ic" aria-hidden="true">↓</span> The Boss Scam — spot a fake boss or deepfake call</a>
             <a href="/guides/family-scam-guide.pdf" download><span class="ic" aria-hidden="true">↓</span> The Family Scam Guide — protect kids, adults &amp; seniors</a>
           </div>
         </div>
@@ -2162,7 +2164,36 @@
         <h2 id="watch-h">Latest scam videos</h2>
       </div>
       <p class="watch-lede" data-reveal>Short videos from <strong>KaiGuardian Academy</strong> on YouTube that break down real scams in plain English &mdash; what they look like, and what to do.</p>
-      <!--VIDEO-GRID-->
+      <div class="video-grid" data-reveal>
+        <figure class="vcard">
+          <button type="button" class="vcard-btn" data-yt="XnIXmpifTfc" aria-label="Play video: Inside the scam call centre next door: 16 phones in an Ipoh house">
+            <img src="https://i.ytimg.com/vi/XnIXmpifTfc/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+            <span class="play" aria-hidden="true">&#9654;</span>
+          </button>
+          <figcaption>Inside the scam call centre next door: 16 phones in an Ipoh house</figcaption>
+        </figure>
+        <figure class="vcard">
+          <button type="button" class="vcard-btn" data-yt="vjs7VF_p7mY" aria-label="Play video: AI scams targeting kids &mdash; the safe-word trick that stops them">
+            <img src="https://i.ytimg.com/vi/vjs7VF_p7mY/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+            <span class="play" aria-hidden="true">&#9654;</span>
+          </button>
+          <figcaption>AI scams targeting kids &mdash; the safe-word trick that stops them</figcaption>
+        </figure>
+        <figure class="vcard">
+          <button type="button" class="vcard-btn" data-yt="Qm8QE-YYDWQ" aria-label="Play video: No police force can arrest you on a video call">
+            <img src="https://i.ytimg.com/vi/Qm8QE-YYDWQ/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+            <span class="play" aria-hidden="true">&#9654;</span>
+          </button>
+          <figcaption>No police force can arrest you on a video call</figcaption>
+        </figure>
+        <figure class="vcard">
+          <button type="button" class="vcard-btn" data-yt="6kR1-fDpvS0" aria-label="Play video: How pig-butchering scams actually work (and how to stop one)">
+            <img src="https://i.ytimg.com/vi/6kR1-fDpvS0/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+            <span class="play" aria-hidden="true">&#9654;</span>
+          </button>
+          <figcaption>How pig-butchering scams actually work (and how to stop one)</figcaption>
+        </figure>
+      </div>
       <p data-reveal><a class="run" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">Watch scam alerts on YouTube &rarr;</a></p>
     </div>
   </section>
@@ -2262,26 +2293,25 @@
 
       <!-- ===== RESOURCES ===== -->
       <div class="resources" id="resources" data-reveal>
-        <h3 class="tips-2026-h">Free resources — keep learning</h3>
+        <h3 class="tips-2026-h">Free tools — keep practising</h3>
         <p class="tips-intro">Knowledge is the best defence. These resources from KaiGuardian are free, practical, and built for everyone — whether you're 15 or 75.</p>
         <div class="resources-grid">
-          <!-- TODO: swap URL + handle text to @NEW_HANDLE once the YouTube channel is renamed -->
-          <a class="resource-card" href="https://www.youtube.com/@KaiCyberAcademy" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">
             <span class="resource-icon">▶️</span>
-            <p class="resource-title">KaiGuardian — YouTube</p>
-            <p class="resource-sub">Free video breakdowns of real scams, AI threat explainers, and step-by-step guides for keeping yourself and your family safe online. New videos every week.</p>
-            <span class="resource-link">KaiGuardian on YouTube →</span>
+            <p class="resource-title">KaiGuardian Academy — YouTube</p>
+            <p class="resource-sub"><strong>For everyone.</strong> Free video breakdowns of real scams and AI threats, with step-by-step advice for keeping yourself and your family safe online.</p>
+            <span class="resource-link">KaiGuardian Academy on YouTube →</span>
           </a>
           <a class="resource-card" href="https://kai-check.higgsfield.app" target="_blank" rel="noopener noreferrer">
             <span class="resource-icon">🛡️</span>
             <p class="resource-title">KaiGuardian Check — Scam Training</p>
-            <p class="resource-sub">Interactive scam-awareness training designed for real people — from teens to grandparents. Practice identifying threats in a safe, guided environment before you see them in the wild.</p>
+            <p class="resource-sub"><strong>For teens, adults and seniors.</strong> Interactive scam-awareness drills: practise spotting fake messages and calls in a safe, guided setting before you meet them for real.</p>
             <span class="resource-link">kai-check.higgsfield.app →</span>
           </a>
           <a class="resource-card" href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener noreferrer">
             <span class="resource-icon">🎮</span>
             <p class="resource-title">CyberKid by KaiGuardian — Free Safety Game</p>
-            <p class="resource-sub">Join KAI &amp; ARIA across 5 neon cyber worlds — beat hackers, crack the password missions, and learn real online safety. Free for kids and adults, and pairs with KaiGuardian to turn scam-awareness lessons into hands-on gameplay.</p>
+            <p class="resource-sub"><strong>For children (and curious adults).</strong> A free game: join KAI &amp; ARIA across five cyber worlds, beat the hackers and learn real online-safety habits through play.</p>
             <span class="resource-link">cyberkid.higgsfield.app →</span>
           </a>
         </div>
@@ -2518,10 +2548,10 @@
       </div>
 
       <a class="atlas-radar" href="/radar/" data-reveal>
-        <span class="atlas-radar-live"><span class="atlas-radar-dot" aria-hidden="true"></span>Live</span>
+        <span class="atlas-radar-live"><span class="atlas-radar-dot" aria-hidden="true"></span>Demo</span>
         <span class="atlas-radar-txt">
-          <b>Open the live scam radar</b>
-          <span>Every APAC scam, tracked in real time — one interactive map.</span>
+          <b>Open the scam radar demo</b>
+          <span>An interactive map showing how scams spread across the region (simulated feed).</span>
         </span>
         <span class="atlas-radar-go">Enter →</span>
       </a>
@@ -2643,8 +2673,8 @@
 
       <div class="atlas-cta" data-reveal>
         <h3>The world’s scams, <em>on one radar.</em></h3>
-        <p>Scam Atlas watches it happen — live. Explore the interactive tracker, the 8-second journey inside a scam, and the full country intelligence.</p>
-        <a class="atlas-enter" href="/radar/">Enter the live radar →</a>
+        <p>Explore the interactive scam radar (a demonstration running on a simulated feed), the 8-second journey inside a scam, and the country data above.</p>
+        <a class="atlas-enter" href="/radar/">Open the scam radar demo →</a>
         <p class="atlas-note">Built and hosted by KaiGuardian. Figures indexed from official government portals as each release drops.</p>
       </div>
     </div>
@@ -2669,8 +2699,7 @@
                  onerror="this.parentElement.textContent='🛡️';this.parentElement.setAttribute('aria-hidden','true');">
           </div>
           <p class="about-name">KaiGuardian</p>
-          <!-- TODO: update handle to @NEW_HANDLE once the YouTube channel is renamed -->
-          <p class="about-handle">KaiGuardian · YouTube</p>
+          <p class="about-handle">KaiGuardian Academy · YouTube</p>
           <div class="about-stat-row">
             <div class="about-stat">
               <span class="about-stat-n">SG</span>
@@ -2701,8 +2730,7 @@
             <li style="color:var(--ink-dim);font-size:.975rem">🏢&nbsp; <strong style="color:var(--ink);font-weight:500">Small business security</strong> — protect your livelihood</li>
           </ul>
           <div class="about-links">
-            <!-- TODO: swap URL to https://www.youtube.com/@NEW_HANDLE once the channel is renamed -->
-            <a class="about-link primary" href="https://www.youtube.com/@KaiCyberAcademy" target="_blank" rel="noopener noreferrer">▶ Watch on YouTube</a>
+            <a class="about-link primary" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">▶ Watch on YouTube</a>
             <a class="about-link" href="https://kai-check.higgsfield.app" target="_blank" rel="noopener noreferrer">🛡 KaiGuardian Check</a>
             <a class="about-link" href="#phish-lab">↑ Try the Phish Lab</a>
           </div>
@@ -3193,17 +3221,17 @@
 
 <footer>
   <div class="wrap foot">
-    <span class="credit"><b>KAI·GUARDIAN</b> — digital safety for every family.</span>
+    <span class="credit"><b>KAI·GUARDIAN</b> — Stop, check, don’t click.</span>
     <span>
       <a href="#guides" style="color:var(--accent);transition:color 200ms" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--accent)'">Free guides →</a>
       &nbsp;·&nbsp;
-      <a href="/radar/" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">Live Radar →</a>
+      <a href="/radar/" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">Scam Radar (demo) →</a>
       &nbsp;·&nbsp;
-      <a href="https://www.youtube.com/@KaiCyberAcademy" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">YouTube →</a>
+      <a href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">KaiGuardian Academy on YouTube →</a>
       &nbsp;·&nbsp;
       <a href="https://kai-check.higgsfield.app" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">KaiGuardian Check →</a>
     </span>
-    <span>One file. No dependencies. Nothing to expire.</span>
+    <span><a href="/privacy.html" style="color:var(--ink-dim)">Privacy notice</a></span>
   </div>
 </footer>
 
@@ -4473,8 +4501,7 @@
   /* ⬆⬆⬆  Get a free key at https://web3forms.com — both forms use it  ⬆⬆⬆ */
 
   var CFG = {
-    guides: { subject: 'New guide download — KaiGuardian',  source: 'kaiguardian.org free guides' },
-    family: { subject: 'Family Guide interest — KaiGuardian', source: 'kaiguardian.org family guide interest' }
+    guides: { subject: 'New guide download — KaiGuardian',  source: 'kaiguardian.org free guides' }
   };
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -4490,9 +4517,20 @@
 
     input.addEventListener('input', function(){ if(err) err.textContent = ''; });
 
+    var btnLabel = btn ? btn.textContent : '';
+
+    /* Show success ONLY after Web3Forms confirms the submission. */
     function finish(){
       form.hidden = true;
-      if(done){ done.hidden = false; }
+      if(done){
+        done.hidden = false;
+        done.setAttribute('tabindex', '-1');
+        done.focus();
+      }
+    }
+    function fail(){
+      if(btn){ btn.disabled = false; btn.textContent = btnLabel; }
+      if(err) err.textContent = 'Sorry, we couldn\u2019t send that just now. Please check your connection and try again.';
     }
 
     form.addEventListener('submit', function(e){
@@ -4508,7 +4546,7 @@
         return;
       }
       if(err) err.textContent = '';
-      if(btn) btn.disabled = true;
+      if(btn){ btn.disabled = true; btn.textContent = 'Sending\u2026'; }
 
       var cfg = CFG[kind] || {};
       var payload = {
@@ -4525,9 +4563,11 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(payload)
-        }).then(finish, finish);
+        })
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return r.ok && d && d.success === true; }); })
+        .then(function(ok){ if(ok){ finish(); } else { fail(); } }, fail);
       } else {
-        finish();
+        fail();
       }
     });
   });
@@ -4558,6 +4598,26 @@
     dd.querySelectorAll('.nav-dd-menu a').forEach(function(a){ a.addEventListener('click', function(){ setOpen(dd,false); }); });
   });
   document.addEventListener('click', function(){ closeAll(null); });
+})();
+</script>
+
+<script>
+/* Watch and learn — click-to-play YouTube (no players load until clicked) */
+(function(){
+  'use strict';
+  [].forEach.call(document.querySelectorAll('.vcard-btn[data-yt]'), function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-yt');
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+      f.title = btn.getAttribute('aria-label').replace(/^Play video: /,'');
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      f.loading = 'lazy';
+      btn.parentNode.replaceChild(f, btn);
+      f.focus();
+    });
+  });
 })();
 </script>
 </body>

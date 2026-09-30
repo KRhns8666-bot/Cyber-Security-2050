@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Scam Atlas Live Radar — the world's scams on one radar. A live threat globe, APAC-weighted scam feed, country heatmap and an instant link checker. A KaiGuardian project.">
+<meta name="description" content="Scam Atlas Scam Radar — an interactive demonstration of how scams spread, with a threat globe, a simulated APAC-weighted scam feed, a country heatmap and an instant link checker. A KaiGuardian project.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#07090F">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -11,16 +11,16 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KaiGuardian">
 <meta property="og:url" content="https://kaiguardian.org/radar/">
-<meta property="og:title" content="Scam Atlas — Live Scam Radar | KaiGuardian">
-<meta property="og:description" content="Every scam. Every APAC country. On one radar. Live threat globe, scam feed, country heatmap and instant link checker.">
+<meta property="og:title" content="Scam Atlas — Scam Radar (Demo) | KaiGuardian">
+<meta property="og:description" content="An interactive scam radar demo: threat globe, simulated scam feed, country heatmap and an instant link checker.">
 <meta property="og:image" content="https://kaiguardian.org/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Scam Atlas — Live Scam Radar | KaiGuardian">
+<meta name="twitter:title" content="Scam Atlas — Scam Radar (Demo) | KaiGuardian">
 <meta name="twitter:description" content="Every scam. Every APAC country. On one radar.">
 <meta name="twitter:image" content="https://kaiguardian.org/assets/og-image.jpg">
-<title>Scam Atlas — Live Scam Radar | KaiGuardian</title>
+<title>Scam Atlas — Scam Radar (Demo) | KaiGuardian</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2307090F'/%3E%3Ccircle cx='8' cy='8' r='3.5' fill='%23E3001B'/%3E%3C/svg%3E">
 <script>document.documentElement.classList.add('js');</script>
 <style>
@@ -164,8 +164,8 @@
 <header>
   <div class="wrap bar">
     <a class="mark" href="/" aria-label="KaiGuardian — home">KAI<b>·</b>GUARDIAN</a>
-    <span class="crumb">Scam Atlas <span>/ Live Radar</span></span>
-    <span class="live"><i aria-hidden="true"></i>Live</span>
+    <span class="crumb">Scam Atlas <span>/ Scam Radar</span></span>
+    <span class="live"><i aria-hidden="true"></i>Simulated demo</span>
     <nav class="nav" aria-label="Radar">
       <a href="#globe" class="hot">Radar</a>
       <a href="#feed">Feed</a>
@@ -181,28 +181,28 @@
   <div class="wrap hero">
     <!-- TEXT + STATS -->
     <div>
-      <span class="label">Every scam. Every country. As it happens.</span>
+      <span class="label">Interactive demo · simulated feed</span>
       <h1>The world's scams, <em>on one radar.</em></h1>
-      <p>Scam Atlas aggregates live threat feeds from phishing databases, CERTs and fraud agencies worldwide — so anyone can see which scams are spiking, where, and how to defend against them.</p>
+      <p>This radar is a demonstration of how scams spread across the region. Its feed is <strong>simulated</strong> &mdash; modelled on public phishing databases and CERT reports, not live data. For real figures, see the official government statistics on the <a href="/#atlas">main site</a>.</p>
       <div class="chips">
         <span class="chip sim">Simulated feed · modelled on URLhaus / PhishTank / OpenPhish / CERT</span>
         <span class="chip" id="chip-events">— events</span>
         <span class="chip" id="chip-updated">updated —</span>
       </div>
-      <section class="panel hero-stats" aria-label="Live statistics">
-        <div class="panel-h"><span class="label">Right now</span></div>
+      <section class="panel hero-stats" aria-label="Demo statistics">
+        <div class="panel-h"><span class="label">In this demo</span></div>
         <div class="stats">
-          <div class="stat"><div class="n" id="s-events">0</div><span class="l">scam events tracked</span></div>
+          <div class="stat"><div class="n" id="s-events">0</div><span class="l">simulated events</span></div>
           <div class="stat"><div class="n" id="s-countries">0</div><span class="l">countries active</span></div>
           <div class="stat"><div class="n" id="s-top">—</div><span class="l">top scam type</span></div>
-          <div class="stat"><div class="n" id="s-today">0</div><span class="l">scams detected today</span></div>
+          <div class="stat"><div class="n" id="s-today">0</div><span class="l">simulated events this session</span></div>
         </div>
       </section>
     </div>
 
     <!-- GLOBE -->
     <div>
-      <section class="panel globe" id="globe" aria-label="Live threat globe">
+      <section class="panel globe" id="globe" aria-label="Threat globe (simulated)">
         <div class="panel-h">
           <span class="label">Threat globe</span>
           <span class="chip" id="chip-rot">auto-rotate</span>
@@ -218,13 +218,13 @@
           </div>
         </div>
       </section>
-      <p class="hero-globe-cap">Active incidents — last 60 min · drag to rotate · scroll to zoom</p>
+      <p class="hero-globe-cap">Simulated incidents · drag to rotate · scroll to zoom</p>
     </div>
   </div>
 
   <div class="wrap feedgrid">
-    <section class="panel" id="feed" aria-label="Live scam feed">
-      <div class="panel-h"><span class="label">Live feed</span><span class="chip">newest first</span></div>
+    <section class="panel" id="feed" aria-label="Simulated scam feed">
+      <div class="panel-h"><span class="label">Simulated feed</span><span class="chip">newest first</span></div>
       <ul class="feed" id="feed-list" aria-live="polite" aria-relevant="additions"></ul>
     </section>
 
