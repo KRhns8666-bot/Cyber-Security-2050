@@ -761,6 +761,12 @@
     .js .ledger [data-reveal]:nth-child(4) { transition-delay: 210ms; }
     .js .ledger [data-reveal]:nth-child(5) { transition-delay: 280ms; }
     .js .ledger [data-reveal]:nth-child(6) { transition-delay: 350ms; }
+    /* Cards in the practical sections: gentle fade + small rise, lightly staggered.
+       Headings and buttons are never hidden behind an animation. */
+    .js :is(.video-grid, .resources-grid, .tips-grid, .watch-grid) > [data-reveal] { transform: translateY(12px); transition-duration: 600ms; }
+    .js :is(.video-grid, .resources-grid, .tips-grid, .watch-grid) > [data-reveal]:nth-child(3n+2) { transition-delay: 80ms; }
+    .js :is(.video-grid, .resources-grid, .tips-grid, .watch-grid) > [data-reveal]:nth-child(3n+3) { transition-delay: 160ms; }
+    .js :is(.video-grid, .resources-grid, .tips-grid, .watch-grid) > [data-reveal].is-in { transform: none; }
   }
 
   /* ---------- Print ---------- */
@@ -2249,11 +2255,11 @@
   <!-- ============ OPT-IN 1 · FREE GUIDES ============ -->
   <section class="optin" id="guides" aria-labelledby="guides-h">
     <div class="wrap">
-      <div class="optin-card" data-reveal>
+      <div class="optin-card">
         <span class="label">Free guides</span>
         <h2 class="optin-h" id="guides-h">Get the free scam checklist</h2>
         <p class="optin-sub">Three short, printable guides in plain English &mdash; including help with deepfake video calls (AI-generated fake videos of real people) and cloned-voice calls. No tech knowledge needed.</p>
-        <ul class="optin-list">
+        <ul class="optin-list" data-reveal>
           <li><span class="n" aria-hidden="true">01</span><span class="t"><b>The 30-Second Scam Check</b> — the checklist: five warning signs behind almost every scam, and one habit that beats them.</span></li>
           <li><span class="n" aria-hidden="true">02</span><span class="t"><b>The Boss Scam</b> — spot a fake boss, CEO or deepfake video call before any money moves.</span></li>
           <li><span class="n" aria-hidden="true">03</span><span class="t"><b>The Family Scam Guide</b> — the family codeword, four household rules, and what to teach kids, adults and seniors.</span></li>
@@ -2288,34 +2294,34 @@
   <!-- ============ WATCH AND LEARN ============ -->
   <section id="watch" aria-labelledby="watch-h">
     <div class="wrap">
-      <div class="section-head" data-reveal>
+      <div class="section-head">
         <span class="label">Watch and learn</span>
         <h2 id="watch-h">Latest scam videos</h2>
       </div>
       <p class="watch-lede" data-reveal>Short videos from <strong>KaiGuardian Academy</strong> on YouTube that break down real scams in plain English &mdash; what they look like, and what to do.</p>
-      <div class="video-grid" data-reveal>
-        <figure class="vcard">
+      <div class="video-grid">
+        <figure class="vcard" data-reveal>
           <button type="button" class="vcard-btn" data-yt="XnIXmpifTfc" aria-label="Play video: Inside the scam call centre next door: 16 phones in an Ipoh house">
             <img src="https://i.ytimg.com/vi/XnIXmpifTfc/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
             <span class="play" aria-hidden="true">&#9654;</span>
           </button>
           <figcaption>Inside the scam call centre next door: 16 phones in an Ipoh house</figcaption>
         </figure>
-        <figure class="vcard">
+        <figure class="vcard" data-reveal>
           <button type="button" class="vcard-btn" data-yt="vjs7VF_p7mY" aria-label="Play video: AI scams targeting kids &mdash; the safe-word trick that stops them">
             <img src="https://i.ytimg.com/vi/vjs7VF_p7mY/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
             <span class="play" aria-hidden="true">&#9654;</span>
           </button>
           <figcaption>AI scams targeting kids &mdash; the safe-word trick that stops them</figcaption>
         </figure>
-        <figure class="vcard">
+        <figure class="vcard" data-reveal>
           <button type="button" class="vcard-btn" data-yt="Qm8QE-YYDWQ" aria-label="Play video: No police force can arrest you on a video call">
             <img src="https://i.ytimg.com/vi/Qm8QE-YYDWQ/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
             <span class="play" aria-hidden="true">&#9654;</span>
           </button>
           <figcaption>No police force can arrest you on a video call</figcaption>
         </figure>
-        <figure class="vcard">
+        <figure class="vcard" data-reveal>
           <button type="button" class="vcard-btn" data-yt="6kR1-fDpvS0" aria-label="Play video: How pig-butchering scams actually work (and how to stop one)">
             <img src="https://i.ytimg.com/vi/6kR1-fDpvS0/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
             <span class="play" aria-hidden="true">&#9654;</span>
@@ -2323,7 +2329,7 @@
           <figcaption>How pig-butchering scams actually work (and how to stop one)</figcaption>
         </figure>
       </div>
-      <p data-reveal><a class="run" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">Watch scam alerts on YouTube &rarr;</a></p>
+      <p><a class="run" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">Watch scam alerts on YouTube &rarr;</a></p>
     </div>
   </section>
 
@@ -2332,14 +2338,14 @@
   <!-- ============ PHISHING LAB ============ -->
   <section id="phish-lab" aria-labelledby="phish-h">
     <div class="wrap">
-      <div class="section-head" data-reveal>
+      <div class="section-head">
         <span class="label">Spot the trap</span>
         <h2 id="phish-h">Can you tell real from fake?</h2>
       </div>
       <p class="lede phish-intro" data-reveal><strong>Phishing</strong> means fake messages &mdash; emails, texts or calls &mdash; that pretend to come from someone you trust, to trick you into clicking a link, paying, or sharing details. It is one of the most common ways scams start, and AI now makes these messages more convincing. Five messages below. You decide: real or trap?</p>
 
       <!-- Simulator -->
-      <div class="sim-shell" id="phish-sim" data-reveal>
+      <div class="sim-shell" id="phish-sim">
         <div class="sim-progress">
           <div class="sim-prog-bar"><div class="sim-prog-fill" id="phish-prog"></div></div>
           <span class="sim-step-label" id="phish-step">Message 1 of 5</span>
@@ -2373,46 +2379,46 @@
       </div>
 
       <!-- 2026 AI Protection Tips -->
-      <div class="tips-2026" data-reveal>
+      <div class="tips-2026">
         <h3 class="tips-2026-h">How to protect yourself in 2026</h3>
         <p class="tips-intro">AI has made attacks more convincing than ever. These rules hold regardless of how polished the attack looks.</p>
         <div class="tips-grid">
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">📞</span>
             <p class="tip-title">Voices can be faked</p>
             <p class="tip-body">If someone calls claiming to be a family member in trouble, <strong>hang up and call them back on their real number.</strong> AI tools can now imitate a person&rsquo;s voice from short clips posted online. A familiar voice alone is not proof.</p>
           </div>
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">🎁</span>
             <p class="tip-title">Asked to pay in gift cards? It&rsquo;s a scam</p>
             <p class="tip-body">Genuine banks, government offices and tech-support lines do not ask for payment in gift cards. <strong>Treat any request to pay with gift cards as a scam</strong> &mdash; even if it seems to come from someone you know.</p>
           </div>
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">🔗</span>
             <p class="tip-title">Read the full sender address</p>
             <p class="tip-body">Scammers use "apple-support-id.com" — not "apple.com". <strong>Check the full domain after the @.</strong> The display name ("Apple Support") can say anything — the address is what counts.</p>
           </div>
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">⏱</span>
             <p class="tip-title">Urgency is a weapon</p>
             <p class="tip-body">Countdown timers, "24-hour deadlines", "act now or lose your account" — these are pressure tactics. <strong>Real organisations give you time.</strong> If you feel rushed, that's the attack working on you. Stop and breathe.</p>
           </div>
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">🤫</span>
             <p class="tip-title">"Don't tell anyone" is a red flag</p>
             <p class="tip-body">Scammers isolate victims so no one can stop them. If anyone — by call, text, or email — tells you to <strong>keep it secret</strong>, that is a warning sign, not a reason to comply. Tell a trusted person immediately.</p>
           </div>
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">🔑</span>
             <p class="tip-title">Agree a family codeword</p>
             <p class="tip-body">Agree on a secret word with the people you love. If someone claims to be them in an emergency, <strong>ask for the codeword.</strong> A real family member will know it. An AI voice clone won't.</p>
           </div>
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">📱</span>
             <p class="tip-title">Go direct — don't click links</p>
             <p class="tip-body">Instead of clicking a link in a text or email, <strong>open your browser and type the address yourself</strong> — your bank&rsquo;s or courier&rsquo;s official site. If there's a real problem, you'll see it when you sign in directly.</p>
           </div>
-          <div class="tip-card">
+          <div class="tip-card" data-reveal>
             <span class="tip-icon">📸</span>
             <p class="tip-title">Video calls can be faked too</p>
             <p class="tip-body">In 2026, real-time deepfake video exists. If a video call seems "off" — odd lighting, no blinking, strange background — <strong>end the call and phone back on a number you know.</strong> Do not act on what you see alone.</p>
@@ -2421,23 +2427,23 @@
       </div>
 
       <!-- ===== RESOURCES ===== -->
-      <div class="resources" id="resources" data-reveal>
+      <div class="resources" id="resources">
         <h3 class="tips-2026-h">Free tools — keep practising</h3>
         <p class="tips-intro">Knowledge is the best defence. These resources from KaiGuardian are free, practical, and built for everyone — whether you're 15 or 75.</p>
         <div class="resources-grid">
-          <a class="resource-card" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card" data-reveal href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">
             <span class="resource-icon">▶️</span>
             <p class="resource-title">KaiGuardian Academy — YouTube</p>
             <p class="resource-sub"><strong>For everyone.</strong> Free video breakdowns of real scams and AI threats, with step-by-step advice for keeping yourself and your family safe online.</p>
             <span class="resource-link">KaiGuardian Academy on YouTube →</span>
           </a>
-          <a class="resource-card" href="https://kai-check.higgsfield.app" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card" data-reveal href="https://kai-check.higgsfield.app" target="_blank" rel="noopener noreferrer">
             <span class="resource-icon">🛡️</span>
             <p class="resource-title">KaiGuardian Check — Scam Training</p>
             <p class="resource-sub"><strong>For teens, adults and seniors.</strong> Interactive scam-awareness drills: practise spotting fake messages and calls in a safe, guided setting before you meet them for real.</p>
             <span class="resource-link">kai-check.higgsfield.app →</span>
           </a>
-          <a class="resource-card" href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card" data-reveal href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener noreferrer">
             <span class="resource-icon">🎮</span>
             <p class="resource-title">CyberKid by KaiGuardian — Free Safety Game</p>
             <p class="resource-sub"><strong>For children (and curious adults).</strong> A free game: join KAI &amp; ARIA across five cyber worlds, beat the hackers and learn real online-safety habits through play.</p>
@@ -2454,52 +2460,52 @@
   <!-- ============ APAC SCAM ALERTS ============ -->
   <section id="alerts" aria-labelledby="alerts-h">
     <div class="wrap">
-      <div class="section-head" data-reveal>
+      <div class="section-head">
         <span class="label">APAC scam alerts</span>
         <h2 id="alerts-h">What's hitting families in the region</h2>
       </div>
 
       <!-- ===== APAC SCAM WATCH ===== -->
-      <div class="apac-scams" data-reveal>
+      <div class="apac-scams">
         <h3 class="tips-2026-h">🌏 APAC Scam Watch: What's hitting hard right now</h3>
         <p class="tips-intro">Southeast Asia, East Asia, and the Pacific are ground zero for some of the world's most sophisticated scams. These are the ones causing the most harm right now — know them, share them.</p>
         <div class="tips-grid">
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">🐷</span>
             <p class="tip-title">Pig Butchering (Sha Zhu Pan)</p>
             <p class="tip-body">Widespread across Southeast Asia and now reported worldwide. A stranger builds trust over weeks through chat, then introduces a "once-in-a-lifetime" crypto investment. The platform is fake, and withdrawals are blocked once you have paid in. <strong>Never invest on a platform introduced by someone you met online.</strong></p>
           </div>
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">💼</span>
             <p class="tip-title">Fake Job Offers → Trafficking</p>
             <p class="tip-body">Ads on LinkedIn, Telegram, and WhatsApp promise high-paying remote jobs in Thailand, Myanmar, or Cambodia. Victims travel and are <strong>forced to run scam operations on others.</strong> <strong>Verify the employer independently:</strong> find the company&rsquo;s official website and phone number yourself (not from the recruiter), confirm the job exists, and be very wary of any offer that needs you to travel overseas or pay an upfront fee.</p>
           </div>
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">📲</span>
             <p class="tip-title">Boss/CEO WhatsApp Scam</p>
             <p class="tip-body">A message on WhatsApp from "your boss" on an unfamiliar number asks for an urgent wire transfer or gift cards. Reported across the region. <strong>Always confirm via a known phone number or in person</strong> before moving any money.</p>
           </div>
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">🔲</span>
             <p class="tip-title">QR Code Phishing (Quishing)</p>
             <p class="tip-body">Scammers place fake QR code stickers over real ones at parking meters, menus, and public kiosks. Scanning takes you to a phishing page designed to steal your login or card details. <strong>Inspect QR codes for a sticker placed on top</strong> and prefer typing addresses manually.</p>
           </div>
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">💕</span>
             <p class="tip-title">Love Scam → Crypto Drain</p>
             <p class="tip-body">A charming stranger on Facebook, Tinder, WeChat, or LINE builds a real-feeling relationship — sometimes for months — then introduces crypto trading on a fake platform. Profits appear, then disappear when you try to withdraw. <strong>Never mix romance with investment.</strong></p>
           </div>
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">🏛️</span>
             <p class="tip-title">Fake Police / Government Calls</p>
             <p class="tip-body">A caller claims to be police, immigration, or tax authority. Your account is "linked to a crime" — but you can clear your name by moving funds to a "safe account." <strong>No real government agency will ever ask you to transfer money on a phone call.</strong> Hang up and call the official number.</p>
           </div>
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">🔢</span>
             <p class="tip-title">OTP Theft — "Bank Staff" Scam</p>
             <p class="tip-body">A caller poses as your bank's fraud team. There's "suspicious activity" — but they need the OTP sent to your phone to "stop it." <strong>Your bank will never ask for your OTP.</strong> An OTP is a one-time key only you should use. Anyone asking for it is stealing your account.</p>
           </div>
-          <div class="tip-card tip-card--apac">
+          <div class="tip-card tip-card--apac" data-reveal>
             <span class="tip-icon">🛍️</span>
             <p class="tip-title">Marketplace &amp; Online Shopping Scams</p>
             <p class="tip-body">Fake sellers on Carousell, Shopee, Lazada, and Facebook Marketplace take deposits and disappear — or fake buyers send fraudulent payment screenshots. <strong>Use in-platform payment only, never bank transfer to a stranger.</strong> For high-value items, meet at a police post or public place.</p>
@@ -2516,7 +2522,7 @@
       </div>
 
       <!-- ===== LIVE SCAM WATCH ===== -->
-      <div class="scam-watch" id="scam-watch" data-reveal>
+      <div class="scam-watch" id="scam-watch">
         <div class="watch-hdr">
           <h3 class="tips-2026-h" style="margin:0">APAC Scam Watch</h3>
           <span class="watch-live-badge"><span class="watch-dot"></span>Active alerts</span>
@@ -2525,7 +2531,7 @@
         <p class="tips-intro">Current threats reported across the Asia-Pacific region, based on published advisories from national cybercrime agencies. Refreshed for August 2026 — newest campaigns first.</p>
         <div class="watch-grid">
 
-          <div class="watch-alert watch-alert--critical">
+          <div class="watch-alert watch-alert--critical" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">APAC</span>
               <span class="watch-level watch-level--critical">critical</span>
@@ -2535,7 +2541,7 @@
             <p class="watch-desc">AI-generated video ads showing trusted public figures and real bank CEOs endorsing crypto and “AI trading” platforms are flooding Facebook, YouTube and TikTok this month. <strong>Apparent endorsements can be fabricated with AI.</strong> Before acting, check the person&rsquo;s or bank&rsquo;s official website or verified accounts yourself &mdash; never through the ad&rsquo;s own links.</p>
           </div>
 
-          <div class="watch-alert watch-alert--critical">
+          <div class="watch-alert watch-alert--critical" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">SG</span>
               <span class="watch-level watch-level--critical">critical</span>
@@ -2545,7 +2551,7 @@
             <p class="watch-desc">Your phone shows your bank’s <em>real</em> number, and an AI voice claiming to be the fraud team says your account is compromised — then guides you to move money to a “safe account.” <strong>Hang up and call the number printed on the back of your card.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--critical">
+          <div class="watch-alert watch-alert--critical" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">SG</span>
               <span class="watch-level watch-level--critical">critical</span>
@@ -2555,7 +2561,7 @@
             <p class="watch-desc">Scammers clone a child’s or grandchild’s voice from a few seconds of social-media audio and call claiming to be stranded, arrested or in hospital. S$3.4M lost in Singapore in July. <strong>Agree on a family codeword now.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--critical">
+          <div class="watch-alert watch-alert--critical" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">IN</span>
               <span class="watch-level watch-level--critical">critical</span>
@@ -2565,7 +2571,7 @@
             <p class="watch-desc">Callers posing as police, CBI or customs claim a parcel or bank account is tied to a crime, then hold victims on a video call under “digital arrest” for hours while extorting transfers. ₹1,935 Cr lost across 2024–25. <strong>No real agency arrests anyone over a video call — hang up and dial 1930.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--critical">
+          <div class="watch-alert watch-alert--critical" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">HK</span>
               <span class="watch-level watch-level--critical">critical</span>
@@ -2575,7 +2581,7 @@
             <p class="watch-desc">Finance staff receive what looks like a live video call from their CFO authorising urgent wire transfers — real-time deepfake throughout. <strong>Verify large transfers through a separate, known channel — always.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--high">
+          <div class="watch-alert watch-alert--high" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">AU</span>
               <span class="watch-level watch-level--high">high</span>
@@ -2585,7 +2591,7 @@
             <p class="watch-desc">Fake investment apps carrying major Australian bank branding are spreading via WhatsApp and Telegram. A$24M reported stolen so far in 2026. <strong>Never invest through a platform someone else introduced you to.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--high">
+          <div class="watch-alert watch-alert--high" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">TH</span>
               <span class="watch-level watch-level--high">high</span>
@@ -2595,7 +2601,7 @@
             <p class="watch-desc">SMS and LINE messages claim a held parcel needs a small customs fee; the payment page harvests your card number and the OTP. <strong>Couriers and customs never collect fees by text link — track parcels only on the official site.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--high">
+          <div class="watch-alert watch-alert--high" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">PH</span>
               <span class="watch-level watch-level--high">high</span>
@@ -2605,7 +2611,7 @@
             <p class="watch-desc">Scammers build 4–8 week relationships before introducing a crypto “trading opportunity.” <strong>Be very suspicious of anyone who mixes romance with an investment opportunity.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--high">
+          <div class="watch-alert watch-alert--high" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">MY</span>
               <span class="watch-level watch-level--high">high</span>
@@ -2615,7 +2621,7 @@
             <p class="watch-desc">Callers impersonate Central Bank officers, accuse victims of money-laundering, then demand transfers to a “safe account” to avoid arrest. <strong>Bank Negara Malaysia never contacts individuals by phone about enforcement actions.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--high">
+          <div class="watch-alert watch-alert--high" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">TW</span>
               <span class="watch-level watch-level--high">high</span>
@@ -2625,7 +2631,7 @@
             <p class="watch-desc">Scammers impersonate LINE support inside LINE itself, claim the account is at risk, and request OTP codes to “verify identity.” <strong>LINE support will never ask for your OTP.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--high">
+          <div class="watch-alert watch-alert--high" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">ID</span>
               <span class="watch-level watch-level--high">high</span>
@@ -2635,7 +2641,7 @@
             <p class="watch-desc">A friendly “wrong number” message leads to weeks of warm conversation, then an introduction to a crypto platform. The platform is fake — funds vanish at withdrawal. <strong>A stranger who becomes a friend who mentions investment is a scammer.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--high">
+          <div class="watch-alert watch-alert--high" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">SG</span>
               <span class="watch-level watch-level--high">high</span>
@@ -2645,7 +2651,7 @@
             <p class="watch-desc">Ads for high-paying remote roles in Cambodia and Thailand. Applicants who travel are forced to operate scam centres. <strong>Verify every overseas offer independently &mdash; find the employer&rsquo;s official contact details yourself, not from the recruiter &mdash; before travelling.</strong></p>
           </div>
 
-          <div class="watch-alert watch-alert--medium">
+          <div class="watch-alert watch-alert--medium" data-reveal>
             <div class="watch-meta">
               <span class="watch-country">NZ</span>
               <span class="watch-level watch-level--medium">medium</span>
