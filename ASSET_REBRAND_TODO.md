@@ -7,6 +7,11 @@ Tracks images, video and configuration the site needs. Updated 30 September 2026
 - [x] **Hero image** — futuristic 2050 megacity keyframe: `assets/hero-city.webp` (desktop,
   also the video poster), `assets/hero-city-mobile.webp` (mobile crop), `assets/hero-city.jpg`
   (fallback). Generated in Higgsfield; no characters.
+- [x] **Hero film** — `assets/hero-city.mp4` / `.webm` (desktop, ~2.5 MB) and
+  `assets/hero-city-mobile.mp4` / `.webm` (~1 MB). Kling 3.0 (Higgsfield), 10 s, silent:
+  threats race through a 2050 megacity until a teal hexagonal shield dome closes over it.
+  Plays once and holds on the protected frame; poster/reduced-motion/data-saver fallback
+  is `assets/hero-city.webp`.
 - [x] **Mascot** — `assets/mascot-kaiguardian.webp` (Kai the lion, from the Higgsfield
   element), shown in the About section.
 - [x] **YouTube** — all links use `@KaiGuardianAcademy`; the Watch and learn section uses
@@ -18,11 +23,6 @@ Tracks images, video and configuration the site needs. Updated 30 September 2026
 
 ## Still needed
 
-- [ ] **Hero background video (optional).** A short, muted loop (about 8–15 s, under
-  ~4 MB, no essential words in the footage), e.g. a suspicious message arriving on a
-  phone → Maya pausing before tapping → a subtle shield → a calm family scene with Kai
-  and Maya. Save as `assets/hero-family.mp4` and set `data-src="assets/hero-family.mp4"`
-  on `#gh-video` in `index.html`. Until then the hero shows the poster image.
 - [ ] **Privacy notice contact email.** `privacy.html` shows a placeholder
   (`[contact email to be added]`). Note: kaiguardian.org is set up to send and receive
   no email (null MX + `v=spf1 -all`), so use an address on another domain, or set up

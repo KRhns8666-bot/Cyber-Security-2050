@@ -1634,7 +1634,7 @@
     letter-spacing: .05em; color: var(--warn); }
   .gh-lede { max-width: 44ch; margin: 1rem 0 0; color: var(--ink-dim); font-size: clamp(1.08rem, 1.45vw, 1.25rem); line-height: 1.6; }
   .gh-cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
-  .gh-toggle { position: absolute; z-index: 3; right: clamp(16px, 4vw, 40px); bottom: 24px; min-height: 44px;
+  .gh-toggle { position: absolute; z-index: 3; right: clamp(16px, 4vw, 40px); top: 112px; min-height: 44px;
     display: inline-flex; align-items: center; gap: .5rem; padding: .55rem 1rem; border-radius: 999px;
     border: 1px solid var(--line); background: rgba(10,18,36,.75); color: var(--ink);
     font-family: var(--mono); font-size: .8rem; letter-spacing: .06em; cursor: pointer; }
@@ -1655,7 +1655,7 @@
     .gh-content { padding: 0 0 3.5rem; margin-top: -1.5rem; }
     .gh-cta { flex-direction: column; }
     .gh-cta .run { width: 100%; text-align: center; }
-    .gh-toggle { top: 88px; bottom: auto; }
+    .gh-toggle { top: 96px; }
   }
 
   .vhero-tagline {
@@ -2164,10 +2164,10 @@
         <source srcset="assets/hero-city.webp" type="image/webp">
         <img class="gh-poster" src="assets/hero-city.jpg" alt="" width="1920" height="1072" fetchpriority="high" decoding="async">
       </picture>
-      <!-- HERO VIDEO ASSET NEEDED: a short, muted loop (e.g. assets/hero-family.mp4).
-           Set data-src below to its path; until then the poster image is shown. -->
-      <video class="gh-video" id="gh-video" muted playsinline loop preload="none"
-             poster="assets/hero-city.webp" data-src="" hidden></video>
+      <!-- Hero film: plays once (threat → shield) and holds on the protected final frame. -->
+      <video class="gh-video" id="gh-video" muted playsinline preload="none"
+             poster="assets/hero-city.webp"
+             data-src="assets/hero-city.mp4" data-src-mobile="assets/hero-city-mobile.mp4" hidden></video>
     </div>
     <div class="gh-shade" aria-hidden="true"></div>
 
@@ -2183,7 +2183,7 @@
     </div>
 
     <button type="button" class="gh-toggle" id="gh-toggle" aria-pressed="false" hidden>
-      <span class="gh-ico" aria-hidden="true">&#10074;&#10074;</span><span class="gh-lbl">Pause background video</span>
+      <span class="gh-ico" aria-hidden="true">&#10074;&#10074;</span><span class="gh-lbl">Pause film</span>
     </button>
   </section>
   <hr class="slash-div">
@@ -4759,44 +4759,52 @@
 </script>
 
 <script>
-/* Guardian hero — optional background video. Poster-first; the video only loads when:
-   a data-src is set, motion is allowed, the connection isn't in data-saving mode. */
+/* Guardian hero film. Poster-first; the film only loads when motion is allowed and the
+   connection isn't in data-saving mode. It plays once (threat → shield) and holds on the
+   protected final frame; the control pauses, resumes, or replays it. */
 (function(){
   'use strict';
   var v = document.getElementById('gh-video'), btn = document.getElementById('gh-toggle');
   if (!v || !btn) return;
-  var src = v.getAttribute('data-src');
-  if (!src) return;                                                   /* no asset yet → poster */
+  var small = window.matchMedia && matchMedia('(max-width: 760px)').matches;
+  var src = (small && v.getAttribute('data-src-mobile')) || v.getAttribute('data-src');
+  if (!src) return;                                                   /* no asset → poster */
+  /* MP4 (H.264) where supported — smaller; otherwise the WebM (VP9) twin with the same name */
+  if (!v.canPlayType('video/mp4; codecs="avc1.640028"')) {
+    if (v.canPlayType('video/webm; codecs="vp9"')) src = src.replace(/\.mp4$/, '.webm'); else return;
+  }
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var c = navigator.connection || {};
   if (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')) return;  /* prefer the poster */
 
   var lbl = btn.querySelector('.gh-lbl'), ico = btn.querySelector('.gh-ico');
-  var userPaused = false, onScreen = true;
-  function setState(playing){
-    btn.setAttribute('aria-pressed', playing ? 'false' : 'true');
-    lbl.textContent = playing ? 'Pause background video' : 'Play background video';
-    ico.innerHTML = playing ? '&#10074;&#10074;' : '&#9654;';
+  var userPaused = false, ended = false;
+  function setState(mode){            /* 'playing' | 'paused' | 'ended' */
+    btn.setAttribute('aria-pressed', mode === 'paused' ? 'true' : 'false');
+    lbl.textContent = mode === 'playing' ? 'Pause film' : mode === 'paused' ? 'Play film' : 'Replay film';
+    ico.innerHTML = mode === 'playing' ? '&#10074;&#10074;' : mode === 'paused' ? '&#9654;' : '&#8635;';
   }
+  function play(){ var p = v.play(); if (p && p.catch) p.catch(giveUp); }
   function giveUp(){ v.pause(); v.removeAttribute('src'); v.load(); v.hidden = true; btn.hidden = true; }
   function start(){
     v.src = src;
     v.hidden = false;
     var p = v.play();
-    if (p && p.then) { p.then(function(){ btn.hidden = false; setState(true); }, giveUp); }
-    else { btn.hidden = false; setState(!v.paused); }
+    if (p && p.then) { p.then(function(){ btn.hidden = false; setState('playing'); }, giveUp); }
+    else { btn.hidden = false; setState(v.paused ? 'paused' : 'playing'); }
   }
   v.addEventListener('error', giveUp);
+  v.addEventListener('ended', function(){ ended = true; setState('ended'); });   /* holds the last frame */
   btn.addEventListener('click', function(){
-    if (v.paused) { userPaused = false; var p = v.play(); if (p && p.catch) p.catch(giveUp); setState(true); }
-    else { userPaused = true; v.pause(); setState(false); }
+    if (ended) { ended = false; userPaused = false; v.currentTime = 0; play(); setState('playing'); }
+    else if (v.paused) { userPaused = false; play(); setState('playing'); }
+    else { userPaused = true; v.pause(); setState('paused'); }
   });
-  /* save battery: pause while the hero is off-screen, resume on return (unless the visitor paused it) */
+  /* save battery: pause while the hero is off-screen; resume on return unless paused or finished */
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function(es){
-      onScreen = es[0].isIntersecting;
-      if (!v.src) return;
-      if (!onScreen) v.pause(); else if (!userPaused) { var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+      if (!v.src || ended) return;
+      if (!es[0].isIntersecting) v.pause(); else if (!userPaused) play();
     }).observe(document.getElementById('top'));
   }
   function later(){ (window.requestIdleCallback || function(f){ setTimeout(f, 300); })(start); }
