@@ -1613,17 +1613,31 @@
   .vcard iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 6px; display: block; }
   .vcard figcaption { margin-top: .6rem; color: var(--ink); font-size: .98rem; line-height: 1.4; }
 
-  /* ---------- Guardian hero (image/video + overlay) ---------- */
-  .gh { position: relative; min-height: min(100svh, 920px); display: flex; align-items: center;
-    overflow: hidden; background: var(--bg); isolation: isolate; }
-  .gh-media, .gh-shade { position: absolute; inset: 0; }
-  .gh-media picture { display: block; width: 100%; height: 100%; }
-  .gh-media img, .gh-poster, .gh-video { width: 100%; height: 100%; object-fit: cover; object-position: 88% 30%; display: block; }
-  .gh-video { position: absolute; inset: 0; }
-  .gh-video[hidden], .gh-toggle[hidden] { display: none; }
-  .gh-shade { background:
-      linear-gradient(90deg, rgba(10,18,36,.97) 0%, rgba(10,18,36,.93) 38%, rgba(10,18,36,.55) 58%, rgba(10,18,36,.1) 100%),
-      linear-gradient(0deg, var(--bg) 0%, rgba(10,18,36,0) 28%); }
+  /* ---------- City film: fixed, scroll-driven backdrop for the whole page ---------- */
+  .cityfilm { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--bg); pointer-events: none; --cf: 0; }
+  .cityfilm picture, .cf-poster, .cf-video { position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 70% 40%; display: block; }
+  .cf-video[hidden], .cf-toggle[hidden] { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cityfilm picture, .cf-video { transform: scale(calc(1 + var(--cf) * .08)); transform-origin: 60% 45%; will-change: transform; }
+  }
+  .cf-veil { position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 70% at 62% 42%, rgba(10,18,36,.10), rgba(10,18,36,.62) 78%),
+                linear-gradient(180deg, rgba(10,18,36,.30), rgba(10,18,36,.48)); }
+  main#main { position: relative; z-index: 1; }
+  body > footer { position: relative; z-index: 1; background: var(--bg); }
+  .cf-toggle { position: fixed; z-index: 60; right: clamp(12px, 3vw, 28px); bottom: clamp(12px, 3vw, 24px); min-height: 44px;
+    display: inline-flex; align-items: center; gap: .5rem; padding: .55rem 1rem; border-radius: 999px;
+    border: 1px solid var(--line); background: rgba(10,18,36,.82); color: var(--ink);
+    font-family: var(--mono); font-size: .78rem; letter-spacing: .06em; cursor: pointer; }
+  .cf-toggle:hover { border-color: var(--accent); }
+  .cf-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (max-width: 760px) { .cityfilm picture, .cf-poster, .cf-video { object-position: 62% 35%; } }
+
+  /* ---------- Guardian hero (text over the city film) ---------- */
+  .gh { position: relative; min-height: min(100svh, 920px); display: flex; align-items: center; isolation: isolate; }
+  .gh-shade { position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(10,18,36,.94) 0%, rgba(10,18,36,.84) 38%, rgba(10,18,36,.35) 62%, rgba(10,18,36,0) 100%); }
   .gh-content { position: relative; z-index: 2; width: var(--col); margin: 0 auto; padding: 9rem 0 5rem; }
   .gh-eyebrow { display: block; font-family: var(--mono); font-size: .85rem; letter-spacing: .16em;
     text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
@@ -1634,28 +1648,12 @@
     letter-spacing: .05em; color: var(--warn); }
   .gh-lede { max-width: 44ch; margin: 1rem 0 0; color: var(--ink-dim); font-size: clamp(1.08rem, 1.45vw, 1.25rem); line-height: 1.6; }
   .gh-cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
-  .gh-toggle { position: absolute; z-index: 3; right: clamp(16px, 4vw, 40px); top: 112px; min-height: 44px;
-    display: inline-flex; align-items: center; gap: .5rem; padding: .55rem 1rem; border-radius: 999px;
-    border: 1px solid var(--line); background: rgba(10,18,36,.75); color: var(--ink);
-    font-family: var(--mono); font-size: .8rem; letter-spacing: .06em; cursor: pointer; }
-  .gh-toggle:hover { border-color: var(--accent); }
-  /* scroll depth: the city pushes in and the copy drifts up as you scroll (native scroll, no hijack) */
-  @media (prefers-reduced-motion: no-preference) {
-    .gh { --p: 0; }
-    .gh-media { transform: scale(calc(1 + var(--p) * .14)); transform-origin: 60% 45%; will-change: transform; }
-    .gh-content { transform: translateY(calc(var(--p) * -48px)); opacity: calc(1 - var(--p) * .85); }
-  }
-  .gh-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   @media (max-width: 760px) {
-    .gh { display: block; min-height: 0; }
-    .gh-media { position: relative; height: 52svh; min-height: 300px; }
-    .gh-media img, .gh-poster, .gh-video { object-position: 62% 20%; }
-    .gh-shade { bottom: auto; height: 52svh; min-height: 300px;
-      background: linear-gradient(180deg, rgba(10,18,36,.35) 0%, rgba(10,18,36,0) 30%, rgba(10,18,36,0) 62%, var(--bg) 100%); }
-    .gh-content { padding: 0 0 3.5rem; margin-top: -1.5rem; }
+    .gh { align-items: flex-end; min-height: 100svh; }
+    .gh-shade { background: linear-gradient(180deg, rgba(10,18,36,.15) 0%, rgba(10,18,36,.25) 30%, rgba(10,18,36,.82) 55%, rgba(10,18,36,.94) 100%); }
+    .gh-content { padding: 0 0 3.5rem; }
     .gh-cta { flex-direction: column; }
     .gh-cta .run { width: 100%; text-align: center; }
-    .gh-toggle { top: 96px; }
   }
 
   .vhero-tagline {
@@ -1780,82 +1778,6 @@
     .vhero h1 { font-size: clamp(2rem, 9vw, 3rem); }
     .vhero-content { padding: 0 20px; }
   }
-
-  /* ============================================================
-     CINEMATIC COLD-OPEN — parallax: a FIXED scrubbing video backdrop
-     that the whole page scrolls over. Copy drifts through, then the
-     .vhero slides up and covers the footage.
-     ============================================================ */
-  /* the fixed film backdrop, behind all page content */
-  .cinebg{
-    position:fixed; inset:0; z-index:0;
-    background:#000; overflow:hidden;
-    transition:opacity .3s linear;
-  }
-  .cinebg.gone{ display:none; }                    /* freed once past the intro */
-  html:not(.js) .cinebg{ display:none; }
-  .cine-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000;
-    will-change:transform; transform-origin:center; }
-  .cine-veil{
-    position:absolute; inset:0; pointer-events:none;
-    background:linear-gradient(to bottom, rgba(7,9,15,.28) 0%, transparent 22%,
-              transparent 50%, rgba(7,9,15,.55) 100%);
-  }
-  .co-loader{
-    position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:1.1rem; background:var(--bg);
-    transition:opacity .6s ease; font-family:var(--mono); color:var(--ink-dim);
-    font-size:11px; letter-spacing:.3em; text-transform:uppercase;
-  }
-  .co-loader.hide{ opacity:0; pointer-events:none; }
-  .co-ring{ width:34px; height:34px; border:2px solid rgba(255,255,255,.12);
-    border-top-color:var(--accent); border-radius:50%; }
-  @media (prefers-reduced-motion:no-preference){
-    .co-ring{ animation:co-spin 1s linear infinite; }
-    @keyframes co-spin{ to{ transform:rotate(360deg); } }
-  }
-
-  /* page content stacks ABOVE the backdrop; transparent areas reveal it */
-  main{ position:relative; z-index:1; }
-
-  /* the transparent scroll region that reveals the film */
-  #coldopen{ position:relative; z-index:1; background:transparent; }
-  #coldopen.co-skip{ display:none; }
-  html:not(.js) #coldopen{ display:none; }
-  .co-panel{
-    min-height:96vh; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center;
-    padding:0 24px;
-  }
-  .co-badge h2{ font-size:clamp(2.2rem,6.5vw,4.6rem); font-weight:600; letter-spacing:-.04em;
-    line-height:.96; margin:0; text-shadow:0 2px 50px rgba(0,0,0,.75); }
-  .co-badge h2 em{ font-style:normal; color:var(--accent); text-shadow:0 0 30px rgba(45,212,191,.55); }
-  .co-badge span{ display:block; margin-top:1rem; font-family:var(--mono); font-size:11px;
-    letter-spacing:.3em; text-transform:uppercase; color:var(--ink-dim); }
-  /* copy panels drift in/out as they cross the screen over the footage */
-  .co-copy{ opacity:0; transform:translateY(26px); transition:opacity .6s var(--ease), transform .6s var(--ease); }
-  .co-copy.in{ opacity:1; transform:none; }
-  @media (prefers-reduced-motion:reduce){ .co-copy{ opacity:1; transform:none; transition:none; } }
-  .co-copy .k{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:.32em;
-    text-transform:uppercase; color:var(--ink-dim); margin-bottom:.9rem; }
-  .co-copy .h{ font-size:clamp(1.6rem,4.2vw,3.1rem); font-weight:600; letter-spacing:-.025em;
-    line-height:1.1; margin:0; text-wrap:balance; text-shadow:0 2px 40px rgba(0,0,0,.65); }
-  .co-copy .h b.red{ font-weight:600; color:var(--warn); text-shadow:0 0 24px rgba(245,165,36,.45); }
-  /* fixed HUD scrubber for the film */
-  .co-scrub{ position:fixed; left:0; right:0; bottom:0; z-index:6; height:2px;
-    background:rgba(255,255,255,.08); pointer-events:none; opacity:0; transition:opacity .3s; }
-  .co-scrub.on{ opacity:1; }
-  .co-scrub i{ position:absolute; inset:0 auto 0 0; width:0%;
-    background:linear-gradient(90deg,var(--accent-dim),var(--accent)); }
-  .co-tc{ position:fixed; right:clamp(16px,5vw,44px); bottom:16px; z-index:6;
-    font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:var(--ink-faint);
-    font-variant-numeric:tabular-nums; pointer-events:none; opacity:0; transition:opacity .3s; }
-  .co-tc.on{ opacity:1; }
-  .co-skip{ position:fixed; left:clamp(16px,5vw,44px); bottom:14px; z-index:7;
-    font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--ink-dim); text-decoration:none; border-bottom:1px solid transparent; opacity:0; transition:opacity .3s; }
-  .co-skip.on{ opacity:1; }
-  .co-skip:hover{ color:var(--ink); border-bottom-color:var(--accent); }
 
   /* ============================================================
      SCAM ATLAS — APAC intelligence from official government data
@@ -2071,20 +1993,6 @@
 
 <a class="skip" href="#main">Skip to content</a>
 
-<!-- Fixed cinematic film backdrop — the whole page scrolls over it -->
-<div class="cinebg" id="cinebg" aria-hidden="true">
-  <video class="cine-video" id="co-video" muted playsinline autoplay loop preload="auto"
-    data-cdn="https://d8j0ntlcm91z4.cloudfront.net/user_3EQRy1gerRGWLKu1q4ZTyKukrQz/hf_20260722_160332_4ebe2102-c2dc-4875-95a0-4d07ad4df146.mp4"
-    src="assets/one-credential.mp4"></video>
-  <div class="cine-veil"></div>
-  <div class="co-loader" id="co-loader"><span class="co-ring"></span><span>loading the journey</span></div>
-</div>
-
-<!-- HUD for the film (fixed, only visible during the cold-open) -->
-<a class="co-skip" id="co-skip" href="#top">skip intro ↓</a>
-<span class="co-tc" id="co-tc">0.0s / 8.0s</span>
-<div class="co-scrub" id="co-scrubwrap"><i id="co-bar"></i></div>
-
 <header>
   <div class="bar">
     <a class="mark" href="#top" aria-label="KaiGuardian — home">KAI<b>·</b>GUARDIAN</a>
@@ -2134,43 +2042,23 @@
 
 <main id="main">
 
-  <!-- ============ CINEMATIC COLD-OPEN (parallax over fixed film) ============ -->
-  <div id="coldopen" aria-hidden="true">
-    <div class="co-panel co-badge">
-      <h2>ONE&nbsp;<em>CREDENTIAL</em></h2>
-      <span>scroll to travel</span>
-    </div>
-    <div class="co-panel co-copy">
-      <div><span class="k">00:00</span>
-      <p class="h">One password, reused on a system<br>no one thought mattered.</p></div>
-    </div>
-    <div class="co-panel co-copy">
-      <div><span class="k">00:03</span>
-      <p class="h">It doesn't break in. It <b class="red">logs in.</b></p></div>
-    </div>
-    <div class="co-panel co-copy">
-      <div><span class="k">00:06</span>
-      <p class="h">Trust is transitive.<br>So is compromise.</p></div>
-    </div>
-    <div class="co-panel co-copy">
-      <div><span class="k">00:08</span>
-      <p class="h">Total compromise. <b class="red">Exploits used: zero.</b></p></div>
-    </div>
+  <!-- ============ CITY FILM — fixed backdrop for the whole page; scrolling plays it ============ -->
+  <div class="cityfilm" id="cityfilm" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 760px)" srcset="assets/hero-city-mobile.webp" type="image/webp">
+      <source srcset="assets/hero-city.webp" type="image/webp">
+      <img class="cf-poster" src="assets/hero-city.jpg" alt="" width="1920" height="1072" fetchpriority="high" decoding="async">
+    </picture>
+    <video class="cf-video" id="cf-video" muted playsinline preload="none"
+           data-src="assets/city-scrub.mp4" data-src-mobile="assets/city-scrub-mobile.mp4" hidden></video>
+    <div class="cf-veil"></div>
   </div>
+  <button type="button" class="cf-toggle" id="cf-toggle" aria-pressed="false" hidden>
+    <span class="cf-ico" aria-hidden="true">&#10074;&#10074;</span><span class="cf-lbl">Freeze background</span>
+  </button>
 
   <!-- ============ HERO (full-viewport) ============ -->
   <section class="gh" id="top" aria-labelledby="vhero-h">
-    <div class="gh-media" aria-hidden="true">
-      <picture>
-        <source media="(max-width: 760px)" srcset="assets/hero-city-mobile.webp" type="image/webp">
-        <source srcset="assets/hero-city.webp" type="image/webp">
-        <img class="gh-poster" src="assets/hero-city.jpg" alt="" width="1920" height="1072" fetchpriority="high" decoding="async">
-      </picture>
-      <!-- Hero film: plays once (threat → shield) and holds on the protected final frame. -->
-      <video class="gh-video" id="gh-video" muted playsinline preload="none"
-             poster="assets/hero-city.webp"
-             data-src="assets/hero-city.mp4" data-src-mobile="assets/hero-city-mobile.mp4" hidden></video>
-    </div>
     <div class="gh-shade" aria-hidden="true"></div>
 
     <div class="gh-content">
@@ -2184,9 +2072,6 @@
       </div>
     </div>
 
-    <button type="button" class="gh-toggle" id="gh-toggle" aria-pressed="false" hidden>
-      <span class="gh-ico" aria-hidden="true">&#10074;&#10074;</span><span class="gh-lbl">Pause film</span>
-    </button>
   </section>
   <hr class="slash-div">
 
@@ -4519,117 +4404,6 @@
 
 <script>
 /* ============================================================
-   CINEMATIC COLD-OPEN — parallax: fixed film backdrop the page
-   scrolls over. Self-contained; degrades to the .vhero on failure.
-   ============================================================ */
-(function(){
-  'use strict';
-  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var wrap   = document.getElementById('coldopen');
-  var cinebg = document.getElementById('cinebg');
-  if(!wrap || !cinebg) return;
-  var v       = document.getElementById('co-video');
-  var loader  = document.getElementById('co-loader');
-  var bar     = document.getElementById('co-bar');
-  var tc      = document.getElementById('co-tc');
-  var scrubw  = document.getElementById('co-scrubwrap');
-  var skip    = document.getElementById('co-skip');
-  var copies  = [].slice.call(wrap.querySelectorAll('.co-copy'));
-
-  function clamp(v,a,b){ return v<a?a:v>b?b:v; }
-
-  /* reduced-motion / no video → remove the whole intro (and the 23MB fetch) */
-  var dropped = false;
-  function drop(){
-    dropped = true;                 /* once dropped, scrolling must never bring the HUD/film back */
-    wrap.classList.add('co-skip');
-    cinebg.classList.add('gone');
-    scrubw.classList.remove('on'); tc.classList.remove('on'); skip.classList.remove('on');
-    if(v){ v.removeAttribute('src'); try{ v.load(); }catch(e){} }
-  }
-  if(RM){ drop(); return; }
-
-  var ready=false, triedCdn=false, progress=0, target=0, raf=0, paused=false;
-
-  /* Play the film SMOOTHLY (every frame, incl. the star-burst warp) instead of
-     scrubbing it by scroll — MP4 seek only lands on keyframes, which is what
-     made fast moments skip and stutter. Scroll now drives only the parallax,
-     the copy, and the dissolve into the hero. */
-  function playVid(){ if(paused) return; var p=v.play(); if(p&&p.then) p.catch(function(){}); }
-
-  v.addEventListener('canplay', function(){
-    if(!ready){ ready=true; loader.classList.add('hide'); }
-    playVid();
-  });
-  v.addEventListener('error', function(){
-    var cdn=v.getAttribute('data-cdn');
-    if(!triedCdn && cdn){ triedCdn=true; ready=false; v.src=cdn; try{ v.load(); }catch(e){} return; }
-    drop();
-  });
-  v.addEventListener('timeupdate', function(){
-    var d=v.duration||8;
-    bar.style.width=((v.currentTime/d)*100).toFixed(1)+'%';   // subtle "film is playing" cue
-  });
-  /* browsers that block muted-autoplay start it on the first interaction */
-  ['touchstart','click','scroll','keydown'].forEach(function(ev){
-    window.addEventListener(ev, playVid, {once:true, passive:true});
-  });
-
-  /* copy panels fade in/out as they cross the screen over the footage */
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(es){
-      es.forEach(function(e){ e.target.classList.toggle('in', e.isIntersecting); });
-    }, { rootMargin:'-32% 0px -32% 0px', threshold:0 });
-    copies.forEach(function(c){ io.observe(c); });
-  } else {
-    copies.forEach(function(c){ c.classList.add('in'); });
-  }
-
-  function read(){
-    if(dropped) return;
-    var r=wrap.getBoundingClientRect();
-    var total=wrap.offsetHeight-window.innerHeight;
-    target=clamp(-r.top/(total||1),0,1);
-    if(!raf) raf=requestAnimationFrame(tick);
-  }
-  function tick(){
-    raf=0;
-    progress += (target-progress)*0.2;
-    if(Math.abs(target-progress)<0.0006) progress=target;
-    ui(progress);
-    if(progress!==target) raf=requestAnimationFrame(tick);
-  }
-
-  function ui(p){
-    if(dropped) return;
-    /* depth: gentle Ken-Burns zoom + vertical drift so the film reads as a
-       receding 3D layer behind the foreground, not a flat backdrop */
-    var sc = 1 + p * 0.09;
-    var dy = (p - 0.5) * 5;            // ~ -2.5vh..+2.5vh
-    v.style.transform = 'translateY(' + dy.toFixed(2) + 'vh) scale(' + sc.toFixed(4) + ')';
-    var active = p < 0.998;
-    scrubw.classList.toggle('on', active);
-    skip.classList.toggle('on', active);
-    if(p >= 1){
-      if(!paused){ paused=true; try{ v.pause(); }catch(e){} }   // stop decoding past the intro
-      cinebg.classList.add('gone');
-    } else {
-      if(paused){ paused=false; playVid(); }
-      cinebg.classList.remove('gone');
-      /* dissolve the film out over the final 12% as the hero rises over it */
-      cinebg.style.opacity = String(p <= 0.88 ? 1 : clamp((1-p)/0.12, 0, 1));
-    }
-  }
-
-  window.addEventListener('scroll', read, {passive:true});
-  window.addEventListener('resize', function(){ read(); ui(progress); });
-  setTimeout(function(){ if(!ready && v.readyState>=2){ ready=true; loader.classList.add('hide'); playVid(); } }, 4500);
-  read(); progress = target; ui(progress);
-})();
-</script>
-
-<script>
-/* ============================================================
    EMAIL OPT-IN — Web3Forms submit + success swap
    ============================================================ */
 (function(){
@@ -4761,60 +4535,6 @@
 </script>
 
 <script>
-/* Guardian hero film. Poster-first; the film only loads when motion is allowed and the
-   connection isn't in data-saving mode. It plays once (threat → shield) and holds on the
-   protected final frame; the control pauses, resumes, or replays it. */
-(function(){
-  'use strict';
-  var v = document.getElementById('gh-video'), btn = document.getElementById('gh-toggle');
-  if (!v || !btn) return;
-  var small = window.matchMedia && matchMedia('(max-width: 760px)').matches;
-  var src = (small && v.getAttribute('data-src-mobile')) || v.getAttribute('data-src');
-  if (!src) return;                                                   /* no asset → poster */
-  /* MP4 (H.264) where supported — smaller; otherwise the WebM (VP9) twin with the same name */
-  if (!v.canPlayType('video/mp4; codecs="avc1.640028"')) {
-    if (v.canPlayType('video/webm; codecs="vp9"')) src = src.replace(/\.mp4$/, '.webm'); else return;
-  }
-  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var c = navigator.connection || {};
-  if (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')) return;  /* prefer the poster */
-
-  var lbl = btn.querySelector('.gh-lbl'), ico = btn.querySelector('.gh-ico');
-  var userPaused = false, ended = false;
-  function setState(mode){            /* 'playing' | 'paused' | 'ended' */
-    btn.setAttribute('aria-pressed', mode === 'paused' ? 'true' : 'false');
-    lbl.textContent = mode === 'playing' ? 'Pause film' : mode === 'paused' ? 'Play film' : 'Replay film';
-    ico.innerHTML = mode === 'playing' ? '&#10074;&#10074;' : mode === 'paused' ? '&#9654;' : '&#8635;';
-  }
-  function play(){ var p = v.play(); if (p && p.catch) p.catch(giveUp); }
-  function giveUp(){ v.pause(); v.removeAttribute('src'); v.load(); v.hidden = true; btn.hidden = true; }
-  function start(){
-    v.src = src;
-    v.hidden = false;
-    var p = v.play();
-    if (p && p.then) { p.then(function(){ btn.hidden = false; setState('playing'); }, giveUp); }
-    else { btn.hidden = false; setState(v.paused ? 'paused' : 'playing'); }
-  }
-  v.addEventListener('error', giveUp);
-  v.addEventListener('ended', function(){ ended = true; setState('ended'); });   /* holds the last frame */
-  btn.addEventListener('click', function(){
-    if (ended) { ended = false; userPaused = false; v.currentTime = 0; play(); setState('playing'); }
-    else if (v.paused) { userPaused = false; play(); setState('playing'); }
-    else { userPaused = true; v.pause(); setState('paused'); }
-  });
-  /* save battery: pause while the hero is off-screen; resume on return unless paused or finished */
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function(es){
-      if (!v.src || ended) return;
-      if (!es[0].isIntersecting) v.pause(); else if (!userPaused) play();
-    }).observe(document.getElementById('top'));
-  }
-  function later(){ (window.requestIdleCallback || function(f){ setTimeout(f, 300); })(start); }
-  if (document.readyState === 'complete') later(); else window.addEventListener('load', later);
-})();
-</script>
-
-<script>
 /* Scroll story — desktop enhancement: sticky visual that follows the step in view.
    Without JS (or on small screens) the steps stay as stacked cards with their own visuals. */
 (function(){
@@ -4853,22 +4573,105 @@
 })();
 </script>
 
+
 <script>
-/* Hero scroll depth — sets --p (0→1) as the hero scrolls away. Motion-safe only. */
+/* City film — the fixed backdrop is scrubbed by scrolling the whole homepage:
+   top = city under threat, middle = teal beam rises, #learn onward = shield dome closed.
+   Poster-only under reduced motion, Save-Data / 2G, or when no format is supported.
+   "Freeze background" stops all film motion and is remembered in this browser. */
 (function(){
   'use strict';
-  var hero = document.getElementById('top');
-  if (!hero || !window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var raf = 0;
-  function upd(){
-    raf = 0;
-    var r = hero.getBoundingClientRect();
-    var p = Math.min(1, Math.max(0, -r.top / (r.height || 1)));
-    hero.style.setProperty('--p', p.toFixed(3));
+  var wrap = document.getElementById('cityfilm'), v = document.getElementById('cf-video'), btn = document.getElementById('cf-toggle');
+  if (!wrap || !v || !btn || !window.matchMedia) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = navigator.connection || {};
+  if (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')) return;
+  var src = (matchMedia('(max-width: 760px)').matches && v.getAttribute('data-src-mobile')) || v.getAttribute('data-src');
+  if (!src) return;
+  if (!v.canPlayType('video/mp4; codecs="avc1.640028"')) {
+    if (v.canPlayType('video/webm; codecs="vp9"')) src = src.replace(/\.mp4$/, '.webm'); else return;
   }
-  window.addEventListener('scroll', function(){ if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-  window.addEventListener('resize', upd);
-  upd();
+
+  /* story beats: [section id, position in the film 0..1] */
+  var ANCHORS = [['top', 0], ['guides', .28], ['phish-lab', .55], ['atlas', .8], ['learn', 1]];
+  var KEY = 'kg-film-frozen', frozen = false;
+  try { frozen = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  var pts = [], dur = 10, target = 0, cur = 0, want = 0, raf = 0, ready = false;
+  var lbl = btn.querySelector('.cf-lbl'), ico = btn.querySelector('.cf-ico');
+
+  function setBtn(){
+    btn.setAttribute('aria-pressed', frozen ? 'true' : 'false');
+    lbl.textContent = frozen ? 'Animate background' : 'Freeze background';
+    ico.innerHTML = frozen ? '&#9654;' : '&#10074;&#10074;';
+  }
+  function measure(){
+    pts = [];
+    ANCHORS.forEach(function(a){
+      var el = document.getElementById(a[0]);
+      if (el) pts.push([el.getBoundingClientRect().top + window.scrollY, a[1]]);
+    });
+    if (pts.length) pts[0][0] = 0;
+  }
+  function frac(y){
+    if (!pts.length || y <= pts[0][0]) return 0;
+    for (var i = 1; i < pts.length; i++) {
+      if (y <= pts[i][0]) { var a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * ((y - a[0]) / ((b[0] - a[0]) || 1)); }
+    }
+    return 1;
+  }
+  function seek(){
+    if (!ready || frozen || v.seeking) return;
+    if (Math.abs(v.currentTime - want) > 0.02) { try { v.currentTime = want; } catch (e) {} }
+  }
+  function read(){
+    if (frozen) return;
+    target = frac(window.scrollY + window.innerHeight * 0.35);
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  function tick(){
+    raf = 0;
+    cur += (target - cur) * 0.18;
+    if (Math.abs(target - cur) < 0.0005) cur = target;
+    wrap.style.setProperty('--cf', cur.toFixed(4));
+    want = cur * Math.max(0, dur - 0.05);
+    seek();
+    if (cur !== target) raf = requestAnimationFrame(tick);
+  }
+  function giveUp(){ ready = false; v.removeAttribute('src'); try { v.load(); } catch (e) {} v.hidden = true; btn.hidden = true; }
+  function start(){
+    v.addEventListener('error', giveUp);
+    v.addEventListener('loadedmetadata', function(){ dur = v.duration || 10; });
+    v.addEventListener('seeked', seek);          /* catch up with the latest scroll position */
+    v.addEventListener('loadeddata', function(){
+      ready = true; v.hidden = false; btn.hidden = false; setBtn();
+      var p = v.play();                           /* one muted play/pause lets iOS paint seeked frames */
+      function go(){ v.pause(); measure(); read(); want = cur * Math.max(0, dur - 0.05); seek(); }
+      if (p && p.then) p.then(go, go); else go();
+    }, { once: true });
+    /* Load the whole (small) film into memory so every scroll position is instantly seekable,
+       independent of server range support; fall back to streaming if fetch/Blob is unavailable. */
+    v.preload = 'auto';
+    if (window.fetch && window.URL && URL.createObjectURL) {
+      fetch(src).then(function(r){ if (!r.ok) throw r.status; return r.blob(); })
+        .then(function(blob){ v.src = URL.createObjectURL(blob); })
+        .catch(function(){ v.src = src; });
+    } else {
+      v.src = src;
+    }
+  }
+  btn.addEventListener('click', function(){
+    frozen = !frozen;
+    try { localStorage.setItem(KEY, frozen ? '1' : '0'); } catch (e) {}
+    setBtn();
+    if (!frozen) read();
+  });
+  window.addEventListener('scroll', read, { passive: true });
+  window.addEventListener('resize', function(){ measure(); read(); });
+  window.addEventListener('load', function(){ measure(); read(); });
+  measure();
+  cur = target = frac(window.scrollY + window.innerHeight * 0.35);
+  if (!frozen) wrap.style.setProperty('--cf', cur.toFixed(4));
+  (window.requestIdleCallback || function(f){ setTimeout(f, 300); })(start);
 })();
 </script>
 </body>
