@@ -1634,6 +1634,30 @@
   .cf-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   @media (max-width: 760px) { .cityfilm picture, .cf-poster, .cf-video { object-position: 62% 35%; } }
 
+  /* ---------- Glass panels over the city film ---------- */
+  main > hr.slash-div { display: none; }
+  main > section:not(.gh):not(.optin) > .wrap {
+    background: rgba(10,18,36,.88); border: 1px solid rgba(45,212,191,.14); border-radius: 22px;
+    padding: clamp(1.5rem, 4vw, 3.5rem); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+  main > section.optin .optin-card { background: rgba(17,27,50,.92); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+  @media (min-width: 900px) {
+    @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      main > section:not(.gh):not(.optin) > .wrap, main > section.optin .optin-card {
+        background: rgba(10,18,36,.76); -webkit-backdrop-filter: blur(14px) saturate(120%); backdrop-filter: blur(14px) saturate(120%); }
+    }
+  }
+  @media (max-width: 760px) {
+    main > section:not(.gh):not(.optin) > .wrap { width: calc(100% - 20px); padding: 1.4rem 1.1rem; border-radius: 16px; }
+  }
+
+  /* ---------- Chapter windows: the film, full-screen, with one line ---------- */
+  .chapter { position: relative; min-height: 46vh; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 4rem 20px; }
+  .chapter-line { margin: 0; max-width: 16ch; font-size: clamp(2.1rem, 6vw, 4.6rem); font-weight: 650; letter-spacing: -.03em;
+    line-height: 1.05; color: var(--ink); text-shadow: 0 2px 28px rgba(10,18,36,.9), 0 0 3px rgba(10,18,36,.9); }
+  .chapter-line span { color: var(--accent); }
+  .chapter-line span.w { color: var(--warn); }
+
   /* ---------- Guardian hero (text over the city film) ---------- */
   .gh { position: relative; min-height: min(100svh, 920px); display: flex; align-items: center; isolation: isolate; }
   .gh-shade { position: absolute; inset: 0;
@@ -2073,7 +2097,7 @@
     </div>
 
   </section>
-  <hr class="slash-div">
+  <div class="chapter" aria-hidden="true"><p class="chapter-line" data-reveal>Threats move <span class="w">fast.</span></p></div>
 
   <!-- ============ STOP · CHECK · PROTECT (scroll story) ============ -->
   <section id="protect" class="story" aria-labelledby="scp-h">
@@ -2226,7 +2250,7 @@
     </div>
   </section>
 
-  <hr class="slash-div">
+  <div class="chapter" aria-hidden="true"><p class="chapter-line" data-reveal>A pause beats <span>panic.</span></p></div>
 
   <!-- ============ PHISHING LAB ============ -->
   <section id="phish-lab" aria-labelledby="phish-h">
@@ -2708,7 +2732,7 @@
     </div>
   </section>
 
-  <hr class="slash-div">
+  <div class="chapter" aria-hidden="true"><p class="chapter-line" data-reveal>Protected &mdash; <span>together.</span></p></div>
 
   <!-- ============ ABOUT ============ -->
   <section id="about" aria-labelledby="about-h">
