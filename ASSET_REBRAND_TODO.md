@@ -19,14 +19,11 @@ Tracks images, video and configuration the site needs. Updated 30 September 2026
 - [x] **Guide PDFs** — `guides/scam-check-starter.pdf`, `guides/boss-scam.pdf`,
   `guides/family-scam-guide.pdf` (KaiGuardian branding).
 - [x] **Social preview** — `assets/og-image.jpg` rebuilt from the futuristic city keyframe (teal/amber).
+- [x] **Privacy notice** — `privacy.html`, contact kaichencyber@gmail.com.
 - [x] **Favicon** — inline SVG, no brand text.
 
 ## Still needed
 
-- [ ] **Privacy notice contact email.** `privacy.html` shows a placeholder
-  (`[contact email to be added]`). Note: kaiguardian.org is set up to send and receive
-  no email (null MX + `v=spf1 -all`), so use an address on another domain, or set up
-  email for the domain first. **Must be filled in before publishing.**
 - [ ] **Paid guide** — the Complete Family Cyber Safety Guide needs a payment platform
   (e.g. Gumroad, Ko-fi). Do not commit the paid PDF to this public repository.
 
