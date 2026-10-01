@@ -1899,7 +1899,9 @@
     display:flex; flex-direction:column; gap:.4rem; }
   .atlas-stats li{ display:flex; justify-content:space-between; gap:1rem; font-size:.82rem; color:var(--ink-dim); }
   .atlas-stats li b{ font-family:var(--mono); color:var(--ink); font-weight:500; white-space:nowrap; }
-  .atlas-src{ font-size:.7rem; color:var(--ink-faint); line-height:1.5; }
+  .atlas-src{ font-size:.8rem; color:var(--ink-faint); line-height:1.5; }
+  .atlas-src a{ color:var(--ink-dim); text-decoration:underline; text-underline-offset:2px; }
+  .atlas-src a:hover{ color:var(--accent); }
   .atlas-link{ margin-top:auto; font-family:var(--mono); font-size:.72rem; letter-spacing:.06em;
     color:var(--accent); text-decoration:none; }
   .atlas-link:hover{ text-decoration:underline; }
@@ -2685,7 +2687,7 @@
         <p class="atlas-intro">Every figure below comes from a government-published source — police
         forces, national CERTs and anti-scam centres across Asia-Pacific. <strong>Scam Atlas</strong>
         monitors these official portals and turns their scattered reports into one living map.
-        Latest official releases as of August 2026.</p>
+        Figures come from the latest full-year official releases (mostly 2025); each card shows its reporting period and links to its source.</p>
       </div>
 
       <a class="atlas-radar" href="/radar/" data-reveal>
@@ -2713,9 +2715,9 @@
           <ul class="atlas-stats">
             <li>Scam &amp; cybercrime cases <b>41,974</b></li>
             <li>Scam cases YoY <b>−27.6%</b></li>
-            <li>Gov-official impersonation <b>Rising</b></li>
+            <li>Gov-official impersonation cases (2025) <b>+123.6%</b></li>
           </ul>
-          <p class="atlas-src">Source: Singapore Police Force — Annual Scam &amp; Cybercrime Brief 2025</p>
+          <p class="atlas-src">Source: <a href="https://www.police.gov.sg/-/media/SPF/Advisories/Scams/Annual-Scam-and-Cybercrime-Brief-2025.pdf" target="_blank" rel="noopener">Singapore Police Force — Annual Scam &amp; Cybercrime Brief 2025</a> (calendar 2025, SGD)</p>
           <a class="atlas-link" href="https://www.police.gov.sg" target="_blank" rel="noopener">ScamShield · police.gov.sg →</a>
         </article>
 
@@ -2728,20 +2730,20 @@
             <li>Complaints filed on NCRP <b>6.59M+</b></li>
             <li>Citizen helpline <b>1930</b></li>
           </ul>
-          <p class="atlas-src">Source: Ministry of Home Affairs / I4C — NCRP &amp; CFCFRMS</p>
+          <p class="atlas-src">Source: <a href="https://www.pib.gov.in/PressReleasePage.aspx?PRID=2287039" target="_blank" rel="noopener">Ministry of Home Affairs / I4C — Lok Sabha reply, Jul 2026</a> (2021–2025; funds saved to 30 Jun 2026, INR)</p>
           <a class="atlas-link" href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in · Chakshu →</a>
         </article>
 
         <article class="atlas-card" data-reveal>
           <div class="atlas-card-top"><span class="atlas-rank">03</span><span class="atlas-flag">🇯🇵</span><span class="atlas-country">Japan</span></div>
           <div class="atlas-headline">¥142.3B<span>lost to “special fraud” in 2025 — +98% YoY</span></div>
-          <p class="atlas-desc">Impersonated police officers are now Japan’s most profitable “crime unit” — losses nearly doubled in a single year, per NPA statistics.</p>
+          <p class="atlas-desc">Fake-police calls drove the surge — ¥100.5B lost in 2025, about 70% of “special fraud” losses, which nearly doubled in a single year, per NPA statistics.</p>
           <ul class="atlas-stats">
-            <li>Fake-police scam cases <b>11,014 (×2)</b></li>
+            <li>Fake-police scam cases (2025) <b>11,014</b></li>
             <li>SNS investment &amp; romance <b>¥183.4B</b></li>
             <li>Record status <b>Worst ever</b></li>
           </ul>
-          <p class="atlas-src">Source: National Police Agency — 2025 Fraud Statistics</p>
+          <p class="atlas-src">Source: <a href="https://www.npa.go.jp/bureau/criminal/souni/tokusyusagi/hurikomesagi_toukei2025.pdf" target="_blank" rel="noopener">National Police Agency — 2025 fraud statistics (final)</a> (calendar 2025, JPY)</p>
           <a class="atlas-link" href="https://www.npa.go.jp" target="_blank" rel="noopener">npa.go.jp →</a>
         </article>
 
@@ -2754,7 +2756,7 @@
             <li>Top channel <b>Online / social</b></li>
             <li>Job scam reports <b>+102.4%</b></li>
           </ul>
-          <p class="atlas-src">Source: ACCC / National Anti-Scam Centre — Targeting Scams 2025</p>
+          <p class="atlas-src">Source: <a href="https://www.nasc.gov.au/system/files/targeting-scams-report-2025.pdf" target="_blank" rel="noopener">ACCC / National Anti-Scam Centre — Targeting Scams 2025</a> (calendar 2025, AUD)</p>
           <a class="atlas-link" href="https://www.scamwatch.gov.au" target="_blank" rel="noopener">scamwatch.gov.au · cyber.gov.au →</a>
         </article>
 
@@ -2765,9 +2767,9 @@
           <ul class="atlas-stats">
             <li>Avg. loss per case (Q1) <b>₩53M</b></li>
             <li>Gov-agency impersonation <b>51%</b></li>
-            <li>Trend since Oct 2025 <b>Falling −25%</b></li>
+            <li>Losses, Oct 2025–Mar 2026 <b>−26.4%</b></li>
           </ul>
-          <p class="atlas-src">Source: Korean National Police Agency — Voice Phishing Statistics</p>
+          <p class="atlas-src">Source: <a href="https://www.fsc.go.kr/no010101/85959" target="_blank" rel="noopener">Financial Services Commission</a> (Jan–Jun 2025 losses, KRW) and <a href="https://www.police.go.kr/user/bbs/BD_selectBbs.do?q_bbsCode=1125&amp;q_bbscttSn=20260407161832219" target="_blank" rel="noopener">Korean National Police Agency</a></p>
           <a class="atlas-link" href="https://www.police.go.kr" target="_blank" rel="noopener">police.go.kr · 112 →</a>
         </article>
 
@@ -2780,33 +2782,33 @@
             <li>Fake investments <b>RM1.47B</b></li>
             <li>Report hotline <b>NSRC 997</b></li>
           </ul>
-          <p class="atlas-src">Source: Royal Malaysia Police (PDRM) — CCID Statistics</p>
+          <p class="atlas-src">Source: <a href="https://berita.rtm.gov.my/nasional/senarai-berita-nasional/senarai-artikel/kes-scam-naik-87-peratus-mangsa-rugi-rm2-97bil/" target="_blank" rel="noopener">Royal Malaysia Police figures, via RTM / Bernama</a> (calendar 2025, MYR)</p>
           <a class="atlas-link" href="https://www.rmp.gov.my" target="_blank" rel="noopener">rmp.gov.my · NSRC 997 →</a>
         </article>
 
         <article class="atlas-card" data-reveal>
           <div class="atlas-card-top"><span class="atlas-rank">07</span><span class="atlas-flag">🇹🇭</span><span class="atlas-country">Thailand</span></div>
-          <div class="atlas-headline">฿89B+<span>lost to cybercrime Jan–Nov 2025 — +45% YoY</span></div>
+          <div class="atlas-headline">฿25.2B<span>lost to online crime in 2025</span></div>
           <p class="atlas-desc">Thai Police Online and the AOC 1441 centre freeze scam-linked mule accounts within the hour — Thailand is now the most scammed market in Asia by contact volume.</p>
           <ul class="atlas-stats">
-            <li>Complaints filed (TPO) <b>~887,000</b></li>
+            <li>Cases reported (2025) <b>380,378</b></li>
             <li>Daily losses <b>~฿70M</b></li>
             <li>Report hotline <b>AOC 1441</b></li>
           </ul>
-          <p class="atlas-src">Source: Royal Thai Police / CCSC — Thai Police Online (TPO)</p>
+          <p class="atlas-src">Source: <a href="https://mgronline.com/stockmarket/detail/9690000027490" target="_blank" rel="noopener">Royal Thai Police 2025 figures, via MGR Online</a> (calendar 2025, THB)</p>
           <a class="atlas-link" href="https://www.thaipoliceonline.go.th" target="_blank" rel="noopener">AOC 1441 · thaipoliceonline.go.th →</a>
         </article>
 
         <article class="atlas-card" data-reveal>
           <div class="atlas-card-top"><span class="atlas-rank">08</span><span class="atlas-flag">🇳🇿</span><span class="atlas-country">New Zealand</span></div>
-          <div class="atlas-headline">NZ$25.7M<span>scam losses in 2024 — highest ever recorded</span></div>
+          <div class="atlas-headline">NZ$25.7M<span>lost to reported cyber incidents in 2024, scams included</span></div>
           <p class="atlas-desc">The NCSC publishes quarterly insights and runs a Phishing Disruption Service — a verified indicator feed organisations can act on directly.</p>
           <ul class="atlas-stats">
             <li>Q1 2025 losses (NCSC) <b>NZ$7.8M</b></li>
             <li>Most reported <b>Scams &amp; fraud</b></li>
             <li>Phishing disruption <b>PDS live feed</b></li>
           </ul>
-          <p class="atlas-src">Source: CERT NZ / NCSC — Quarterly Cyber Security Insights</p>
+          <p class="atlas-src">Source: <a href="https://www.ncsc.govt.nz/insights-and-research/insights-reports/" target="_blank" rel="noopener">NCSC — Quarterly Cyber Security Insights</a> (2024 = sum of four quarterly reports, NZD)</p>
           <a class="atlas-link" href="https://www.ncsc.govt.nz" target="_blank" rel="noopener">ncsc.govt.nz →</a>
         </article>
 
