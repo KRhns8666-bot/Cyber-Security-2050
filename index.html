@@ -1613,16 +1613,15 @@
   .vcard iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 6px; display: block; }
   .vcard figcaption { margin-top: .6rem; color: var(--ink); font-size: .98rem; line-height: 1.4; }
 
-  /* ---------- City film: fixed, scroll-driven backdrop for the whole page ---------- */
+  /* ---------- City film: fixed, continuously looping backdrop for the whole page ---------- */
   /* z-index -1 inside main's stacking context: paints above main's (empty) background but below
      every section, positioned or not. At 0 it covered all non-positioned content. */
-  .cityfilm { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); pointer-events: none; --cf: 0; }
+  .cityfilm { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); pointer-events: none; }
   .cityfilm picture, .cf-poster, .cf-video { position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: 70% 40%; display: block; }
   .cf-video[hidden], .cf-toggle[hidden] { display: none; }
-  @media (prefers-reduced-motion: no-preference) {
-    .cityfilm picture, .cf-video { transform: scale(calc(1 + var(--cf) * .08)); transform-origin: 60% 45%; will-change: transform; }
-  }
+  .cf-video { opacity: 0; transition: opacity .8s ease; }
+  .cf-video.is-on { opacity: 1; }
   .cf-veil { position: absolute; inset: 0;
     background: radial-gradient(ellipse 80% 70% at 62% 42%, rgba(10,18,36,.10), rgba(10,18,36,.62) 78%),
                 linear-gradient(180deg, rgba(10,18,36,.30), rgba(10,18,36,.48)); }
@@ -2026,6 +2025,7 @@
         <li><a href="#guides" class="nav-highlight">Free Guides</a></li>
         <li><a href="#watch">Videos</a></li>
         <li><a href="#phish-lab" class="nav-highlight">Practice</a></li>
+        <li><a href="https://cyberkid.higgsfield.app/" class="nav-highlight" target="_blank" rel="noopener noreferrer">Play the Game<span class="sr-only"> (CyberKid, opens in a new tab)</span></a></li>
         <li><a href="#alerts">Scam Alerts</a></li>
         <li class="nav-dd">
           <button class="nav-dd-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="dd-atlas">Scam Atlas</button>
@@ -2052,6 +2052,7 @@
       <li><a href="#guides" class="nav-highlight">Free Guides</a></li>
       <li><a href="#watch">Videos</a></li>
       <li><a href="#phish-lab" class="nav-highlight">Practice</a></li>
+      <li><a href="https://cyberkid.higgsfield.app/" class="nav-highlight" target="_blank" rel="noopener noreferrer">Play the Game<span class="sr-only"> (CyberKid, opens in a new tab)</span></a></li>
       <li><a href="#alerts">Scam Alerts</a></li>
       <li class="dd-group" aria-hidden="true">Scam Atlas</li>
       <li class="dd-sub"><a href="#atlas">Country Data</a></li>
@@ -2065,19 +2066,19 @@
 
 <main id="main">
 
-  <!-- ============ CITY FILM — fixed backdrop for the whole page; scrolling plays it ============ -->
+  <!-- ============ CITY FILM — fixed backdrop for the whole page; plays on a seamless loop ============ -->
   <div class="cityfilm" id="cityfilm" aria-hidden="true">
     <picture>
       <source media="(max-width: 760px)" srcset="assets/hero-city-mobile.webp" type="image/webp">
       <source srcset="assets/hero-city.webp" type="image/webp">
       <img class="cf-poster" src="assets/hero-city.jpg" alt="" width="1920" height="1072" fetchpriority="high" decoding="async">
     </picture>
-    <video class="cf-video" id="cf-video" muted playsinline preload="none"
-           data-src="assets/city-scrub.mp4" data-src-mobile="assets/city-scrub-mobile.mp4" hidden></video>
+    <video class="cf-video" id="cf-video" muted loop playsinline preload="none"
+           data-src="assets/city-loop.mp4" data-src-mobile="assets/city-loop-mobile.mp4" hidden></video>
     <div class="cf-veil"></div>
   </div>
   <button type="button" class="cf-toggle" id="cf-toggle" aria-pressed="false" hidden>
-    <span class="cf-ico" aria-hidden="true">&#10074;&#10074;</span><span class="cf-lbl">Freeze background</span>
+    <span class="cf-ico" aria-hidden="true">&#10074;&#10074;</span><span class="cf-lbl">Pause background</span>
   </button>
 
   <!-- ============ HERO (full-viewport) ============ -->
@@ -2361,8 +2362,8 @@
           </a>
           <a class="resource-card" data-reveal href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener noreferrer">
             <span class="resource-icon">🎮</span>
-            <p class="resource-title">CyberKid by KaiGuardian — Free Safety Game</p>
-            <p class="resource-sub"><strong>For children (and curious adults).</strong> A free game: join KAI &amp; ARIA across five cyber worlds, beat the hackers and learn real online-safety habits through play.</p>
+            <p class="resource-title">CyberKid: Shadow Broker Showdown — Free Safety Game</p>
+            <p class="resource-sub"><strong>For children aged 8–14 (and curious adults).</strong> A free game: join KAI &amp; ARIA across five cyber worlds, beat the hackers and learn real online-safety habits through play.</p>
             <span class="resource-link">cyberkid.higgsfield.app →</span>
           </a>
         </div>
@@ -2782,6 +2783,7 @@
           <div class="about-links">
             <a class="about-link primary" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">▶ Watch on YouTube</a>
             <a class="about-link" href="https://kai-check.higgsfield.app" target="_blank" rel="noopener noreferrer">🛡 KaiGuardian Check</a>
+            <a class="about-link" href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener noreferrer">🎮 Play CyberKid</a>
             <a class="about-link" href="#phish-lab">↑ Try the Phish Lab</a>
           </div>
         </div>
@@ -3280,6 +3282,8 @@
       <a href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">KaiGuardian Academy on YouTube →</a>
       &nbsp;·&nbsp;
       <a href="https://kai-check.higgsfield.app" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">KaiGuardian Check →</a>
+      &nbsp;·&nbsp;
+      <a href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">CyberKid game →</a>
     </span>
     <span><a href="/privacy.html" style="color:var(--ink-dim)">Privacy notice</a></span>
   </div>
@@ -4598,14 +4602,13 @@
 
 
 <script>
-/* City film — the fixed backdrop is scrubbed by scrolling the whole homepage:
-   top = city under threat, middle = teal beam rises, #learn onward = shield dome closed.
-   Poster-only under reduced motion, Save-Data / 2G, or when no format is supported.
-   "Freeze background" stops all film motion and is remembered in this browser. */
+/* City film — the fixed backdrop plays continuously on a seamless 8.5 s loop (threat → shield
+   dome, cross-faded back to the start). Poster-only under reduced motion, Save-Data / 2G, or when
+   no format is supported. "Pause background" stops it and is remembered in this browser. */
 (function(){
   'use strict';
-  var wrap = document.getElementById('cityfilm'), v = document.getElementById('cf-video'), btn = document.getElementById('cf-toggle');
-  if (!wrap || !v || !btn || !window.matchMedia) return;
+  var v = document.getElementById('cf-video'), btn = document.getElementById('cf-toggle');
+  if (!v || !btn || !window.matchMedia) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var c = navigator.connection || {};
   if (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')) return;
@@ -4615,85 +4618,38 @@
     if (v.canPlayType('video/webm; codecs="vp9"')) src = src.replace(/\.mp4$/, '.webm'); else return;
   }
 
-  /* story beats: [section id, position in the film 0..1] */
-  var ANCHORS = [['top', 0], ['guides', .28], ['phish-lab', .55], ['atlas', .8], ['learn', 1]];
-  var KEY = 'kg-film-frozen', frozen = false;
-  try { frozen = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  var pts = [], dur = 10, target = 0, cur = 0, want = 0, raf = 0, ready = false;
+  var KEY = 'kg-film-paused', paused = false;
+  try { paused = localStorage.getItem(KEY) === '1'; } catch (e) {}
   var lbl = btn.querySelector('.cf-lbl'), ico = btn.querySelector('.cf-ico');
 
   function setBtn(){
-    btn.setAttribute('aria-pressed', frozen ? 'true' : 'false');
-    lbl.textContent = frozen ? 'Animate background' : 'Freeze background';
-    ico.innerHTML = frozen ? '&#9654;' : '&#10074;&#10074;';
+    btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    lbl.textContent = paused ? 'Play background' : 'Pause background';
+    ico.innerHTML = paused ? '&#9654;' : '&#10074;&#10074;';
   }
-  function measure(){
-    pts = [];
-    ANCHORS.forEach(function(a){
-      var el = document.getElementById(a[0]);
-      if (el) pts.push([el.getBoundingClientRect().top + window.scrollY, a[1]]);
-    });
-    if (pts.length) pts[0][0] = 0;
+  function play(){
+    var p = v.play();
+    /* autoplay refused (e.g. low-power mode): show the still frame and offer Play */
+    if (p && p.catch) p.catch(function(){ paused = true; setBtn(); });
   }
-  function frac(y){
-    if (!pts.length || y <= pts[0][0]) return 0;
-    for (var i = 1; i < pts.length; i++) {
-      if (y <= pts[i][0]) { var a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * ((y - a[0]) / ((b[0] - a[0]) || 1)); }
-    }
-    return 1;
-  }
-  function seek(){
-    if (!ready || frozen || v.seeking) return;
-    if (Math.abs(v.currentTime - want) > 0.02) { try { v.currentTime = want; } catch (e) {} }
-  }
-  function read(){
-    if (frozen) return;
-    target = frac(window.scrollY + window.innerHeight * 0.35);
-    if (!raf) raf = requestAnimationFrame(tick);
-  }
-  function tick(){
-    raf = 0;
-    cur += (target - cur) * 0.18;
-    if (Math.abs(target - cur) < 0.0005) cur = target;
-    wrap.style.setProperty('--cf', cur.toFixed(4));
-    want = cur * Math.max(0, dur - 0.05);
-    seek();
-    if (cur !== target) raf = requestAnimationFrame(tick);
-  }
-  function giveUp(){ ready = false; v.removeAttribute('src'); try { v.load(); } catch (e) {} v.hidden = true; btn.hidden = true; }
+  function giveUp(){ v.removeAttribute('src'); try { v.load(); } catch (e) {} v.hidden = true; btn.hidden = true; }
   function start(){
+    v.muted = true; v.loop = true;
     v.addEventListener('error', giveUp);
-    v.addEventListener('loadedmetadata', function(){ dur = v.duration || 10; });
-    v.addEventListener('seeked', seek);          /* catch up with the latest scroll position */
     v.addEventListener('loadeddata', function(){
-      ready = true; v.hidden = false; btn.hidden = false; setBtn();
-      var p = v.play();                           /* one muted play/pause lets iOS paint seeked frames */
-      function go(){ v.pause(); measure(); read(); want = cur * Math.max(0, dur - 0.05); seek(); }
-      if (p && p.then) p.then(go, go); else go();
+      v.hidden = false; btn.hidden = false; setBtn();
+      requestAnimationFrame(function(){ v.classList.add('is-on'); });
+      if (!paused) play();
     }, { once: true });
-    /* Load the whole (small) film into memory so every scroll position is instantly seekable,
-       independent of server range support; fall back to streaming if fetch/Blob is unavailable. */
     v.preload = 'auto';
-    if (window.fetch && window.URL && URL.createObjectURL) {
-      fetch(src).then(function(r){ if (!r.ok) throw r.status; return r.blob(); })
-        .then(function(blob){ v.src = URL.createObjectURL(blob); })
-        .catch(function(){ v.src = src; });
-    } else {
-      v.src = src;
-    }
+    v.src = src;
   }
   btn.addEventListener('click', function(){
-    frozen = !frozen;
-    try { localStorage.setItem(KEY, frozen ? '1' : '0'); } catch (e) {}
+    paused = !paused;
+    try { localStorage.setItem(KEY, paused ? '1' : '0'); } catch (e) {}
     setBtn();
-    if (!frozen) read();
+    if (paused) v.pause(); else play();
   });
-  window.addEventListener('scroll', read, { passive: true });
-  window.addEventListener('resize', function(){ measure(); read(); });
-  window.addEventListener('load', function(){ measure(); read(); });
-  measure();
-  cur = target = frac(window.scrollY + window.innerHeight * 0.35);
-  if (!frozen) wrap.style.setProperty('--cf', cur.toFixed(4));
   (window.requestIdleCallback || function(f){ setTimeout(f, 300); })(start);
 })();
 </script>
