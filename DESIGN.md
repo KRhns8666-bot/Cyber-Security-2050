@@ -89,6 +89,10 @@ Rules:
 - Principles set as a strict left-aligned ledger: hairline rule, numeral,
   title, paragraph. Two-column (numeral gutter + text) above 720px.
 - Hairline rules (`1px`, `--line`) are the only dividers. No cards, no boxes.
+- Homepage exception: each content section sits on a tinted navy panel
+  (`rgba(10,18,36,.88)`, 1px teal-tinted border, 22px radius) so text never
+  sits on the moving city film; the gaps between panels stay open. No backdrop
+  blur — blurring over a moving video re-renders every frame and cost ~40 fps.
 - Ultrawide: content column holds; the visualization field alone may stretch
   to `1280px`. Nothing ever spans raw viewport width except rules and ground.
 
@@ -104,6 +108,16 @@ Rules:
 - While the visualization is idle, faint probe dots wander the graph — the
   scanning never stops. Max three concurrent, ~35% peak alpha, killed the
   moment the canvas leaves the viewport.
+- **Scroll film (homepage):** one fixed, full-screen city film behind the whole
+  page (`assets/city-scrub*.mp4/.webm`, near all-intra so any frame seeks
+  instantly). Scroll position drives `video.currentTime`, piecewise across
+  section anchors: top = city under threat, Phish Lab = teal beam, `#learn` =
+  shield dome closed, held to the footer. Scrolling up rewinds. The time eases
+  with an rAF lerp (0.18) and the layer scales 1 → 1.08 with progress
+  (transform only). Three short chapter lines sit directly over the film at
+  the story beats. A fixed **Freeze background** button stops it and is
+  remembered per browser. Reduced motion, Save-Data / 2G and browsers without
+  MP4/WebM get the still poster.
 - Case-file numerals count up once on entry (1.1s, cubic ease-out, rAF).
 - `prefers-reduced-motion`: reveals disabled; the cascade plays as discrete
   state changes — no easing, no pulses, no idle noise, no ticker scroll, no
