@@ -1916,6 +1916,29 @@
   .optin-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
   .optin-btn:disabled{ opacity:.55; cursor:default; }
   .optin-err{ margin-top:.6rem; font-size:.82rem; color:#FBC56A; min-height:1.1em; }
+  /* Business enquiries */
+  .ct-grid{ display:grid; gap:clamp(2rem,4vw,3.5rem); }
+  @media (min-width: 900px){ .ct-grid{ grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr); align-items:start; } }
+  .ct-offers{ list-style:none; margin:0; padding:0; display:grid; gap:1.25rem; }
+  .ct-offers li{ border-left:2px solid var(--accent-dim); padding-left:1rem; }
+  .ct-offers strong{ display:block; color:var(--ink); font-weight:600; margin-bottom:.25rem; }
+  .ct-offers span{ color:var(--ink-dim); font-size:.98rem; line-height:1.6; }
+  .ct-box{ background:var(--bg-raise); border:1px solid var(--line); border-radius:14px; padding:clamp(1.25rem,3vw,2rem); }
+  .ct-form{ display:grid; gap:1rem; }
+  .ct-form[hidden]{ display:none; }
+  .ct-row{ display:grid; gap:1rem; }
+  @media (min-width: 560px){ .ct-row{ grid-template-columns:1fr 1fr; } }
+  .ct-field{ display:grid; gap:.4rem; }
+  .ct-field > span{ font-family:var(--mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); }
+  .ct-field em{ font-style:normal; text-transform:none; letter-spacing:0; color:var(--ink-faint); }
+  .ct-field .optin-input{ width:100%; }
+  .ct-field select.optin-input{ appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--ink-dim) 50%),linear-gradient(135deg,var(--ink-dim) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size:5px 5px; background-repeat:no-repeat; padding-right:2.4rem; }
+  .ct-field textarea.optin-input{ resize:vertical; min-height:8rem; line-height:1.55; }
+  .ct-form .optin-btn{ justify-self:start; }
+  .ct-done p{ margin:0 0 .4rem; color:var(--ink-dim); }
+  .ct-alt{ margin:1.25rem 0 0; padding-top:1rem; border-top:1px solid var(--line); color:var(--ink-dim); font-size:.95rem; }
+  .ct-alt a{ color:var(--accent); }
   .optin-err:empty{ margin-top:0; min-height:0; }
   .optin-fine{ margin-top:.9rem; font-size:.92rem; color:var(--ink-dim); line-height:1.6; max-width:62ch; }
   .optin-fine strong{ color:var(--ink); font-weight:600; }
@@ -2036,6 +2059,7 @@
         </li>
         <li><a href="#resources">Tools</a></li>
         <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
         <li><a href="#learn">Learn</a></li>
       </ul>
     </nav>
@@ -2059,6 +2083,7 @@
       <li class="dd-sub"><a href="/radar/">Scam Radar <span class="tag">Demo</span></a></li>
       <li><a href="#resources">Tools</a></li>
       <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
       <li><a href="#learn">Learn</a></li>
     </ul>
   </nav>
@@ -2784,6 +2809,7 @@
             <a class="about-link primary" href="https://www.youtube.com/@KaiGuardianAcademy" target="_blank" rel="noopener noreferrer">▶ Watch on YouTube</a>
             <a class="about-link" href="https://kai-check.higgsfield.app" target="_blank" rel="noopener noreferrer">🛡 KaiGuardian Check</a>
             <a class="about-link" href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener noreferrer">🎮 Play CyberKid</a>
+            <a class="about-link" href="#contact">✉ Work with KaiGuardian</a>
             <a class="about-link" href="#phish-lab">↑ Try the Phish Lab</a>
           </div>
         </div>
@@ -2792,6 +2818,58 @@
   </section>
 
   <hr class="slash-div">
+
+  <!-- ============ WORK WITH KAIGUARDIAN (business enquiries) ============ -->
+  <section id="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="label">Business enquiries</span>
+        <h2 id="contact-h">Work with KaiGuardian</h2>
+        <p class="intro">Brands, schools, companies, media and fellow creators &mdash; if you want to help families stay safe from scams, get in touch.</p>
+      </div>
+      <div class="ct-grid">
+        <ul class="ct-offers">
+          <li><strong>Brand partnerships &amp; sponsorships</strong><span>Sponsored videos and co-branded safety content on KaiGuardian Academy.</span></li>
+          <li><strong>Talks &amp; workshops</strong><span>Scam-awareness sessions for schools, companies, community groups and seniors.</span></li>
+          <li><strong>Media &amp; interviews</strong><span>Press, podcasts and expert comment on scams across Asia-Pacific.</span></li>
+          <li><strong>Collaborations</strong><span>Joint videos and projects with creators and organisations.</span></li>
+        </ul>
+        <div class="ct-box">
+          <form class="ct-form" id="contact-form" novalidate>
+            <div class="optin-hp" aria-hidden="true">
+              <label>Leave this field empty<input type="text" name="botcheck" tabindex="-1" autocomplete="off"></label>
+            </div>
+            <div class="ct-row">
+              <label class="ct-field"><span>Your name</span>
+                <input class="optin-input" name="name" type="text" autocomplete="name" required></label>
+              <label class="ct-field"><span>Email</span>
+                <input class="optin-input" name="email" type="email" inputmode="email" autocomplete="email" required></label>
+            </div>
+            <label class="ct-field"><span>Organisation <em>(optional)</em></span>
+              <input class="optin-input" name="organisation" type="text" autocomplete="organization"></label>
+            <label class="ct-field"><span>What is it about?</span>
+                <select class="optin-input" name="enquiry_type" required>
+                  <option value="Brand partnership / sponsorship">Brand partnership / sponsorship</option>
+                  <option value="Talk or workshop">Talk or workshop</option>
+                  <option value="Media or interview">Media or interview</option>
+                  <option value="Collaboration">Collaboration</option>
+                  <option value="Something else">Something else</option>
+                </select></label>
+            <label class="ct-field"><span>Message</span>
+              <textarea class="optin-input" name="message" rows="5" required></textarea></label>
+            <p class="optin-err" data-err role="alert" aria-live="polite"></p>
+            <button class="optin-btn" type="submit">Send enquiry</button>
+            <p class="optin-fine">We use these details only to reply to you. Read our <a href="/privacy.html">privacy notice</a>.</p>
+          </form>
+          <div class="ct-done" id="contact-done" hidden>
+            <p class="optin-done-h">&#10003; Thanks &mdash; your message has been sent.</p>
+            <p>You&rsquo;ll hear back at the email address you gave.</p>
+          </div>
+          <p class="ct-alt">Prefer email? <a href="mailto:kaichencyber@gmail.com?subject=Business%20enquiry%20%E2%80%94%20KaiGuardian">kaichencyber@gmail.com</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ GO DEEPER (security essays) ============ -->
   <section id="learn" class="deep-intro" aria-labelledby="learn-h">
@@ -3285,7 +3363,7 @@
       &nbsp;·&nbsp;
       <a href="https://cyberkid.higgsfield.app/" target="_blank" rel="noopener" style="color:var(--ink-dim);transition:color 200ms" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--ink-dim)'">CyberKid game →</a>
     </span>
-    <span><a href="/privacy.html" style="color:var(--ink-dim)">Privacy notice</a></span>
+    <span><a href="#contact" style="color:var(--ink-dim)">Business enquiries</a> &nbsp;·&nbsp; <a href="/privacy.html" style="color:var(--ink-dim)">Privacy notice</a></span>
   </div>
 </footer>
 
@@ -4511,6 +4589,48 @@
       }
     });
   });
+
+  /* Business enquiry form (#contact) — same Web3Forms key and bot layers as the guides form. */
+  var cform = document.getElementById('contact-form');
+  if(cform){
+    var cerr = cform.querySelector('[data-err]'), cbtn = cform.querySelector('.optin-btn'),
+        cdone = document.getElementById('contact-done'), cLabel = cbtn.textContent, cLoaded = Date.now();
+    var field = function(n){ return cform.elements[n]; };
+    cform.addEventListener('input', function(){ cerr.textContent = ''; });
+    cform.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(field('botcheck').value){ cform.hidden = true; cdone.hidden = false; return; }
+      var name = field('name').value.trim(), email = field('email').value.trim(), msg = field('message').value.trim();
+      var bad = !name ? ['name', 'Please enter your name.'] :
+                !EMAIL_RE.test(email) ? ['email', 'Please enter a valid email address.'] :
+                msg.length < 10 ? ['message', 'Please add a short message (at least a sentence).'] : null;
+      if(bad){ cerr.textContent = bad[1]; field(bad[0]).focus(); return; }
+      cbtn.disabled = true; cbtn.textContent = 'Sending\u2026';
+      var type = field('enquiry_type').value;
+      var payload = {
+        access_key: WEB3FORMS_KEY,
+        subject: 'Business enquiry \u2014 ' + type + ' \u2014 KaiGuardian',
+        from_name: name + ' via kaiguardian.org',
+        name: name, email: email, replyto: email,
+        organisation: field('organisation').value.trim() || '\u2014',
+        enquiry_type: type, message: msg,
+        source: 'kaiguardian.org business enquiries',
+        botcheck: '', submit_ms: Date.now() - cLoaded
+      };
+      function cfail(){ cbtn.disabled = false; cbtn.textContent = cLabel;
+        cerr.textContent = 'Sorry, that didn\u2019t send. Please try again, or email kaichencyber@gmail.com.'; }
+      if(!window.fetch){ cfail(); return; }
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return r.ok && d && d.success === true; }); })
+      .then(function(ok){
+        if(!ok){ cfail(); return; }
+        cform.hidden = true; cdone.hidden = false; cdone.setAttribute('tabindex', '-1'); cdone.focus();
+      }, cfail);
+    });
+  }
 })();
 </script>
 
