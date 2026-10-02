@@ -114,8 +114,11 @@ Rules:
   closes, then the last 1.5 s cross-fades back into the start so there is no
   cut. Three short chapter lines sit directly over the film at the story beats.
   A fixed **Pause background** button stops it and is remembered per browser
-  (required for any motion that runs longer than 5 s). Reduced motion,
-  Save-Data / 2G and browsers without MP4/WebM get the still poster.
+  (required for any motion that runs longer than 5 s). Reduced motion and
+  Save-Data / 2G start on the still poster with a **Play background** button;
+  if a phone refuses autoplay (e.g. iOS Low Power Mode) the same button
+  appears. play() is called straight away rather than after loading, because
+  iOS does not download a video until it is told to play.
 - Case-file numerals count up once on entry (1.1s, cubic ease-out, rAF).
 - `prefers-reduced-motion`: reveals disabled; the cascade plays as discrete
   state changes — no easing, no pulses, no idle noise, no ticker scroll, no

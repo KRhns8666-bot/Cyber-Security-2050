@@ -2074,7 +2074,7 @@
       <img class="cf-poster" src="assets/hero-city.jpg" alt="" width="1920" height="1072" fetchpriority="high" decoding="async">
     </picture>
     <video class="cf-video" id="cf-video" muted loop playsinline preload="none"
-           data-src="assets/city-loop.mp4" data-src-mobile="assets/city-loop-mobile.mp4" hidden></video>
+           data-src="assets/city-loop.mp4" data-src-mobile="assets/city-loop-mobile.mp4"></video>
     <div class="cf-veil"></div>
   </div>
   <button type="button" class="cf-toggle" id="cf-toggle" aria-pressed="false" hidden>
@@ -4603,54 +4603,62 @@
 
 <script>
 /* City film — the fixed backdrop plays continuously on a seamless 8.5 s loop (threat → shield
-   dome, cross-faded back to the start). Poster-only under reduced motion, Save-Data / 2G, or when
-   no format is supported. "Pause background" stops it and is remembered in this browser. */
+   dome, cross-faded back to the start). The video stays in the layout (opacity 0 until it is
+   actually playing) because iOS will not load a video before play() is called and pauses videos
+   it thinks are hidden. If autoplay is refused (Low Power Mode, Reduce Motion, Save-Data) the
+   poster stays and "Play background" starts it with a tap. The choice is remembered. */
 (function(){
   'use strict';
   var v = document.getElementById('cf-video'), btn = document.getElementById('cf-toggle');
   if (!v || !btn || !window.matchMedia) return;
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var c = navigator.connection || {};
-  if (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')) return;
   var src = (matchMedia('(max-width: 760px)').matches && v.getAttribute('data-src-mobile')) || v.getAttribute('data-src');
   if (!src) return;
-  if (!v.canPlayType('video/mp4; codecs="avc1.640028"')) {
+  if (!v.canPlayType('video/mp4; codecs="avc1.4d401f"')) {
     if (v.canPlayType('video/webm; codecs="vp9"')) src = src.replace(/\.mp4$/, '.webm'); else return;
   }
+  var c = navigator.connection || {};
+  var calm = matchMedia('(prefers-reduced-motion: reduce)').matches || c.saveData || /(^|-)2g$/.test(c.effectiveType || '');
 
-  var KEY = 'kg-film-paused', paused = false;
-  try { paused = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  var lbl = btn.querySelector('.cf-lbl'), ico = btn.querySelector('.cf-ico');
+  var KEY = 'kg-film-paused', paused = calm, stored = null;
+  try { stored = localStorage.getItem(KEY); } catch (e) {}
+  if (stored === '1') paused = true;
+  if (stored === '0') paused = false;   /* an explicit tap on Play wins, even with Reduce Motion on */
+  var lbl = btn.querySelector('.cf-lbl'), ico = btn.querySelector('.cf-ico'), loaded = false;
 
   function setBtn(){
     btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
     lbl.textContent = paused ? 'Play background' : 'Pause background';
     ico.innerHTML = paused ? '&#9654;' : '&#10074;&#10074;';
   }
-  function play(){
-    var p = v.play();
-    /* autoplay refused (e.g. low-power mode): show the still frame and offer Play */
-    if (p && p.catch) p.catch(function(){ paused = true; setBtn(); });
-  }
-  function giveUp(){ v.removeAttribute('src'); try { v.load(); } catch (e) {} v.hidden = true; btn.hidden = true; }
-  function start(){
-    v.muted = true; v.loop = true;
-    v.addEventListener('error', giveUp);
-    v.addEventListener('loadeddata', function(){
-      v.hidden = false; btn.hidden = false; setBtn();
-      requestAnimationFrame(function(){ v.classList.add('is-on'); });
-      if (!paused) play();
-    }, { once: true });
+  function load(){
+    if (loaded) return;
+    loaded = true;
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', '');
     v.preload = 'auto';
     v.src = src;
   }
+  function play(){
+    load();
+    var p = v.play();
+    /* autoplay refused: keep the poster and offer Play */
+    if (p && p.catch) p.catch(function(){ paused = true; setBtn(); });
+  }
+  v.addEventListener('playing', function(){ v.classList.add('is-on'); });
+  v.addEventListener('error', function(){
+    if (!v.getAttribute('src')) return;
+    v.removeAttribute('src'); try { v.load(); } catch (e) {} v.hidden = true; btn.hidden = true;
+  });
   btn.addEventListener('click', function(){
     paused = !paused;
     try { localStorage.setItem(KEY, paused ? '1' : '0'); } catch (e) {}
     setBtn();
     if (paused) v.pause(); else play();
   });
-  (window.requestIdleCallback || function(f){ setTimeout(f, 300); })(start);
+  setBtn();
+  btn.hidden = false;
+  /* start right after first paint (not on window load, which slow thumbnails can delay) */
+  if (!paused) requestAnimationFrame(function(){ setTimeout(play, 60); });
 })();
 </script>
 </body>
